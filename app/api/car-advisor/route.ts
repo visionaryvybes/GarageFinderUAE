@@ -506,7 +506,8 @@ CRITICAL: Return ONLY valid JSON. No markdown. No explanation. No code fences.`;
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 8192,
+            maxOutputTokens: 16384,
+            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       }

@@ -14,6 +14,7 @@ import {
   PieChart, Pie, Cell,
 } from "recharts";
 import { applyFilters, type ExtendedPlaceResult } from "@/lib/mock-data";
+import PlaceDetail from "@/components/PlaceDetail";
 
 // Each emirate can have multiple search regions for full coverage
 const EMIRATE_CONFIG = [
@@ -68,7 +69,7 @@ async function fetchRegion(q: string, lat: number, lng: number, radius: number):
   return data.results || [];
 }
 
-function GarageCard({ shop, rank }: { shop: ExtendedPlaceResult; rank?: number }) {
+function GarageCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?: number; onSelect: (id: string) => void }) {
   const isOpen = shop.opening_hours?.open_now;
   const rating = shop.rating || 0;
 
@@ -76,7 +77,8 @@ function GarageCard({ shop, rank }: { shop: ExtendedPlaceResult; rank?: number }
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-3 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-blue-600/20 transition-colors group cursor-pointer"
+      onClick={() => onSelect(shop.place_id)}
+      className="flex items-center gap-3 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-blue-600/30 hover:bg-zinc-900/80 active:scale-[0.99] transition-all group cursor-pointer"
     >
       {/* Rank badge */}
       {rank && rank <= 3 ? (
@@ -227,6 +229,8 @@ function GaragesContent() {
   const [openOnly, setOpenOnly] = useState(false);
   const [minRating, setMinRating] = useState<number>(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
   const [allShops, setAllShops] = useState<ExtendedPlaceResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -459,11 +463,21 @@ function GaragesContent() {
         ) : (
           <div className="space-y-2">
             {garages.map((shop, i) => (
-              <GarageCard key={shop.place_id} shop={shop} rank={i + 1} />
+              <GarageCard
+                key={shop.place_id}
+                shop={shop}
+                rank={i + 1}
+                onSelect={(id) => { setSelectedPlaceId(id); setShowDetail(true); }}
+              />
             ))}
           </div>
         )}
       </div>
+
+      <PlaceDetail
+        placeId={showDetail ? selectedPlaceId : null}
+        onClose={() => { setShowDetail(false); setSelectedPlaceId(null); }}
+      />
     </div>
   );
 }

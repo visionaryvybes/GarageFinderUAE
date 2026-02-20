@@ -11,6 +11,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
 import { type ExtendedPlaceResult } from "@/lib/mock-data";
+import PlaceDetail from "@/components/PlaceDetail";
 
 const PARTS_CATEGORIES = [
   { label: "All Parts", query: "auto spare parts UAE", color: "#3b82f6" },
@@ -34,7 +35,7 @@ const EMIRATE_CONFIG = [
   { label: "Ajman", lat: 25.4052, lng: 55.5136, radius: 20000 },
 ];
 
-function PartsCard({ shop, rank }: { shop: ExtendedPlaceResult; rank?: number }) {
+function PartsCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?: number; onSelect: (id: string) => void }) {
   const isOpen = shop.opening_hours?.open_now;
   const isUsed = shop.name.toLowerCase().includes("used") ||
     shop.name.toLowerCase().includes("second") ||
@@ -44,7 +45,8 @@ function PartsCard({ shop, rank }: { shop: ExtendedPlaceResult; rank?: number })
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-3 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-orange-600/20 transition-colors group cursor-pointer"
+      onClick={() => onSelect(shop.place_id)}
+      className="flex items-center gap-3 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-orange-600/30 hover:bg-zinc-900/80 active:scale-[0.99] transition-all group cursor-pointer"
     >
       {rank && rank <= 3 ? (
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
@@ -168,6 +170,8 @@ export default function PartsPage() {
   const [allShops, setAllShops] = useState<ExtendedPlaceResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
 
   const fetchParts = useCallback(async (cat: string, em: string, searchTerm = "") => {
     setLoading(true);
@@ -385,10 +389,10 @@ export default function PartsPage() {
         )}
 
         {/* Chart */}
-        {!loading && filtered.length > 3 && <CategoryChart shops={filtered} />}
+        {filtered.length > 3 && <CategoryChart shops={filtered} />}
 
         {/* Results */}
-        {loading ? (
+        {loading && filtered.length === 0 ? (
           <div className="space-y-2">
             {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
@@ -415,13 +419,24 @@ export default function PartsPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className={`space-y-2 transition-opacity duration-300 ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
             {filtered.map((shop, i) => (
-              <PartsCard key={shop.place_id} shop={shop} rank={i + 1} />
+              <PartsCard
+                key={shop.place_id}
+                shop={shop}
+                rank={i + 1}
+                onSelect={(id) => { setSelectedPlaceId(id); setShowDetail(true); }}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Place Detail Panel */}
+      <PlaceDetail
+        placeId={showDetail ? selectedPlaceId : null}
+        onClose={() => { setShowDetail(false); setSelectedPlaceId(null); }}
+      />
     </div>
   );
 }

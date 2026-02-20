@@ -53,7 +53,8 @@ Advisor:`;
           contents: [{ parts: [{ text: fullPrompt }] }],
           generationConfig: {
             temperature: 0.6,
-            maxOutputTokens: 512,
+            maxOutputTokens: 1024,
+            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
       }
