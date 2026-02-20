@@ -40,5 +40,16 @@ export const SERVICE_TYPE_KEYWORDS: Record<string, string> = {
   dealer: "car dealership service center",
 };
 
-export const DEFAULT_CENTER = { lat: 40.7128, lng: -74.006 }; // NYC default
-export const DEFAULT_ZOOM = 13;
+export const UAE_REGIONS: Record<string, { lat: number; lng: number; label: string }> = {
+  all: { lat: 24.4539, lng: 54.3773, label: "All UAE" },
+  dubai: { lat: 25.2048, lng: 55.2708, label: "Dubai" },
+  abudhabi: { lat: 24.4539, lng: 54.3773, label: "Abu Dhabi" },
+  sharjah: { lat: 25.3463, lng: 55.4209, label: "Sharjah" },
+  ajman: { lat: 25.4052, lng: 55.5136, label: "Ajman" },
+  rak: { lat: 25.7895, lng: 55.9432, label: "Ras Al Khaimah" },
+  fujairah: { lat: 25.1288, lng: 56.3264, label: "Fujairah" },
+  uaq: { lat: 25.5647, lng: 55.5554, label: "Umm Al Quwain" },
+};
+
+export const DEFAULT_CENTER = UAE_REGIONS.dubai;
+export const DEFAULT_ZOOM = 12;

@@ -101,43 +101,49 @@ export default function Map({
     loadGoogleMaps().then(async (maps) => {
       if (cancelled || !mapRef.current) return;
 
-      const { Map } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
-      await google.maps.importLibrary("marker");
+      try {
+        const { Map } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
+        await google.maps.importLibrary("marker");
 
-      const map = new Map(mapRef.current, {
-        center,
-        zoom,
-        styles: MAP_STYLES,
-        disableDefaultUI: true,
-        zoomControl: true,
-        zoomControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_CENTER,
-        },
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-        gestureHandling: "greedy",
-        mapId: "garage-finder-map",
-      });
+        const map = new Map(mapRef.current, {
+          center,
+          zoom,
+          styles: MAP_STYLES,
+          disableDefaultUI: true,
+          zoomControl: true,
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_CENTER,
+          },
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+          gestureHandling: "greedy",
+          mapId: "garage-finder-map",
+        });
 
-      mapInstanceRef.current = map;
-      setMapLoaded(true);
+        mapInstanceRef.current = map;
+        setMapLoaded(true);
 
-      map.addListener("idle", () => {
-        const bounds = map.getBounds();
-        const center = map.getCenter();
-        if (bounds && center && onBoundsChange) {
-          const ne = bounds.getNorthEast();
-          const sw = bounds.getSouthWest();
-          onBoundsChange({
-            north: ne.lat(),
-            south: sw.lat(),
-            east: ne.lng(),
-            west: sw.lng(),
-            center: { lat: center.lat(), lng: center.lng() },
-          });
-        }
-      });
+        map.addListener("idle", () => {
+          const bounds = map.getBounds();
+          const center = map.getCenter();
+          if (bounds && center && onBoundsChange) {
+            const ne = bounds.getNorthEast();
+            const sw = bounds.getSouthWest();
+            onBoundsChange({
+              north: ne.lat(),
+              south: sw.lat(),
+              east: ne.lng(),
+              west: sw.lng(),
+              center: { lat: center.lat(), lng: center.lng() },
+            });
+          }
+        });
+      } catch (err) {
+        console.warn("Map initialization failed:", err);
+      }
+    }).catch((err) => {
+      console.warn("Google Maps API failed to load:", err);
     });
 
     return () => {
@@ -195,13 +201,13 @@ export default function Map({
           display:flex;align-items:center;justify-content:center;
           width:${isSelected ? "36px" : "30px"};
           height:${isSelected ? "36px" : "30px"};
-          background:${isSelected ? "#a78bfa" : "#e4e4e7"};
-          color:${isSelected ? "#09090b" : "#3f3f46"};
+          background:${isSelected ? "#2563eb" : "#e4e4e7"};
+          color:${isSelected ? "#ffffff" : "#3f3f46"};
           border-radius:50%;
           font-size:${isSelected ? "14px" : "12px"};
           font-weight:700;
           box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? "0.4" : "0.2"});
-          border:2px solid ${isSelected ? "#c4b5fd" : "white"};
+          border:2px solid ${isSelected ? "#60a5fa" : "white"};
           transition:all 0.2s;
           cursor:pointer;
           ${isSelected ? "transform:scale(1.1);" : ""}
