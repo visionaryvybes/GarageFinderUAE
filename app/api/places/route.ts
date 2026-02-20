@@ -176,6 +176,8 @@ export async function GET(request: NextRequest) {
       intent,
       searchedLocation: location,
       count: results.length,
+    }, {
+      headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" },
     });
   } catch (error) {
     console.error("Places API error:", error);

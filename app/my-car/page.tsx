@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Car, Sparkles, AlertTriangle, CheckCircle2, Clock, ChevronDown,
-  Wrench, Thermometer, Wind, Battery, Gauge, Shield, Zap,
+  Wrench, Thermometer, Wind, Gauge, Shield, Zap,
   MessageSquare, Send, BellRing, MapPin, Info, TrendingUp,
   RotateCcw, Star, X, Loader2, ArrowRight,
 } from "lucide-react";
@@ -457,8 +457,6 @@ export default function MyCarPage() {
   const urgentCount = data?.maintenanceItems?.filter(i => i.status === "urgent").length || 0;
   const dueSoonCount = data?.maintenanceItems?.filter(i => i.status === "due_soon").length || 0;
 
-  // Suppress unused import warnings
-  void Battery; void Wind; void Zap;
 
   return (
     <div className="min-h-screen bg-[#09090b]">

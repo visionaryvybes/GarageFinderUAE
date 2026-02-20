@@ -106,7 +106,9 @@ export async function POST(request: NextRequest) {
     // Remove permanently closed
     results = results.filter(r => (r as { business_status?: string }).business_status !== "CLOSED_PERMANENTLY");
 
-    return NextResponse.json({ analysis, results, intent, searchedLocation: location });
+    return NextResponse.json({ analysis, results, intent, searchedLocation: location }, {
+      headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" },
+    });
   } catch (error) {
     console.error("AI Search error:", error);
     return NextResponse.json({ error: "AI search failed" }, { status: 500 });
