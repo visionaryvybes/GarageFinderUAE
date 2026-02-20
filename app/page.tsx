@@ -29,7 +29,7 @@ const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-10 h-10 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
     </div>
   ),
 });
@@ -192,8 +192,8 @@ function HomeContent() {
     <div className="min-h-screen bg-black text-zinc-100">
 
       {/* ── STICKY HEADER ── */}
-      <header className="sticky top-0 z-40 bg-black/95 backdrop-blur-xl border-b border-[#1a1a1a]">
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+      <header className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800/60">
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
         <div className="px-4 py-3 flex items-center gap-3">
           {/* Logo */}
           <button
@@ -206,14 +206,14 @@ function HomeContent() {
             className="flex items-center gap-2.5 shrink-0 hover:opacity-80 transition-opacity"
           >
             <div className="relative w-9 h-9">
-              <div className="absolute inset-0 bg-blue-600 rounded-xl blur opacity-40" />
+              <div className="absolute inset-0 bg-violet-600 rounded-xl blur opacity-40" />
               <div className="relative w-9 h-9 bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700 rounded-xl flex items-center justify-center">
-                <Wrench className="w-4 h-4 text-blue-400" />
+                <Wrench className="w-4 h-4 text-violet-400" />
               </div>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-[17px] font-black tracking-tight leading-none text-white">
-                Garage<span className="text-blue-500">Finder</span>
+                Garage<span className="text-violet-400">Finder</span>
               </h1>
               <p className="text-[10px] text-zinc-500 font-medium tracking-wide">UAE · AI-POWERED</p>
             </div>
@@ -237,7 +237,7 @@ function HomeContent() {
               onClick={() => setShowMap(!showMap)}
               className={`shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium transition-all
                 ${showMap
-                  ? "bg-blue-500/10 border-blue-500/40 text-blue-400"
+                  ? "bg-violet-500/10 border-violet-500/40 text-violet-400"
                   : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
                 }`}
             >
@@ -297,7 +297,7 @@ function HomeContent() {
             <div className="skeleton h-6 w-40 mb-4 rounded-lg" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden border border-[#1a1a1a] bg-[#0a0a0a]">
+                <div key={i} className="rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900">
                   <div className="skeleton h-44 w-full" />
                   <div className="p-4 space-y-2">
                     <div className="skeleton h-5 w-3/4 rounded" />
@@ -324,7 +324,7 @@ function HomeContent() {
                     <>
                       <span>{brandName}</span>
                       <span className="text-zinc-500">Specialists</span>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-600/10 border border-blue-600/20 text-blue-400">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-violet-600/10 border border-violet-600/20 text-violet-400">
                         {places.length} found
                       </span>
                     </>
@@ -343,7 +343,7 @@ function HomeContent() {
               </div>
               <div className="hidden sm:flex items-center gap-4 text-xs text-zinc-600">
                 <span className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-yellow-400" /> Top rated</span>
-                <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-blue-500" /> AI matched</span>
+                <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-violet-400" /> AI matched</span>
               </div>
             </div>
 
@@ -396,7 +396,7 @@ function HomeContent() {
 
             {/* Spare Parts */}
             {partsShops.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-[#1a1a1a]">
+              <div className="mt-8 pt-8 border-t border-zinc-800/60">
                 <div className="flex items-center gap-2 mb-4">
                   <Package className="w-4 h-4 text-orange-400" />
                   <span className="text-sm font-bold text-zinc-300">Spare Parts Stores</span>
@@ -419,7 +419,7 @@ function HomeContent() {
         {/* No results */}
         {!isLoading && searchPerformed && places.length === 0 && (
           <div className="text-center py-16">
-            <div className="w-16 h-16 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-4">
               <Wrench className="w-8 h-8 text-zinc-700" />
             </div>
             {!HAS_API_KEY ? (
@@ -435,7 +435,7 @@ function HomeContent() {
                 <p className="text-sm text-zinc-600 mb-4">Try adjusting your filters, expanding your area, or using different keywords.</p>
                 <button
                   onClick={() => { setFilters(DEFAULT_FILTERS); searchPlaces(currentQuery, false, activeBrand); }}
-                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500 transition-colors"
+                  className="px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-500 transition-colors"
                 >
                   Clear filters & retry
                 </button>
@@ -446,9 +446,9 @@ function HomeContent() {
 
         {/* ── TRENDING ── */}
         {!isLoading && (
-          <section className={searchPerformed ? "border-t border-[#1a1a1a] pt-8" : ""}>
+          <section className={searchPerformed ? "border-t border-zinc-800/60 pt-8" : ""}>
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-4 h-4 text-blue-500" />
+              <TrendingUp className="w-4 h-4 text-violet-400" />
               <h3 className="text-lg font-bold text-zinc-100">Trending in UAE</h3>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -465,10 +465,10 @@ function HomeContent() {
                 <button
                   key={label}
                   onClick={() => searchPlaces(label, true)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700 hover:bg-zinc-900/80 transition-all text-left group"
+                  className="flex items-center justify-between p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 transition-all text-left group"
                 >
                   <span className="text-sm text-zinc-400 group-hover:text-white transition-colors line-clamp-1">{label}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-zinc-700 group-hover:text-blue-500 transition-colors shrink-0 ml-1" />
+                  <ChevronRight className="w-3.5 h-3.5 text-zinc-700 group-hover:text-violet-400 transition-colors shrink-0 ml-1" />
                 </button>
               ))}
             </div>
@@ -485,13 +485,13 @@ function HomeContent() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-zinc-950"
           >
-            <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-3 px-4 py-3 bg-zinc-950/90 backdrop-blur border-b border-[#1a1a1a]">
+            <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-3 px-4 py-3 bg-zinc-950/90 backdrop-blur border-b border-zinc-800/60">
               <h2 className="font-bold text-zinc-100 flex-1">
                 {places.length} locations on map
               </h2>
               <button
                 onClick={handleLocate}
-                className="p-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-blue-600/40 transition-colors"
+                className="p-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-violet-500/40 transition-colors"
               >
                 <Locate className="w-4 h-4 text-zinc-400" />
               </button>
@@ -530,7 +530,7 @@ export default function Home() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <HomeContent />

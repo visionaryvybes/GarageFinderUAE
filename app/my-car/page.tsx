@@ -1,608 +1,736 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Car, Zap, ChevronRight, Star, AlertTriangle,
-  CheckCircle, Clock, Wrench, Lock, BarChart3,
-  ArrowRight, RefreshCw, Info, Shield, Gauge,
+  Car, Sparkles, AlertTriangle, CheckCircle2, Clock, ChevronDown,
+  Wrench, Thermometer, Wind, Battery, Gauge, Shield, Zap,
+  MessageSquare, Send, BellRing, MapPin, Info, TrendingUp,
+  RotateCcw, Star, X, Loader2, ArrowRight,
 } from "lucide-react";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
-} from "recharts";
-import type { CarAdvisorResponse, MaintenanceItem } from "@/app/api/car-advisor/route";
+import Link from "next/link";
+import type {
+  CarAdvisorResponse, MaintenanceItem, SafetyAlert,
+  UAEClimateAlert, WarningLight,
+} from "@/app/api/car-advisor/route";
 
+/* ── Constants ── */
 const CAR_BRANDS = [
-  "Toyota", "Nissan", "Honda", "Hyundai", "Kia", "Mitsubishi", "Mazda",
-  "BMW", "Mercedes-Benz", "Audi", "Volkswagen", "Porsche",
-  "Ford", "Chevrolet", "Dodge", "Jeep", "GMC", "Cadillac",
-  "Land Rover", "Jaguar", "Volvo", "Lexus", "Infiniti",
-  "Ferrari", "Lamborghini", "Bentley", "Rolls-Royce",
-  "Tesla", "Genesis", "Peugeot", "Renault", "Fiat",
-  "Other",
+  "Toyota", "Nissan", "Honda", "Mitsubishi", "Hyundai", "Kia",
+  "BMW", "Mercedes-Benz", "Audi", "Volkswagen", "Porsche", "Ferrari",
+  "Lamborghini", "Maserati", "Land Rover", "Jaguar", "Bentley", "Rolls-Royce",
+  "Ford", "Chevrolet", "GMC", "Dodge", "Jeep", "Cadillac",
+  "Lexus", "Infiniti", "Acura", "Mazda", "Subaru", "Volvo",
+  "Peugeot", "Renault", "Fiat", "Alfa Romeo", "MINI",
 ];
 
-const ENGINE_TYPES = [
-  { value: "petrol", label: "Petrol / Gasoline" },
-  { value: "diesel", label: "Diesel" },
-  { value: "hybrid", label: "Hybrid (Petrol)" },
-  { value: "plugin_hybrid", label: "Plug-in Hybrid" },
-  { value: "electric", label: "Full Electric" },
+const QUICK_QUESTIONS = [
+  "My AC is blowing warm air, what should I do?",
+  "How often should I change oil in UAE heat?",
+  "What tyre brand is best for UAE summer?",
+  "My car vibrates at high speed on the highway",
+  "Battery keeps dying, is it the heat?",
+  "Is it safe to drive with the check engine light on?",
 ];
 
-const STATUS_CONFIG = {
-  urgent: { color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", icon: AlertTriangle, label: "Urgent" },
-  due_soon: { color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20", icon: Clock, label: "Due Soon" },
-  ok: { color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", icon: CheckCircle, label: "OK" },
-  unknown: { color: "text-zinc-500", bg: "bg-zinc-500/10", border: "border-zinc-500/20", icon: Info, label: "Unknown" },
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Engine: "#ef4444",
-  Brakes: "#f59e0b",
-  Suspension: "#10b981",
-  Electrical: "#8b5cf6",
-  "AC & Climate": "#06b6d4",
-  Tyres: "#f97316",
-  Fluids: "#3b82f6",
-  Filters: "#a78bfa",
-  Body: "#ec4899",
-};
-
-function MileageBar({ item, currentMileage }: { item: MaintenanceItem; currentMileage: number }) {
-  const lastKm = item.lastDoneKm ?? (item.dueAtKm - item.intervalKm);
-  const progress = Math.min(100, Math.max(0,
-    ((currentMileage - lastKm) / item.intervalKm) * 100
-  ));
-  const isOverdue = currentMileage > item.dueAtKm;
+/* ── HealthGauge ── */
+function HealthGauge({ score }: { score: number }) {
+  const s = Math.max(0, Math.min(100, score));
+  const angle = -135 + (s / 100) * 270;
+  const color = s >= 75 ? "#10b981" : s >= 50 ? "#f59e0b" : "#ef4444";
+  const label = s >= 80 ? "Excellent" : s >= 65 ? "Good" : s >= 45 ? "Fair" : "Needs Attention";
 
   return (
-    <div className="w-full mt-2">
-      <div className="flex items-center justify-between text-[10px] text-zinc-600 mb-1">
-        <span>{lastKm > 0 ? `${lastKm.toLocaleString()} km` : "—"}</span>
-        <span>{isOverdue ? "OVERDUE" : `${(item.dueAtKm - currentMileage).toLocaleString()} km left`}</span>
-        <span>{item.dueAtKm.toLocaleString()} km</span>
+    <div className="flex flex-col items-center">
+      <div className="relative w-36 h-36">
+        <svg viewBox="0 0 100 100" className="w-full h-full -rotate-[135deg]">
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#27272a" strokeWidth="8" strokeDasharray="213 300" strokeLinecap="round" />
+          <motion.circle cx="50" cy="50" r="38" fill="none" stroke={color} strokeWidth="8"
+            strokeDasharray={`${(s / 100) * 213} 300`} strokeLinecap="round"
+            initial={{ strokeDasharray: "0 300" }}
+            animate={{ strokeDasharray: `${(s / 100) * 213} 300` }}
+            transition={{ duration: 1.5, ease: "easeOut" }} />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <motion.div className="absolute w-0.5 h-10 origin-bottom rounded-full"
+            style={{ background: color, bottom: "50%" }}
+            initial={{ rotate: -135 }} animate={{ rotate: angle }}
+            transition={{ duration: 1.5, ease: "easeOut" }} />
+          <div className="relative z-10 flex flex-col items-center mt-3">
+            <motion.span className="text-2xl font-black" style={{ color }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+              {s}
+            </motion.span>
+            <span className="text-[10px] text-[#71717a] font-semibold">/100</span>
+          </div>
+        </div>
       </div>
-      <div className="h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className={`h-full rounded-full ${
-            isOverdue ? "bg-red-500" :
-            progress > 80 ? "bg-amber-400" :
-            progress > 50 ? "bg-blue-500" :
-            "bg-emerald-500"
-          }`}
-        />
+      <motion.span className="text-xs font-bold mt-1" style={{ color }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+        {label}
+      </motion.span>
+    </div>
+  );
+}
+
+/* ── MileageBar ── */
+function MileageBar({ item }: { item: MaintenanceItem }) {
+  if (!item.intervalKm) return null;
+  const used = item.overdueBy > 0 ? item.intervalKm : item.intervalKm - (item.dueAtKm - (item.lastDoneKm ?? (item.dueAtKm - item.intervalKm)));
+  const pct = Math.min(100, Math.max(0, (used / item.intervalKm) * 100));
+  const color = pct >= 100 ? "#ef4444" : pct >= 80 ? "#f59e0b" : "#10b981";
+  return (
+    <div className="mt-2">
+      <div className="flex justify-between text-[10px] text-[#52525b] mb-1">
+        <span>Interval: {item.intervalKm.toLocaleString()} km</span>
+        {item.overdueBy > 0
+          ? <span className="text-red-400 font-bold">Overdue {item.overdueBy.toLocaleString()} km</span>
+          : <span>Due at {item.dueAtKm.toLocaleString()} km</span>}
+      </div>
+      <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
+        <motion.div className="h-full rounded-full" style={{ background: color }}
+          initial={{ width: 0 }} animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }} />
       </div>
     </div>
   );
 }
 
-function MaintenanceCard({ item, mileage, isPremium, index }: {
-  item: MaintenanceItem;
-  mileage: number;
-  isPremium: boolean;
-  index: number;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const cfg = STATUS_CONFIG[item.status] || STATUS_CONFIG.unknown;
-  const StatusIcon = cfg.icon;
-  const isLocked = !isPremium && index >= 5;
+/* ── MaintenanceCard ── */
+function MaintenanceCard({ item, index }: { item: MaintenanceItem; index: number }) {
+  const [open, setOpen] = useState(false);
+  const statusStyles: Record<string, { border: string; bg: string; badge: string; icon: React.ElementType; ic: string }> = {
+    urgent: { border: "border-l-red-500", bg: "bg-red-500/5", badge: "bg-red-500/15 text-red-400 border-red-500/25", icon: AlertTriangle, ic: "text-red-400" },
+    due_soon: { border: "border-l-amber-500", bg: "bg-amber-500/5", badge: "bg-amber-500/15 text-amber-400 border-amber-500/25", icon: Clock, ic: "text-amber-400" },
+    ok: { border: "border-l-emerald-500", bg: "bg-emerald-500/5", badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25", icon: CheckCircle2, ic: "text-emerald-400" },
+    unknown: { border: "border-l-[#3f3f46]", bg: "", badge: "bg-[#27272a] text-[#71717a] border-[#3f3f46]", icon: Info, ic: "text-[#52525b]" },
+  };
+  const s = statusStyles[item.status] || statusStyles.unknown;
+  const Icon = s.icon;
+  const diffColors: Record<string, string> = { "Easy": "text-emerald-400", "Medium": "text-amber-400", "Hard": "text-orange-400", "Workshop Only": "text-red-400" };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04 }}
-      className={`rounded-xl border transition-all ${cfg.border} ${cfg.bg} ${isLocked ? "opacity-60" : ""}`}
-    >
-      <button
-        onClick={() => !isLocked && setExpanded(!expanded)}
-        className="w-full flex items-center gap-3 p-3 text-left"
-      >
-        <StatusIcon className={`w-4 h-4 shrink-0 ${cfg.color}`} />
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.025 }}
+      className={`rounded-xl border-l-2 border border-[#27272a] ${s.border} ${s.bg} overflow-hidden`}>
+      <button onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-3 p-3 text-left hover:bg-white/[0.02] transition-colors">
+        <Icon className={`w-4 h-4 shrink-0 ${s.ic}`} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[13px] font-semibold text-zinc-100">{item.item}</p>
-            <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full border ${cfg.border} ${cfg.color} ${cfg.bg}`}>
-              {cfg.label}
+            <span className="text-sm font-semibold text-[#fafafa]">{item.item}</span>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${s.badge}`}>
+              {item.status === "urgent" ? "URGENT" : item.status === "due_soon" ? "DUE SOON" : item.status === "ok" ? "OK" : "CHECK"}
             </span>
-            {isLocked && (
-              <span className="flex items-center gap-0.5 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400">
-                <Lock className="w-2.5 h-2.5" /> Premium
-              </span>
-            )}
           </div>
-          <p className="text-[11px] text-zinc-600 mt-0.5">
-            Every {item.intervalKm.toLocaleString()} km · AED {item.estimatedCostAed}
-          </p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <span className="text-[11px] text-[#71717a]">{item.category}</span>
+            <span className="text-[11px] text-[#3f3f46]">·</span>
+            <span className="text-[11px] font-semibold text-violet-400">{item.estimatedCostAed} AED</span>
+          </div>
         </div>
-        {!isLocked && (
-          <ChevronRight className={`w-3.5 h-3.5 text-zinc-600 transition-transform shrink-0 ${expanded ? "rotate-90" : ""}`} />
-        )}
-        {isLocked && <Lock className="w-3.5 h-3.5 text-violet-500 shrink-0" />}
+        <ChevronDown className={`w-4 h-4 text-[#52525b] shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
-
-      {!isLocked && (
-        <AnimatePresence>
-          {expanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-            >
-              <div className="px-3 pb-3 border-t border-[#1a1a1a] pt-3 space-y-2">
-                <p className="text-[12px] text-zinc-400">{item.description}</p>
-                <MileageBar item={item} currentMileage={mileage} />
-                <div className="flex items-center gap-4 flex-wrap pt-1">
-                  <div>
-                    <p className="text-[9px] text-zinc-600 font-semibold">ESTIMATED COST</p>
-                    <p className="text-[12px] font-black text-zinc-200">AED {item.estimatedCostAed}</p>
-                  </div>
-                  <div>
-                    <p className="text-[9px] text-zinc-600 font-semibold">DIY DIFFICULTY</p>
-                    <p className={`text-[12px] font-black ${
-                      item.diyDifficulty === "Easy" ? "text-emerald-400" :
-                      item.diyDifficulty === "Medium" ? "text-amber-400" :
-                      item.diyDifficulty === "Hard" ? "text-red-400" :
-                      "text-zinc-500"
-                    }`}>{item.diyDifficulty}</p>
-                  </div>
-                  <div>
-                    <p className="text-[9px] text-zinc-600 font-semibold">DUE AT</p>
-                    <p className="text-[12px] font-black text-zinc-200">{item.dueAtKm.toLocaleString()} km</p>
-                  </div>
+      <AnimatePresence>
+        {open && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
+            <div className="px-4 pb-4 pt-1 space-y-3 border-t border-[#27272a]/50">
+              <p className="text-[13px] text-[#a1a1aa] leading-relaxed">{item.description}</p>
+              {item.uaeNote && (
+                <div className="flex gap-2 p-2.5 rounded-lg bg-orange-500/8 border border-orange-500/15">
+                  <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0 mt-0.5" />
+                  <p className="text-[12px] text-orange-300">{item.uaeNote}</p>
                 </div>
+              )}
+              <div className="flex items-center gap-4 text-[11px]">
+                <div><span className="text-[#52525b]">DIY: </span><span className={`font-bold ${diffColors[item.diyDifficulty] || "text-[#a1a1aa]"}`}>{item.diyDifficulty}</span></div>
+                {item.intervalKm > 0 && <div><span className="text-[#52525b]">Interval: </span><span className="text-[#a1a1aa] font-semibold">{item.intervalKm.toLocaleString()} km</span></div>}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
+              {item.intervalKm > 0 && <MileageBar item={item} />}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
 
-function HealthGauge({ score }: { score: number }) {
-  const color = score >= 80 ? "#10b981" : score >= 60 ? "#f59e0b" : score >= 40 ? "#f97316" : "#ef4444";
-  const label = score >= 80 ? "Excellent" : score >= 60 ? "Good" : score >= 40 ? "Fair" : "Needs Attention";
-
+/* ── TyrePressureCard ── */
+function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-28 h-28">
-        <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-          <circle cx="50" cy="50" r="40" fill="none" stroke="#1a1a1a" strokeWidth="10" />
-          <motion.circle
-            cx="50" cy="50" r="40" fill="none"
-            stroke={color} strokeWidth="10"
-            strokeLinecap="round"
-            strokeDasharray={`${2 * Math.PI * 40}`}
-            initial={{ strokeDashoffset: 2 * Math.PI * 40 }}
-            animate={{ strokeDashoffset: 2 * Math.PI * 40 * (1 - score / 100) }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-black" style={{ color }}>{score}</span>
-          <span className="text-[9px] text-zinc-600 font-semibold">/100</span>
+    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
+        <Gauge className="w-4 h-4 text-violet-400" />
+        <span className="text-sm font-bold text-[#fafafa]">Tyre Pressure</span>
+        <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/12 border border-orange-500/20 text-orange-400">UAE Adjusted</span>
+      </div>
+      <div className="p-4">
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {[
+            { label: "Front", psi: data.frontPsi, bar: data.frontBar },
+            { label: "Rear", psi: data.rearPsi, bar: data.rearBar },
+            { label: "Spare", psi: data.sparePsi, bar: Math.round(data.sparePsi * 0.0689 * 10) / 10 },
+          ].map(t => (
+            <div key={t.label} className="text-center p-3 rounded-xl bg-[#1c1c1f] border border-[#27272a]">
+              <div className="text-2xl font-black text-violet-400">{t.psi}</div>
+              <div className="text-[10px] text-[#52525b] font-semibold">PSI</div>
+              <div className="text-[10px] text-[#71717a] mt-0.5">{t.bar} bar</div>
+              <div className="text-[11px] font-bold text-[#a1a1aa] mt-1">{t.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2 p-2.5 rounded-xl bg-amber-500/8 border border-amber-500/15">
+          <Thermometer className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-[12px] text-amber-300 leading-relaxed">{data.uaeNote}</p>
+            <p className="text-[11px] text-[#71717a] mt-1">Check frequency: {data.checkFrequency}</p>
+          </div>
         </div>
       </div>
-      <p className="text-[13px] font-bold mt-1" style={{ color }}>{label}</p>
     </div>
   );
 }
 
-function CarForm({ onSubmit, loading }: { onSubmit: (data: Record<string, unknown>) => void; loading: boolean }) {
-  const [formData, setFormData] = useState({
-    brand: "Toyota",
-    model: "",
-    year: new Date().getFullYear() - 3,
-    mileage: 75000,
-    engineType: "petrol",
-    lastOilChangeMileage: "",
-    lastServiceDate: "",
-    additionalInfo: "",
-  });
-
-  const set = (key: string, value: string | number) =>
-    setFormData(prev => ({ ...prev, [key]: value }));
-
+/* ── SafetySection ── */
+function SafetySection({ alerts }: { alerts: SafetyAlert[] }) {
+  if (!alerts?.length) return <p className="text-center py-8 text-[#52525b] text-sm">No critical safety alerts. Your vehicle appears safe.</p>;
+  const cfg: Record<string, { bg: string; border: string; badge: string; icon: React.ElementType; ic: string }> = {
+    critical: { bg: "bg-red-500/8", border: "border-red-500/25", badge: "bg-red-500/15 text-red-400", icon: Shield, ic: "text-red-400" },
+    warning: { bg: "bg-amber-500/8", border: "border-amber-500/25", badge: "bg-amber-500/15 text-amber-400", icon: AlertTriangle, ic: "text-amber-400" },
+    info: { bg: "bg-violet-500/8", border: "border-violet-500/25", badge: "bg-violet-500/15 text-violet-400", icon: Info, ic: "text-violet-400" },
+  };
+  const sorted = [...alerts].sort((a, b) => { const o = { critical: 0, warning: 1, info: 2 }; return o[a.severity] - o[b.severity]; });
   return (
-    <form
-      onSubmit={e => { e.preventDefault(); onSubmit(formData); }}
-      className="space-y-4"
-    >
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">Brand</label>
-          <select
-            value={formData.brand}
-            onChange={e => set("brand", e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-zinc-100 outline-none focus:border-blue-600/40 transition-colors"
-          >
-            {CAR_BRANDS.map(b => <option key={b} value={b}>{b}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">Model</label>
-          <input
-            type="text"
-            value={formData.model}
-            onChange={e => set("model", e.target.value)}
-            placeholder="e.g. Camry, X5..."
-            required
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-600/40 transition-colors"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">Year</label>
-          <input
-            type="number"
-            value={formData.year}
-            onChange={e => set("year", parseInt(e.target.value))}
-            min={1990}
-            max={new Date().getFullYear() + 1}
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white outline-none focus:border-blue-600/40 transition-colors"
-          />
-        </div>
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">Engine Type</label>
-          <select
-            value={formData.engineType}
-            onChange={e => set("engineType", e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-zinc-100 outline-none focus:border-blue-600/40 transition-colors"
-          >
-            {ENGINE_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className="text-[11px] text-zinc-500 font-semibold block mb-1">
-          Current Mileage: <span className="text-blue-400">{formData.mileage.toLocaleString()} km</span>
-        </label>
-        <input
-          type="range"
-          min={0}
-          max={500000}
-          step={1000}
-          value={formData.mileage}
-          onChange={e => set("mileage", parseInt(e.target.value))}
-          className="w-full accent-blue-500"
-        />
-        <div className="flex justify-between text-[10px] text-zinc-600 mt-0.5">
-          <span>0 km</span><span>250,000 km</span><span>500,000 km</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">
-            Last Oil Change (km) <span className="text-zinc-700">optional</span>
-          </label>
-          <input
-            type="number"
-            value={formData.lastOilChangeMileage}
-            onChange={e => set("lastOilChangeMileage", e.target.value)}
-            placeholder="e.g. 70000"
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-600/40 transition-colors"
-          />
-        </div>
-        <div>
-          <label className="text-[11px] text-zinc-500 font-semibold block mb-1">
-            Last Service Date <span className="text-zinc-700">optional</span>
-          </label>
-          <input
-            type="date"
-            value={formData.lastServiceDate}
-            onChange={e => set("lastServiceDate", e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-zinc-300 outline-none focus:border-blue-600/40 transition-colors"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="text-[11px] text-zinc-500 font-semibold block mb-1">
-          Additional Info <span className="text-zinc-700">optional</span>
-        </label>
-        <textarea
-          value={formData.additionalInfo}
-          onChange={e => set("additionalInfo", e.target.value)}
-          placeholder="Any issues, unusual sounds, warning lights..."
-          rows={2}
-          className="w-full px-3 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-600/40 transition-colors resize-none"
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading || !formData.model}
-        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold text-sm hover:opacity-90 disabled:opacity-50 transition-all"
-      >
-        {loading ? (
-          <>
-            <RefreshCw className="w-4 h-4 animate-spin" />
-            Analyzing with AI...
-          </>
-        ) : (
-          <>
-            <Zap className="w-4 h-4" />
-            Generate Maintenance Plan
-          </>
-        )}
-      </button>
-    </form>
+    <div className="space-y-3">
+      {sorted.map((alert, i) => {
+        const c = cfg[alert.severity] || cfg.info;
+        const Icon = c.icon;
+        return (
+          <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
+            className={`rounded-xl p-4 border ${c.bg} ${c.border}`}>
+            <div className="flex items-start gap-3">
+              <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center shrink-0`}>
+                <Icon className={`w-4 h-4 ${c.ic}`} />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="text-sm font-bold text-[#fafafa]">{alert.item}</h4>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${c.badge}`}>{alert.severity.toUpperCase()}</span>
+                </div>
+                <p className="text-[12px] text-[#a1a1aa] leading-relaxed mb-2">{alert.description}</p>
+                <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+                  <p className="text-[12px] text-[#fafafa] font-medium"><span className={`font-bold ${c.ic}`}>Action: </span>{alert.action}</p>
+                </div>
+                {alert.estimatedCostAed && <p className="text-[11px] text-[#71717a] mt-2">Est. cost: <span className="text-violet-400 font-semibold">{alert.estimatedCostAed} AED</span></p>}
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }
 
-export default function MyCarPage() {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<CarAdvisorResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [mileage, setMileage] = useState(75000);
-  const [isPremium] = useState(false); // Toggle for premium users
-  const [activeFilter, setActiveFilter] = useState<"all" | "urgent" | "due_soon" | "ok">("all");
+/* ── UAEClimateSection ── */
+function UAEClimateSection({ alerts }: { alerts: UAEClimateAlert[] }) {
+  if (!alerts?.length) return <p className="text-center py-8 text-[#52525b] text-sm">No climate alerts.</p>;
+  const pOrder = { high: 0, medium: 1, low: 2 };
+  const sorted = [...alerts].sort((a, b) => pOrder[a.priority] - pOrder[b.priority]);
+  const sIcons: Record<string, React.ElementType> = { summer: Thermometer, winter: Wind, "year-round": TrendingUp };
+  const pStyles: Record<string, string> = { high: "border-l-orange-500 bg-orange-500/5", medium: "border-l-amber-500 bg-amber-500/5", low: "border-l-[#3f3f46]" };
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {sorted.map((alert, i) => {
+        const Icon = sIcons[alert.season] || Info;
+        return (
+          <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
+            className={`rounded-xl p-4 border-l-2 border border-[#27272a] ${pStyles[alert.priority]}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <Icon className={`w-4 h-4 ${alert.priority === "high" ? "text-orange-400" : "text-amber-400"}`} />
+              <h4 className="text-sm font-bold text-[#fafafa]">{alert.title}</h4>
+              {alert.priority === "high" && <span className="ml-auto text-[9px] font-black px-1.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/25">HIGH</span>}
+            </div>
+            <p className="text-[12px] text-[#a1a1aa] leading-relaxed">{alert.description}</p>
+            <p className="text-[10px] text-[#52525b] mt-2 capitalize">{alert.season}</p>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
 
-  const handleSubmit = async (data: Record<string, unknown>) => {
+/* ── WarningLightsSection ── */
+function WarningLightsSection({ lights }: { lights: WarningLight[] }) {
+  if (!lights?.length) return <p className="text-center py-8 text-[#52525b] text-sm">No warning light data.</p>;
+  const uStyles: Record<string, { border: string; ic: string }> = {
+    stop_now: { border: "border-l-red-500 bg-red-500/5", ic: "text-red-400" },
+    service_soon: { border: "border-l-amber-500 bg-amber-500/5", ic: "text-amber-400" },
+    informational: { border: "border-l-[#3f3f46]", ic: "text-[#52525b]" },
+  };
+  const cStyles: Record<string, string> = { red: "bg-red-500 text-white", amber: "bg-amber-500 text-black", green: "bg-emerald-500 text-white", blue: "bg-blue-500 text-white", orange: "bg-orange-500 text-white" };
+  return (
+    <div className="space-y-2">
+      {lights.map((light, i) => {
+        const st = uStyles[light.urgency] || uStyles.informational;
+        return (
+          <div key={i} className={`rounded-xl p-3.5 border-l-2 border border-[#27272a] ${st.border}`}>
+            <div className="flex items-start gap-3">
+              <div className={`px-2 py-1 rounded text-[10px] font-black shrink-0 ${cStyles[light.color] || "bg-[#27272a] text-[#a1a1aa]"}`}>{light.color.toUpperCase()}</div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-[#fafafa]">{light.name}</h4>
+                  {light.urgency === "stop_now" && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/25 animate-pulse">STOP NOW</span>}
+                </div>
+                <p className="text-[12px] text-[#a1a1aa] mt-0.5 leading-relaxed">{light.meaning}</p>
+                <p className="text-[12px] text-[#fafafa] mt-1.5 font-medium"><span className={`font-bold ${st.ic}`}>Action: </span>{light.action}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── ServiceReminderWidget ── */
+function ServiceReminderWidget({ data, brand, model }: { data: CarAdvisorResponse; brand: string; model: string }) {
+  const [reminderSet, setReminderSet] = useState(false);
+  const [customKm, setCustomKm] = useState("");
+  const key = `service-reminder-${brand}-${model}`;
+  useEffect(() => { if (localStorage.getItem(key)) setReminderSet(true); }, [key]);
+  const save = () => {
+    const km = parseInt(customKm) || data.nextServiceKm;
+    localStorage.setItem(key, JSON.stringify({ vehicle: `${brand} ${model}`, nextServiceKm: km, nextServiceDate: data.nextServiceEstimatedDate, setAt: new Date().toISOString() }));
+    setReminderSet(true);
+  };
+  if (reminderSet) return (
+    <div className="rounded-2xl bg-emerald-500/8 border border-emerald-500/20 p-4 flex items-center gap-3">
+      <BellRing className="w-5 h-5 text-emerald-400 shrink-0" />
+      <div className="flex-1">
+        <p className="text-sm font-bold text-emerald-400">Service Reminder Set</p>
+        <p className="text-[12px] text-[#71717a]">Next service: {data.nextServiceKm.toLocaleString()} km · {data.nextServiceEstimatedDate}</p>
+      </div>
+      <button onClick={() => { localStorage.removeItem(key); setReminderSet(false); }} className="p-1 hover:bg-emerald-500/10 rounded-lg transition-colors">
+        <X className="w-4 h-4 text-[#52525b]" />
+      </button>
+    </div>
+  );
+  return (
+    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4">
+      <div className="flex items-center gap-2 mb-3"><BellRing className="w-4 h-4 text-violet-400" /><h3 className="text-sm font-bold text-[#fafafa]">Set Service Reminder</h3></div>
+      <div className="flex gap-2 mb-3">
+        <input type="number" value={customKm} onChange={e => setCustomKm(e.target.value)}
+          placeholder={`e.g. ${data.nextServiceKm.toLocaleString()}`}
+          className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+        <span className="text-sm text-[#71717a] self-center">km</span>
+      </div>
+      <button onClick={save} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 text-white text-sm font-bold transition-all">
+        <BellRing className="w-4 h-4" />Save Reminder
+      </button>
+      <p className="text-[11px] text-[#52525b] mt-2 text-center">Saved locally to your browser</p>
+    </div>
+  );
+}
+
+/* ── AIChat ── */
+function AIChat({ carDetails }: { carDetails: { brand: string; model: string; year: number; mileage: number; engineType: string } }) {
+  const [messages, setMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  const send = async (text?: string) => {
+    const q = text || input.trim();
+    if (!q || loading) return;
+    setInput("");
+    const newMsgs = [...messages, { role: "user" as const, content: q }];
+    setMessages(newMsgs);
     setLoading(true);
-    setError(null);
-    setResult(null);
-    setMileage(data.mileage as number);
     try {
-      const res = await fetch("/api/car-advisor", {
+      const res = await fetch("/api/car-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ question: q, carDetails, history: messages.slice(-4) }),
       });
-      if (!res.ok) throw new Error("Request failed");
-      const json = await res.json();
-      if (json.error) throw new Error(json.error);
-      setResult(json);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+      const d = await res.json();
+      setMessages(prev => [...prev, { role: "assistant", content: d.answer || "Sorry, couldn't process that." }]);
+    } catch {
+      setMessages(prev => [...prev, { role: "assistant", content: "Connection error. Please try again." }]);
+    } finally { setLoading(false); }
   };
 
-  const filteredItems = result?.maintenanceItems.filter(
-    item => activeFilter === "all" || item.status === activeFilter
-  ) || [];
-
-  // Category breakdown chart
-  const categoryData = result ? Object.entries(
-    result.maintenanceItems.reduce((acc, item) => {
-      const cat = item.category || "Other";
-      if (!acc[cat]) acc[cat] = { urgent: 0, due_soon: 0, ok: 0 };
-      acc[cat][item.status === "unknown" ? "ok" : item.status]++;
-      return acc;
-    }, {} as Record<string, { urgent: number; due_soon: number; ok: number }>)
-  ).map(([name, counts]) => ({ name, ...counts })) : [];
-
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-8">
-      {/* Header */}
-      <div className="border-b border-[#1a1a1a] bg-[#050505]">
-        <div className="max-w-5xl mx-auto px-3 py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-8 h-8 rounded-xl bg-violet-500/15 border border-violet-500/20 flex items-center justify-center">
-                  <Car className="w-4 h-4 text-violet-400" />
-                </div>
-                <h1 className="text-xl font-black tracking-tight text-white">
-                  My <span className="text-violet-400">Car Advisor</span>
-                </h1>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400">
-                  AI-POWERED
-                </span>
-              </div>
-              <p className="text-[12px] text-zinc-500">
-                Enter your car details to get a complete factory-based maintenance schedule optimised for UAE conditions.
-              </p>
+    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
+        <MessageSquare className="w-4 h-4 text-violet-400" />
+        <span className="text-sm font-bold text-[#fafafa]">Ask Your AI Advisor</span>
+        <div className="ml-auto flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[10px] text-[#71717a]">Online</span></div>
+      </div>
+      <div className="h-56 overflow-y-auto p-4 space-y-3">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full gap-3">
+            <div className="w-10 h-10 rounded-full bg-violet-500/15 flex items-center justify-center"><Sparkles className="w-5 h-5 text-violet-400" /></div>
+            <p className="text-sm text-[#71717a] text-center">Ask me anything about your {carDetails.brand} {carDetails.model}</p>
+          </div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${m.role === "user" ? "bg-violet-600 text-white rounded-tr-sm" : "bg-[#1c1c1f] text-[#a1a1aa] rounded-tl-sm border border-[#27272a]"}`}>
+              {m.content}
             </div>
           </div>
-
-          {/* Premium banner */}
-          {!isPremium && (
-            <div className="mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-violet-500/5 border border-violet-500/15">
-              <Lock className="w-4 h-4 text-violet-400 shrink-0" />
-              <div className="flex-1">
-                <p className="text-[12px] text-zinc-300 font-semibold">
-                  Unlock full maintenance history, cost tracking & garage booking
-                </p>
-                <p className="text-[10px] text-zinc-600">Premium · AED 9.99/month · Coming soon</p>
-              </div>
-              <button className="px-3 py-1.5 rounded-lg bg-violet-600 text-white text-[11px] font-bold hover:bg-violet-500 transition-colors shrink-0">
-                Notify Me
-              </button>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="bg-[#1c1c1f] rounded-2xl rounded-tl-sm px-3.5 py-2.5 border border-[#27272a] flex gap-1 items-center">
+              <Loader2 className="w-3.5 h-3.5 text-violet-400 animate-spin" /><span className="text-[12px] text-[#52525b]">Thinking...</span>
             </div>
-          )}
+          </div>
+        )}
+        <div ref={endRef} />
+      </div>
+      {messages.length === 0 && (
+        <div className="px-4 pb-3">
+          <p className="text-[10px] font-bold text-[#52525b] uppercase tracking-wider mb-2">Quick Questions</p>
+          <div className="flex flex-wrap gap-1.5">
+            {QUICK_QUESTIONS.slice(0, 4).map(q => (
+              <button key={q} onClick={() => send(q)}
+                className="text-[11px] px-2.5 py-1 rounded-full bg-[#1c1c1f] border border-[#27272a] text-[#71717a] hover:text-violet-400 hover:border-violet-500/30 transition-all">
+                {q.length > 32 ? q.slice(0, 32) + "…" : q}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="px-4 pb-4">
+        <div className="flex gap-2">
+          <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()}
+            placeholder="Ask about your car..."
+            className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3.5 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+          <button onClick={() => send()} disabled={!input.trim() || loading}
+            className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 disabled:opacity-40 text-white transition-all">
+            <Send className="w-4 h-4" />
+          </button>
         </div>
       </div>
+    </div>
+  );
+}
 
-      <div className="max-w-5xl mx-auto px-3 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-          {/* Form */}
-          <div className="lg:col-span-2">
-            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
-              <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                <Car className="w-3 h-3" /> VEHICLE DETAILS
-              </p>
-              <CarForm onSubmit={handleSubmit} loading={loading} />
+/* ── Main Page ── */
+export default function MyCarPage() {
+  const [form, setForm] = useState({
+    brand: "Toyota", model: "", year: new Date().getFullYear() - 2,
+    mileage: 75000, engineType: "Petrol / Gasoline",
+    lastOilChangeMileage: "", lastServiceDate: "", additionalInfo: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<CarAdvisorResponse | null>(null);
+  const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState<"maintenance" | "safety" | "climate" | "warnings">("maintenance");
+  const [filterStatus, setFilterStatus] = useState<"all" | "urgent" | "due_soon" | "ok">("all");
+
+  const generate = async () => {
+    if (!form.model.trim()) { setError("Please enter your car model"); return; }
+    setLoading(true); setError("");
+    try {
+      const res = await fetch("/api/car-advisor", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: form.brand, model: form.model, year: form.year, mileage: form.mileage,
+          engineType: form.engineType,
+          lastOilChangeMileage: form.lastOilChangeMileage ? parseInt(form.lastOilChangeMileage) : undefined,
+          lastServiceDate: form.lastServiceDate || undefined,
+          additionalInfo: form.additionalInfo || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error("error");
+      setData(await res.json());
+      setActiveTab("maintenance");
+    } catch { setError("Failed to generate. Check API key and try again."); }
+    finally { setLoading(false); }
+  };
+
+  const filtered = data?.maintenanceItems?.filter(i => filterStatus === "all" || i.status === filterStatus) || [];
+  const urgentCount = data?.maintenanceItems?.filter(i => i.status === "urgent").length || 0;
+  const dueSoonCount = data?.maintenanceItems?.filter(i => i.status === "due_soon").length || 0;
+
+  // Suppress unused import warnings
+  void Battery; void Wind; void Zap;
+
+  return (
+    <div className="min-h-screen bg-[#09090b]">
+      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="relative w-9 h-9">
+            <div className="absolute inset-0 bg-violet-600 rounded-2xl blur opacity-50" />
+            <div className="relative w-9 h-9 bg-gradient-to-br from-[#1c1c1f] to-[#09090b] border border-violet-500/30 rounded-2xl flex items-center justify-center">
+              <Car className="w-5 h-5 text-violet-400" />
             </div>
           </div>
+          <div>
+            <h1 className="text-xl font-black text-white">My Car Advisor</h1>
+            <p className="text-[12px] text-[#71717a]">Factory-based maintenance schedule optimised for UAE conditions</p>
+          </div>
+          <div className="ml-auto badge-violet flex items-center gap-1">
+            <Sparkles className="w-3 h-3" />AI-POWERED
+          </div>
+        </div>
 
-          {/* Results */}
-          <div className="lg:col-span-3 space-y-4">
-            {error && (
-              <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/20 text-sm text-red-400">
-                {error}
+        <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6">
+          {/* ── Left: Form ── */}
+          <div className="space-y-4">
+            <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+              <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
+                <Wrench className="w-3.5 h-3.5 text-[#71717a]" />
+                <span className="text-[11px] font-bold text-[#71717a] uppercase tracking-widest">Vehicle Details</span>
               </div>
-            )}
-
-            {loading && (
-              <div className="p-8 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] flex flex-col items-center gap-4">
-                <div className="w-12 h-12 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
-                <div className="text-center">
-                  <p className="text-sm font-semibold text-zinc-300">AI is analyzing your vehicle...</p>
-                  <p className="text-[12px] text-zinc-600 mt-1">Checking 24+ maintenance items for UAE conditions</p>
+              <div className="p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Brand</label>
+                    <select value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))}
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors">
+                      {CAR_BRANDS.map(b => <option key={b}>{b}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Model</label>
+                    <input type="text" value={form.model} onChange={e => setForm(f => ({ ...f, model: e.target.value }))}
+                      placeholder="e.g. Camry, X5..." className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+                  </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Year</label>
+                    <input type="number" value={form.year} onChange={e => setForm(f => ({ ...f, year: parseInt(e.target.value) || f.year }))}
+                      min={1990} max={new Date().getFullYear()}
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Engine</label>
+                    <select value={form.engineType} onChange={e => setForm(f => ({ ...f, engineType: e.target.value }))}
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors">
+                      {["Petrol / Gasoline", "Diesel", "Hybrid", "Plug-in Hybrid (PHEV)", "Electric (EV)"].map(e => <option key={e}>{e}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider">Mileage</label>
+                    <span className="text-sm font-black text-violet-400">{form.mileage.toLocaleString()} km</span>
+                  </div>
+                  <input type="range" min={0} max={500000} step={5000} value={form.mileage}
+                    onChange={e => setForm(f => ({ ...f, mileage: parseInt(e.target.value) }))}
+                    className="w-full accent-violet-500" />
+                  <div className="flex justify-between text-[10px] text-[#3f3f46] mt-0.5"><span>0</span><span>250k</span><span>500k km</span></div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Oil Change <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
+                    <input type="number" value={form.lastOilChangeMileage} onChange={e => setForm(f => ({ ...f, lastOilChangeMileage: e.target.value }))}
+                      placeholder="e.g. 70000" className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Service <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
+                    <input type="date" value={form.lastServiceDate} onChange={e => setForm(f => ({ ...f, lastServiceDate: e.target.value }))}
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Issues / Notes <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
+                  <textarea value={form.additionalInfo} onChange={e => setForm(f => ({ ...f, additionalInfo: e.target.value }))}
+                    placeholder="Any issues, warning lights, unusual sounds..." rows={2}
+                    className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors resize-none" />
+                </div>
+                {error && <p className="text-sm text-red-400 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" />{error}</p>}
+                <button onClick={generate} disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-violet-900/30">
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Analyzing {form.brand} {form.model}...</> : <><Sparkles className="w-4 h-4" />Generate Full Analysis</>}
+                </button>
+              </div>
+            </div>
+
+            {/* Feature pills */}
+            {!data && (
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { icon: Wrench, label: "30+ Checks" }, { icon: Thermometer, label: "UAE Climate" },
+                  { icon: Gauge, label: "Tyre Pressure" }, { icon: Shield, label: "Safety Alerts" },
+                  { icon: MessageSquare, label: "AI Chat" }, { icon: BellRing, label: "Reminders" },
+                ].map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#18181b] border border-[#27272a]">
+                    <Icon className="w-4 h-4 text-[#52525b]" />
+                    <span className="text-[10px] font-semibold text-[#52525b] text-center">{label}</span>
+                  </div>
+                ))}
               </div>
             )}
 
-            {result && (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-4"
-                >
-                  {/* Health score + summary */}
-                  <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
-                    <div className="flex items-center gap-6">
-                      <HealthGauge score={result.overallScore} />
-                      <div className="flex-1">
-                        <p className="text-[11px] text-zinc-500 font-semibold mb-2 flex items-center gap-1">
-                          <Shield className="w-3 h-3" /> VEHICLE HEALTH
-                        </p>
-                        <p className="text-[13px] text-zinc-300 leading-relaxed">{result.summary}</p>
-                        <div className="flex items-center gap-3 mt-3 flex-wrap">
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-red-500" />
-                            <span className="text-[11px] text-zinc-400">{result.urgentCount} Urgent</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-amber-500" />
-                            <span className="text-[11px] text-zinc-400">{result.dueSoonCount} Due Soon</span>
-                          </div>
-                          <div className="text-[11px] text-zinc-500">
-                            Next service: {result.nextServiceKm.toLocaleString()} km
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            {/* AI Chat */}
+            {data && <AIChat carDetails={{ brand: form.brand, model: form.model, year: form.year, mileage: form.mileage, engineType: form.engineType }} />}
+          </div>
 
-                  {/* Category chart */}
-                  {categoryData.length > 0 && (
-                    <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
-                      <p className="text-[11px] text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                        <BarChart3 className="w-3 h-3" /> MAINTENANCE BY CATEGORY
-                      </p>
-                      <div style={{ height: 120 }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={categoryData} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
-                            <XAxis dataKey="name" tick={{ fontSize: 8, fill: "#71717a" }} tickLine={false} axisLine={false} />
-                            <YAxis tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
-                            <Tooltip
-                              contentStyle={{ background: "#111", border: "1px solid #222", borderRadius: 8, fontSize: 11 }}
-                            />
-                            <Bar dataKey="urgent" fill="#ef4444" name="Urgent" radius={[2, 2, 0, 0]} stackId="a" />
-                            <Bar dataKey="due_soon" fill="#f59e0b" name="Due Soon" radius={[2, 2, 0, 0]} stackId="a" />
-                            <Bar dataKey="ok" fill="#10b981" name="OK" radius={[2, 2, 0, 0]} stackId="a" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Tips */}
-                  {result.tips?.length > 0 && (
-                    <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/15">
-                      <p className="text-[11px] text-blue-400 font-semibold mb-2 flex items-center gap-1">
-                        <Info className="w-3 h-3" /> UAE DRIVING TIPS
-                      </p>
-                      <ul className="space-y-1.5">
-                        {result.tips.slice(0, 3).map((tip, i) => (
-                          <li key={i} className="flex items-start gap-2 text-[12px] text-zinc-400">
-                            <span className="text-blue-500 shrink-0 mt-0.5">•</span>
-                            {tip}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Filter tabs */}
-                  <div className="flex gap-2 flex-wrap">
-                    {(["all", "urgent", "due_soon", "ok"] as const).map(f => {
-                      const counts: Record<string, number> = {
-                        all: result.maintenanceItems.length,
-                        urgent: result.maintenanceItems.filter(i => i.status === "urgent").length,
-                        due_soon: result.maintenanceItems.filter(i => i.status === "due_soon").length,
-                        ok: result.maintenanceItems.filter(i => i.status === "ok").length,
-                      };
-                      const labels = { all: "All", urgent: "Urgent", due_soon: "Due Soon", ok: "OK" };
-                      const colors = { all: "text-zinc-400 border-zinc-700", urgent: "text-red-400 border-red-500/30", due_soon: "text-amber-400 border-amber-500/30", ok: "text-emerald-400 border-emerald-500/30" };
-                      return (
-                        <button
-                          key={f}
-                          onClick={() => setActiveFilter(f)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
-                            activeFilter === f ? colors[f] + " bg-[#1a1a1a]" : "text-zinc-600 border-[#1a1a1a] hover:border-zinc-700"
-                          }`}
-                        >
-                          {labels[f]}
-                          <span className="text-[10px] opacity-70">({counts[f]})</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Maintenance items */}
-                  <div className="space-y-2">
-                    {filteredItems.map((item, i) => (
-                      <MaintenanceCard
-                        key={item.item}
-                        item={item}
-                        mileage={mileage}
-                        isPremium={isPremium}
-                        index={i}
-                      />
-                    ))}
-                    {!isPremium && result.maintenanceItems.length > 5 && (
-                      <div className="p-4 rounded-xl bg-violet-500/5 border border-violet-500/15 text-center">
-                        <Lock className="w-5 h-5 text-violet-400 mx-auto mb-2" />
-                        <p className="text-[13px] font-semibold text-zinc-300">
-                          {result.maintenanceItems.length - 5} more items locked
-                        </p>
-                        <p className="text-[11px] text-zinc-600 mt-1">Upgrade to Premium to see full maintenance schedule</p>
-                        <button className="mt-3 px-4 py-2 rounded-lg bg-violet-600 text-white text-[12px] font-bold hover:bg-violet-500 transition-colors">
-                          Unlock Premium · AED 9.99/mo
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-            {!result && !loading && !error && (
-              <div className="p-8 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] text-center">
-                <Car className="w-12 h-12 text-zinc-800 mx-auto mb-3" />
-                <p className="text-sm font-semibold text-zinc-400">Enter your car details</p>
-                <p className="text-[12px] text-zinc-600 mt-1 max-w-xs mx-auto">
-                  Get a personalized maintenance schedule with mileage tracking for every component
-                </p>
-                <div className="grid grid-cols-3 gap-3 mt-6 text-center">
-                  {[
-                    { icon: "🔧", label: "24+ Checks" },
-                    { icon: "🇦🇪", label: "UAE Climate" },
-                    { icon: "💰", label: "Cost Estimates" },
-                  ].map(f => (
-                    <div key={f.label} className="p-2 rounded-lg bg-[#111] border border-[#1a1a1a]">
-                      <div className="text-xl mb-1">{f.icon}</div>
-                      <p className="text-[10px] text-zinc-500 font-semibold">{f.label}</p>
+          {/* ── Right: Results ── */}
+          <div className="space-y-4">
+            {!data && !loading && (
+              <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-10 flex flex-col items-center justify-center min-h-[400px] text-center gap-5">
+                <div className="w-16 h-16 rounded-full bg-violet-500/10 flex items-center justify-center">
+                  <Car className="w-8 h-8 text-[#27272a]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#fafafa] mb-1">Enter your car details</h3>
+                  <p className="text-[13px] text-[#52525b] leading-relaxed max-w-xs mx-auto">
+                    Get a complete AI-generated maintenance schedule with tyre pressure, safety alerts, UAE climate tips, warning lights guide, and live chat
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 gap-3 mt-1">
+                  {[{ icon: Wrench, label: "30+ Checks", sub: "Comprehensive" }, { icon: Thermometer, label: "UAE Climate", sub: "Local conditions" }, { icon: MessageSquare, label: "AI Chat", sub: "Ask anything" }].map(({ icon: Icon, label, sub }) => (
+                    <div key={label} className="p-3 rounded-xl bg-[#1c1c1f] border border-[#27272a] text-center">
+                      <Icon className="w-5 h-5 text-[#3f3f46] mx-auto mb-1.5" />
+                      <p className="text-[11px] font-bold text-[#71717a]">{label}</p>
+                      <p className="text-[10px] text-[#3f3f46]">{sub}</p>
                     </div>
                   ))}
                 </div>
               </div>
+            )}
+
+            {loading && (
+              <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-12 flex flex-col items-center justify-center gap-6 min-h-[400px]">
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full bg-violet-500/15 flex items-center justify-center"><Loader2 className="w-8 h-8 text-violet-400 animate-spin" /></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-violet-500/20 animate-ping" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-bold text-[#fafafa]">AI analyzing your {form.brand} {form.model}</p>
+                  <p className="text-[12px] text-[#52525b] mt-1">Generating factory schedule, tyre pressure, safety alerts & UAE climate advice...</p>
+                </div>
+              </div>
+            )}
+
+            {data && (
+              <AnimatePresence>
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                  {/* AI Summary */}
+                  {data.aiSummary && (
+                    <div className="rounded-2xl bg-gradient-to-br from-violet-600/10 to-violet-500/5 border border-violet-500/20 p-4">
+                      <div className="flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-violet-400" /><span className="text-sm font-bold text-violet-400">AI Advisor Says</span></div>
+                      <p className="text-[13px] text-[#d4d4d8] leading-relaxed">{data.aiSummary}</p>
+                      {data.estimatedAnnualCostAed && (
+                        <div className="mt-3 pt-3 border-t border-violet-500/15 flex items-center gap-2">
+                          <TrendingUp className="w-3.5 h-3.5 text-violet-400" />
+                          <span className="text-[12px] text-[#a1a1aa]">Est. annual maintenance: </span>
+                          <span className="text-[12px] font-bold text-violet-400">{data.estimatedAnnualCostAed} AED</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Score + KPI strip */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="col-span-2 sm:col-span-1 rounded-2xl bg-[#18181b] border border-[#27272a] p-4 flex items-center justify-center">
+                      <HealthGauge score={data.overallScore} />
+                    </div>
+                    {[
+                      { label: "Urgent", value: String(urgentCount), color: "text-red-400", ic: AlertTriangle, bg: "bg-red-500/10" },
+                      { label: "Due Soon", value: String(dueSoonCount), color: "text-amber-400", ic: Clock, bg: "bg-amber-500/10" },
+                      { label: "Next Service", value: data.nextServiceEstimatedDate || "—", color: "text-violet-400", ic: Zap, bg: "bg-violet-500/10" },
+                    ].map(({ label, value, color, ic: Icon, bg }) => (
+                      <div key={label} className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4 flex flex-col justify-between">
+                        <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center mb-2`}><Icon className={`w-4 h-4 ${color}`} /></div>
+                        <div className={`text-lg font-black ${color} leading-none`}>{value}</div>
+                        <div className="text-[11px] text-[#71717a] mt-0.5">{label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Tyre Pressure */}
+                  {data.tyrePressure && <TyrePressureCard data={data.tyrePressure} />}
+
+                  {/* Service Reminder */}
+                  <ServiceReminderWidget data={data} brand={form.brand} model={form.model} />
+
+                  {/* Tabs */}
+                  <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+                    <div className="flex border-b border-[#27272a] overflow-x-auto scrollbar-none">
+                      {[
+                        { id: "maintenance", label: "Maintenance", icon: Wrench, count: data.maintenanceItems?.length },
+                        { id: "safety", label: "Safety", icon: Shield, count: data.safetyAlerts?.length, alert: (data.safetyAlerts?.filter(a => a.severity === "critical").length ?? 0) > 0 },
+                        { id: "climate", label: "UAE Climate", icon: Thermometer, count: data.uaeClimateAlerts?.length },
+                        { id: "warnings", label: "Warning Lights", icon: AlertTriangle, count: data.warningLights?.length },
+                      ].map(tab => (
+                        <button key={tab.id} onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                          className={`flex items-center gap-1.5 px-4 py-3 text-xs font-bold transition-all shrink-0 relative ${activeTab === tab.id ? "text-violet-400 border-b-2 border-violet-500 bg-violet-500/5" : "text-[#71717a] hover:text-[#a1a1aa]"}`}>
+                          <tab.icon className="w-3.5 h-3.5" />{tab.label}
+                          {tab.count != null && <span className="text-[9px] font-black px-1 py-0.5 rounded-full bg-[#27272a] text-[#71717a]">{tab.count}</span>}
+                          {tab.alert && <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="p-4">
+                      {activeTab === "maintenance" && (
+                        <div className="space-y-3">
+                          <div className="flex gap-2 flex-wrap">
+                            {[
+                              { id: "all", label: "All", count: data.maintenanceItems?.length },
+                              { id: "urgent", label: "Urgent", count: urgentCount },
+                              { id: "due_soon", label: "Due Soon", count: dueSoonCount },
+                              { id: "ok", label: "OK", count: (data.maintenanceItems?.filter(i => i.status === "ok").length ?? 0) },
+                            ].map(f => (
+                              <button key={f.id} onClick={() => setFilterStatus(f.id as typeof filterStatus)}
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterStatus === f.id ? "bg-violet-600/12 border-violet-600/35 text-violet-400" : "bg-[#1c1c1f] border-[#27272a] text-[#71717a] hover:border-[#3f3f46]"}`}>
+                                {f.label}<span className="text-[10px] opacity-70">{f.count}</span>
+                              </button>
+                            ))}
+                          </div>
+                          <div className="space-y-2">
+                            {filtered.map((item, i) => <MaintenanceCard key={item.item} item={item} index={i} />)}
+                            {filtered.length === 0 && <div className="text-center py-8 text-[#52525b] text-sm">No items in this category</div>}
+                          </div>
+                          {data.tips?.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-[#27272a]">
+                              <p className="text-[11px] font-bold text-[#52525b] uppercase tracking-wider mb-3">UAE Driving Tips</p>
+                              <div className="space-y-2">
+                                {data.tips.map((tip, i) => (
+                                  <div key={i} className="flex gap-2 items-start">
+                                    <Star className="w-3.5 h-3.5 text-violet-400 shrink-0 mt-0.5" />
+                                    <p className="text-[12px] text-[#a1a1aa] leading-relaxed">{tip}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {activeTab === "safety" && <SafetySection alerts={data.safetyAlerts} />}
+                      {activeTab === "climate" && <UAEClimateSection alerts={data.uaeClimateAlerts} />}
+                      {activeTab === "warnings" && <WarningLightsSection lights={data.warningLights} />}
+                    </div>
+                  </div>
+
+                  {/* Find garage CTA */}
+                  <div className="rounded-2xl bg-gradient-to-r from-orange-500/10 to-orange-600/5 border border-orange-500/20 p-4 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500/15 flex items-center justify-center shrink-0"><MapPin className="w-5 h-5 text-orange-400" /></div>
+                    <div className="flex-1">
+                      <h3 className="text-sm font-bold text-[#fafafa]">Ready to book a service?</h3>
+                      <p className="text-[12px] text-[#71717a]">Find verified garages near you in the UAE</p>
+                    </div>
+                    <Link href="/garages" className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white text-xs font-bold transition-all shrink-0">
+                      Find Garages<ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+
+                  <button onClick={generate} disabled={loading}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#a1a1aa] hover:border-[#3f3f46] text-sm font-semibold transition-all">
+                    <RotateCcw className="w-4 h-4" />Regenerate Analysis
+                  </button>
+                </motion.div>
+              </AnimatePresence>
             )}
           </div>
         </div>

@@ -17,7 +17,7 @@ import type { ExtendedPlaceResult } from "@/lib/mock-data";
 // UAE Emirate data with static estimates + live overlay
 const EMIRATE_DATA = [
   { name: "Dubai", garages: 850, parts: 320, color: "#8b5cf6" },
-  { name: "Abu Dhabi", garages: 620, parts: 210, color: "#3b82f6" },
+  { name: "Abu Dhabi", garages: 620, parts: 210, color: "#06b6d4" },
   { name: "Sharjah", garages: 380, parts: 145, color: "#10b981" },
   { name: "Ajman", garages: 140, parts: 55, color: "#f59e0b" },
   { name: "RAK", garages: 95, parts: 38, color: "#ef4444" },
@@ -40,13 +40,13 @@ const SEARCH_TREND = [
 const RATING_DIST = [
   { range: "3.0–3.4", count: 45, fill: "#ef4444" },
   { range: "3.5–3.9", count: 120, fill: "#f59e0b" },
-  { range: "4.0–4.4", count: 385, fill: "#3b82f6" },
+  { range: "4.0–4.4", count: 385, fill: "#8b5cf6" },
   { range: "4.5–4.9", count: 510, fill: "#10b981" },
   { range: "5.0", count: 68, fill: "#8b5cf6" },
 ];
 
 const SERVICE_MIX = [
-  { name: "Service Centres", value: 62, fill: "#3b82f6" },
+  { name: "Service Centres", value: 62, fill: "#8b5cf6" },
   { name: "Parts Stores", value: 23, fill: "#f97316" },
   { name: "Tyres & Wheels", value: 9, fill: "#10b981" },
   { name: "Detailing", value: 6, fill: "#8b5cf6" },
@@ -92,7 +92,7 @@ function UAECalendar() {
   const dayName = uaeTime.toLocaleDateString("en-US", { weekday: "long", timeZone: "Asia/Dubai" });
 
   return (
-    <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+    <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
@@ -122,7 +122,7 @@ function UAECalendar() {
             className={`aspect-square flex items-center justify-center text-[11px] rounded-md font-semibold transition-colors ${
               day === null ? "" :
               day === today
-                ? "bg-blue-600 text-white font-black"
+                ? "bg-violet-600 text-white font-black"
                 : day % 7 === 6 || day % 7 === 0
                   ? "text-zinc-600"
                   : "text-zinc-400 hover:bg-[#1a1a1a]"
@@ -144,7 +144,7 @@ function StatCard({ label, value, sub, color, icon: Icon }: {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]"
+      className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800"
     >
       <div className="flex items-start justify-between gap-2">
         <div>
@@ -169,7 +169,7 @@ function LiveFeed() {
     { icon: "🤖", text: "AI search: 1,240 queries today", time: "Live" },
   ];
   return (
-    <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+    <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
       <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
         <Activity className="w-3 h-3" /> LIVE FEED
         <span className="ml-1 px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] border border-emerald-500/20">LIVE</span>
@@ -202,7 +202,7 @@ function QuickNav() {
         <Link
           key={l.href}
           href={l.href}
-          className="flex flex-col gap-2 p-3.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700 transition-colors group"
+          className="flex flex-col gap-2 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors group"
         >
           <div className="flex items-center justify-between">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: l.color + "20" }}>
@@ -227,7 +227,7 @@ function QuickNav() {
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#111] border border-[#222] rounded-xl p-2.5 text-xs shadow-xl">
+    <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-2.5 text-xs shadow-xl">
       <p className="text-zinc-400 font-semibold mb-1">{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }} className="font-bold">{p.name}: {p.value.toLocaleString()}</p>
@@ -261,12 +261,12 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black text-zinc-100 pb-8">
       {/* Header */}
-      <div className="border-b border-[#1a1a1a] bg-[#050505]">
+      <div className="border-b border-zinc-800/60 bg-zinc-950">
         <div className="max-w-6xl mx-auto px-3 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-black tracking-tight text-white">
-                UAE <span className="text-blue-400">Dashboard</span>
+                UAE <span className="text-violet-400">Dashboard</span>
               </h1>
               <p className="text-xs text-zinc-600 mt-0.5">Auto repair ecosystem · real-time overview</p>
             </div>
@@ -300,7 +300,7 @@ export default function DashboardPage() {
           {/* Center + right: Charts */}
           <div className="lg:col-span-2 space-y-4">
             {/* Search trend area chart */}
-            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" /> SEARCH ACTIVITY (7 DAYS)
@@ -334,7 +334,7 @@ export default function DashboardPage() {
             {/* Emirate bar chart + rating dist side by side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Garages by Emirate */}
-              <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Globe className="w-3 h-3" /> GARAGES BY EMIRATE
                 </p>
@@ -353,7 +353,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Rating distribution */}
-              <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Star className="w-3 h-3" /> RATING DISTRIBUTION
                 </p>
@@ -375,7 +375,7 @@ export default function DashboardPage() {
             {/* Service mix pie + Top garages */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Service mix */}
-              <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Activity className="w-3 h-3" /> SERVICE MIX
                 </p>
@@ -400,7 +400,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Top rated live */}
-              <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Shield className="w-3 h-3" /> TOP RATED · DUBAI
                 </p>
@@ -424,7 +424,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     ))}
-                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 mt-1">
+                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-violet-400 hover:text-blue-300 mt-1">
                       See all <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>

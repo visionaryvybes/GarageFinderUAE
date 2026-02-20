@@ -9,7 +9,7 @@ const REVIEWS = [
     car: "BMW M5 · Dubai",
     text: "Saved 3,500 AED on a gearbox overhaul. The AI knew exactly which workshop specialises in M series. Incredible.",
     stars: 5,
-    color: "from-blue-600/20 to-transparent",
+    color: "from-violet-600/20 to-transparent",
   },
   {
     name: "Sarah M.",
@@ -37,7 +37,7 @@ const REVIEWS = [
     car: "Porsche 911 · Abu Dhabi",
     text: "Used it for a pre-purchase inspection on a used 992. Mechanic was thorough and caught hidden rust damage. Worth every dirham.",
     stars: 5,
-    color: "from-blue-600/20 to-transparent",
+    color: "from-violet-600/20 to-transparent",
   },
   {
     name: "Omar H.",
@@ -50,7 +50,7 @@ const REVIEWS = [
 
 function ReviewCard({ review }: { review: (typeof REVIEWS)[0] }) {
   return (
-    <div className="w-[360px] shrink-0 relative p-6 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/50 transition-colors duration-300 overflow-hidden group">
+    <div className="w-[360px] shrink-0 relative p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700/50 transition-colors duration-300 overflow-hidden group">
       {/* Gradient tint */}
       <div className={`absolute inset-0 bg-gradient-to-br ${review.color} opacity-40 group-hover:opacity-60 transition-opacity duration-300`} />
 
@@ -91,7 +91,7 @@ export default function Testimonials() {
       <div className="max-w-6xl mx-auto px-4 mb-12">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-bold text-blue-500 tracking-widest uppercase mb-2">Reviews</p>
+            <p className="text-xs font-bold text-violet-500 tracking-widest uppercase mb-2">Reviews</p>
             <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
               Real Drivers,
               <br />
