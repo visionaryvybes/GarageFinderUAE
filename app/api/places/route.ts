@@ -108,6 +108,8 @@ export async function GET(request: NextRequest) {
   const defaultLat = searchParams.get("lat") || "25.2048";
   const defaultLng = searchParams.get("lng") || "55.2708";
   const openNow = searchParams.get("openNow") === "true";
+  const radiusParam = searchParams.get("radius");
+  const customRadius = radiusParam ? parseInt(radiusParam) : null;
 
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!apiKey) {
@@ -121,49 +123,39 @@ export async function GET(request: NextRequest) {
 
     let results: unknown[] = [];
 
+    const svcRadius = customRadius ?? 25000;
+    const partsRadius = customRadius ?? 30000;
+
     if (intent === "parts") {
-      // Search for parts stores specifically — NO type filter lets Google return stores
       const [storeResults, noTypeResults] = await Promise.all([
-        searchPlaces(cleanedQuery, location.lat, location.lng, "store", apiKey, 20000),
-        searchPlaces(query, location.lat, location.lng, null, apiKey, 25000),
+        searchPlaces(cleanedQuery, location.lat, location.lng, "store", apiKey, partsRadius),
+        searchPlaces(query, location.lat, location.lng, null, apiKey, partsRadius),
       ]);
-      // Merge and deduplicate
       const seen = new Set<string>();
       for (const r of [...storeResults, ...noTypeResults]) {
         const id = (r as { place_id: string }).place_id;
-        if (!seen.has(id)) {
-          seen.add(id);
-          results.push(r);
-        }
+        if (!seen.has(id)) { seen.add(id); results.push(r); }
       }
     } else if (intent === "service") {
-      // Service garages
       const [repairResults, noTypeResults] = await Promise.all([
-        searchPlaces(cleanedQuery, location.lat, location.lng, "car_repair", apiKey, 15000),
-        searchPlaces(cleanedQuery, location.lat, location.lng, null, apiKey, 15000),
+        searchPlaces(cleanedQuery, location.lat, location.lng, "car_repair", apiKey, svcRadius),
+        searchPlaces(cleanedQuery, location.lat, location.lng, null, apiKey, svcRadius),
       ]);
       const seen = new Set<string>();
       for (const r of [...repairResults, ...noTypeResults]) {
         const id = (r as { place_id: string }).place_id;
-        if (!seen.has(id)) {
-          seen.add(id);
-          results.push(r);
-        }
+        if (!seen.has(id)) { seen.add(id); results.push(r); }
       }
     } else {
-      // Both — search everything in parallel
       const [repairResults, storeResults, broadResults] = await Promise.all([
-        searchPlaces(cleanedQuery, location.lat, location.lng, "car_repair", apiKey, 15000),
-        searchPlaces(cleanedQuery, location.lat, location.lng, "store", apiKey, 20000),
-        searchPlaces(query, location.lat, location.lng, null, apiKey, 20000),
+        searchPlaces(cleanedQuery, location.lat, location.lng, "car_repair", apiKey, svcRadius),
+        searchPlaces(cleanedQuery, location.lat, location.lng, "store", apiKey, partsRadius),
+        searchPlaces(query, location.lat, location.lng, null, apiKey, partsRadius),
       ]);
       const seen = new Set<string>();
       for (const r of [...repairResults, ...storeResults, ...broadResults]) {
         const id = (r as { place_id: string }).place_id;
-        if (!seen.has(id)) {
-          seen.add(id);
-          results.push(r);
-        }
+        if (!seen.has(id)) { seen.add(id); results.push(r); }
       }
     }
 

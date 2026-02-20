@@ -1,37 +1,40 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Package, Star, MapPin, ChevronRight,
-  Search, SlidersHorizontal, AlertCircle, RefreshCw, Zap, Clock,
+  Search, Clock, Activity, Filter, RefreshCw, Zap,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+} from "recharts";
 import { type ExtendedPlaceResult } from "@/lib/mock-data";
 
 const PARTS_CATEGORIES = [
-  { label: "All Parts", query: "auto spare parts UAE" },
-  { label: "Engine Parts", query: "engine parts auto UAE" },
-  { label: "Brakes", query: "brake parts auto shop UAE" },
-  { label: "Suspension", query: "suspension parts car UAE" },
-  { label: "Electrical", query: "car electrical parts auto UAE" },
-  { label: "Body Parts", query: "car body parts panel UAE" },
-  { label: "Tyres & Wheels", query: "tyres wheels car UAE" },
-  { label: "Used / OEM", query: "used second hand car parts OEM UAE" },
-  { label: "Performance", query: "car performance parts tuning UAE" },
+  { label: "All Parts", query: "auto spare parts UAE", color: "#3b82f6" },
+  { label: "Engine", query: "engine parts auto UAE", color: "#ef4444" },
+  { label: "Brakes", query: "brake parts auto shop UAE", color: "#f59e0b" },
+  { label: "Suspension", query: "suspension parts car UAE", color: "#10b981" },
+  { label: "Electrical", query: "car electrical parts auto UAE", color: "#8b5cf6" },
+  { label: "Body Parts", query: "car body parts panel UAE", color: "#06b6d4" },
+  { label: "Tyres & Wheels", query: "tyres wheels car UAE", color: "#ec4899" },
+  { label: "Used / OEM", query: "used second hand car parts OEM UAE", color: "#a78bfa" },
+  { label: "Performance", query: "car performance parts tuning UAE", color: "#f97316" },
 ];
 
-const EMIRATE_FILTERS = [
-  { label: "All UAE", query: "auto spare parts UAE", lat: 25.2048, lng: 55.2708 },
-  { label: "Dubai", query: "spare parts auto Dubai", lat: 25.2048, lng: 55.2708 },
-  { label: "Al Aweer", query: "used car parts Al Aweer Dubai", lat: 25.1833, lng: 55.4167 },
-  { label: "Abu Dhabi", query: "spare parts auto Abu Dhabi", lat: 24.4539, lng: 54.3773 },
-  { label: "Mussafah", query: "auto parts Mussafah Abu Dhabi", lat: 24.3595, lng: 54.4921 },
-  { label: "Sharjah", query: "spare parts auto Sharjah", lat: 25.3463, lng: 55.4209 },
-  { label: "Ajman", query: "car parts Ajman", lat: 25.4052, lng: 55.5136 },
+const EMIRATE_CONFIG = [
+  { label: "All UAE", lat: 25.2048, lng: 55.2708, radius: 50000 },
+  { label: "Dubai", lat: 25.2048, lng: 55.2708, radius: 35000 },
+  { label: "Al Aweer", lat: 25.1833, lng: 55.4167, radius: 15000 },
+  { label: "Abu Dhabi", lat: 24.4539, lng: 54.3773, radius: 45000 },
+  { label: "Mussafah", lat: 24.3595, lng: 54.4921, radius: 15000 },
+  { label: "Sharjah", lat: 25.3463, lng: 55.4209, radius: 25000 },
+  { label: "Ajman", lat: 25.4052, lng: 55.5136, radius: 20000 },
 ];
 
-function PartsCard({ shop }: { shop: ExtendedPlaceResult }) {
+function PartsCard({ shop, rank }: { shop: ExtendedPlaceResult; rank?: number }) {
   const isOpen = shop.opening_hours?.open_now;
   const isUsed = shop.name.toLowerCase().includes("used") ||
     shop.name.toLowerCase().includes("second") ||
@@ -39,73 +42,118 @@ function PartsCard({ shop }: { shop: ExtendedPlaceResult }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glow-card flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-orange-600/20 transition-colors group cursor-pointer"
+      className="flex items-center gap-3 p-3.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-orange-600/20 transition-colors group cursor-pointer"
     >
-      <div className="w-14 h-14 rounded-xl bg-orange-600/8 border border-orange-600/15 flex items-center justify-center shrink-0">
-        <Package className="w-6 h-6 text-orange-400" />
-      </div>
+      {rank && rank <= 3 ? (
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
+          rank === 1 ? "rank-badge-gold text-white" :
+          rank === 2 ? "rank-badge-silver text-white" :
+          "rank-badge-bronze text-white"
+        }`}>
+          #{rank}
+        </div>
+      ) : (
+        <div className="w-9 h-9 rounded-lg bg-orange-600/8 border border-orange-600/15 flex items-center justify-center shrink-0">
+          <Package className="w-4 h-4 text-orange-400" />
+        </div>
+      )}
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 flex-wrap">
-          <h3 className="font-bold text-sm text-zinc-100 group-hover:text-white transition-colors leading-tight">
+        <div className="flex items-start justify-between gap-2">
+          <p className="font-semibold text-[13px] text-zinc-100 leading-tight truncate pr-1">
             {shop.name}
-          </h3>
-          <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
-            isOpen
-              ? "bg-emerald-900/40 border-emerald-600/25 text-emerald-400"
-              : "bg-zinc-900/60 border-zinc-700/25 text-zinc-600"
-          }`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
-            {isOpen ? "Open" : "Closed"}
+          </p>
+          <div className="flex items-center gap-1 shrink-0">
+            {isUsed && (
+              <span className="text-[9px] px-1 py-0.5 rounded bg-amber-600/10 border border-amber-600/20 text-amber-400 font-bold">
+                OEM
+              </span>
+            )}
+            <div className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold border ${
+              isOpen
+                ? "bg-emerald-900/40 border-emerald-600/25 text-emerald-400"
+                : "bg-zinc-900/60 border-zinc-700/25 text-zinc-500"
+            }`}>
+              <span className={`w-1 h-1 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
+              {isOpen ? "Open" : "Closed"}
+            </div>
           </div>
         </div>
-
-        <div className="flex items-center gap-1.5 mt-1 mb-2">
-          <MapPin className="w-3 h-3 text-zinc-700 shrink-0" />
-          <p className="text-xs text-zinc-600 truncate">{shop.vicinity || shop.formatted_address}</p>
-        </div>
-
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-1">
+            <MapPin className="w-2.5 h-2.5 text-zinc-700" />
+            <span className="text-[11px] text-zinc-600 truncate max-w-[160px]">{shop.vicinity || shop.formatted_address || "UAE"}</span>
+          </div>
           {shop.rating && (
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-              <span className="text-xs font-bold text-zinc-300">{shop.rating}</span>
+            <div className="flex items-center gap-0.5">
+              <Star className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" />
+              <span className="text-[11px] font-bold text-zinc-300">{shop.rating}</span>
               {shop.user_ratings_total && (
-                <span className="text-[11px] text-zinc-600">({shop.user_ratings_total.toLocaleString()})</span>
+                <span className="text-[10px] text-zinc-600">({shop.user_ratings_total.toLocaleString()})</span>
               )}
             </div>
           )}
-          {shop.price_level !== undefined && (
-            <span className="text-xs text-zinc-600">{"$".repeat(Math.max(1, shop.price_level || 1))}</span>
-          )}
-          {isUsed && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-amber-600/10 border border-amber-600/20 text-amber-400 font-semibold">
-              Used & OEM
-            </span>
-          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
-        <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-orange-400 transition-colors" />
-      </div>
+      <ChevronRight className="w-3.5 h-3.5 text-zinc-700 group-hover:text-orange-400 transition-colors shrink-0" />
     </motion.div>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="flex items-center gap-4 p-5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a]">
-      <div className="skeleton w-14 h-14 rounded-xl" />
-      <div className="flex-1 space-y-2">
-        <div className="skeleton h-4 w-2/3 rounded" />
-        <div className="skeleton h-3 w-1/2 rounded" />
-        <div className="flex gap-2">
-          <div className="skeleton h-4 w-16 rounded-full" />
-          <div className="skeleton h-4 w-12 rounded-full" />
-        </div>
+    <div className="flex items-center gap-3 p-3.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+      <div className="skeleton w-9 h-9 rounded-lg shrink-0" />
+      <div className="flex-1 space-y-1.5">
+        <div className="skeleton h-3.5 w-3/4 rounded" />
+        <div className="skeleton h-2.5 w-1/2 rounded" />
+      </div>
+    </div>
+  );
+}
+
+function CategoryChart({ shops }: { shops: ExtendedPlaceResult[] }) {
+  const data = useMemo(() => {
+    const ratingBuckets = [
+      { name: "< 4.0", value: 0, fill: "#27272a" },
+      { name: "4.0–4.4", value: 0, fill: "#3b82f6" },
+      { name: "4.5–4.8", value: 0, fill: "#06b6d4" },
+      { name: "4.9+", value: 0, fill: "#10b981" },
+    ];
+    shops.forEach(s => {
+      const r = s.rating || 0;
+      if (r < 4.0) ratingBuckets[0].value++;
+      else if (r < 4.5) ratingBuckets[1].value++;
+      else if (r < 4.9) ratingBuckets[2].value++;
+      else ratingBuckets[3].value++;
+    });
+    return ratingBuckets;
+  }, [shops]);
+
+  if (shops.length === 0) return null;
+
+  return (
+    <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] mb-4">
+      <p className="text-[10px] text-zinc-500 font-semibold mb-2 flex items-center gap-1">
+        <Activity className="w-3 h-3" /> Rating Distribution · {shops.length} stores
+      </p>
+      <div style={{ height: 64 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 0, right: 0, bottom: 0, left: -24 }}>
+            <XAxis dataKey="name" tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
+            <Tooltip
+              contentStyle={{ background: "#111", border: "1px solid #222", borderRadius: 8, fontSize: 11 }}
+              cursor={{ fill: "rgba(249,115,22,0.05)" }}
+            />
+            <Bar dataKey="value" radius={[3, 3, 0, 0]}>
+              {data.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
@@ -126,18 +174,20 @@ export default function PartsPage() {
     setError(false);
     try {
       const catFilter = PARTS_CATEGORIES.find(c => c.label === cat) || PARTS_CATEGORIES[0];
-      const emFilter = EMIRATE_FILTERS.find(e => e.label === em) || EMIRATE_FILTERS[0];
+      const emFilter = EMIRATE_CONFIG.find(e => e.label === em) || EMIRATE_CONFIG[0];
 
-      // Combine category + emirate into one smart query
+      // Build query with specific emirate context
       let query = catFilter.query;
       if (em !== "All UAE") {
-        query = `${catFilter.label === "All Parts" ? "spare parts" : catFilter.label} ${em}`;
+        const catPart = cat === "All Parts" ? "spare parts" : cat;
+        query = `${catPart} auto shop ${em}`;
       }
 
       const params = new URLSearchParams({
         query,
         lat: String(emFilter.lat),
         lng: String(emFilter.lng),
+        radius: String(emFilter.radius),
       });
       const res = await fetch(`/api/places?${params}`);
       if (!res.ok) throw new Error("fetch failed");
@@ -155,89 +205,96 @@ export default function PartsPage() {
     fetchParts(category, emirate);
   }, [category, emirate, fetchParts]);
 
-  const filtered = allShops.filter(s =>
-    (!search ||
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      (s.vicinity || "").toLowerCase().includes(search.toLowerCase()) ||
-      (s.formatted_address || "").toLowerCase().includes(search.toLowerCase())) &&
-    (!openOnly || s.opening_hours?.open_now)
-  );
+  const filtered = useMemo(() => {
+    return allShops
+      .filter(s =>
+        (!search ||
+          s.name.toLowerCase().includes(search.toLowerCase()) ||
+          (s.vicinity || "").toLowerCase().includes(search.toLowerCase()) ||
+          (s.formatted_address || "").toLowerCase().includes(search.toLowerCase())) &&
+        (!openOnly || s.opening_hours?.open_now)
+      )
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  }, [allShops, search, openOnly]);
 
-  const hasApiKey = !!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const stats = useMemo(() => {
+    const open = filtered.filter(s => s.opening_hours?.open_now).length;
+    const rated = filtered.filter(s => s.rating);
+    const avgRating = rated.length > 0
+      ? (rated.reduce((sum, s) => sum + (s.rating || 0), 0) / rated.length).toFixed(1)
+      : "—";
+    return { total: filtered.length, open, avgRating };
+  }, [filtered]);
+
+  const activeCat = PARTS_CATEGORIES.find(c => c.label === category);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
-      {/* Header */}
-      <div className="border-b border-[#1a1a1a] bg-[#050505]">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-2 mb-2 text-xs text-zinc-600">
-            <Link href="/" className="hover:text-zinc-400 transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-zinc-400">Spare Parts</span>
-          </div>
-
-          <div className="flex items-end justify-between gap-4 flex-wrap">
+    <div className="min-h-screen bg-black text-zinc-100 pb-6">
+      {/* Compact sticky header */}
+      <div className="border-b border-[#1a1a1a] bg-[#050505] sticky top-14 z-30">
+        <div className="max-w-5xl mx-auto px-3 py-3">
+          {/* Title */}
+          <div className="flex items-center gap-2 mb-3">
             <div>
-              <h1 className="text-2xl md:text-4xl font-black tracking-tighter text-white">
-                Spare <span className="text-orange-400">Parts</span>
-              </h1>
-              <p className="text-sm text-zinc-500 mt-1">
-                {loading ? "Loading..." : `${filtered.length} stores`}
-                {!loading && " · New, used & OEM parts across UAE"}
-                {!loading && !error && " · live data"}
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-black tracking-tight text-white">
+                  Spare <span className="text-orange-400">Parts</span>
+                </h1>
+                {loading && <RefreshCw className="w-3.5 h-3.5 text-zinc-600 animate-spin" />}
+              </div>
+              <p className="text-[11px] text-zinc-600 mt-0.5">
+                {loading ? "Searching..." : `${filtered.length} stores · ${category} · ${emirate}`}
               </p>
+            </div>
+            <div className="ml-auto flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-3">
+                {[
+                  { icon: Package, label: "New & OEM" },
+                  { icon: RefreshCw, label: "Used Parts" },
+                  { icon: Zap, label: "Performance" },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center gap-1">
+                    <item.icon className="w-3 h-3 text-orange-400" />
+                    <span className="text-[11px] text-zinc-600">{item.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Info strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4">
-            {[
-              { icon: Package, label: "New Parts", desc: "OEM & aftermarket" },
-              { icon: RefreshCw, label: "Used Parts", desc: "Al Aweer & Sharjah souqs" },
-              { icon: Zap, label: "Performance", desc: "Tuning & upgrades" },
-            ].map(item => (
-              <div key={item.label} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
-                <item.icon className="w-4 h-4 text-orange-400 shrink-0" />
-                <div>
-                  <p className="text-xs font-bold text-zinc-300">{item.label}</p>
-                  <p className="text-[11px] text-zinc-600">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Search + filters */}
-          <div className="flex items-center gap-2 mt-4 flex-wrap">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
+          {/* Search + filter */}
+          <div className="flex items-center gap-2 mb-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search parts store or area..."
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white placeholder:text-zinc-600 outline-none focus:border-orange-600/40 transition-colors"
+                className="w-full pl-8 pr-3 py-2 rounded-lg bg-[#0a0a0a] border border-[#1a1a1a] text-sm text-white placeholder:text-zinc-600 outline-none focus:border-orange-600/40 transition-colors"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-semibold transition-all shrink-0 ${
                 showFilters || openOnly
                   ? "bg-orange-600/15 border-orange-600/30 text-orange-400"
-                  : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-400 hover:border-zinc-700"
+                  : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700"
               }`}
             >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filters
+              <Filter className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Filters</span>
+              {openOnly && <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />}
             </button>
           </div>
 
           {/* Emirate pills */}
-          <div className="flex gap-1.5 mt-3 overflow-x-auto scrollbar-none pb-1">
-            {EMIRATE_FILTERS.map(em => (
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1">
+            {EMIRATE_CONFIG.map(em => (
               <button
                 key={em.label}
                 onClick={() => setEmirate(em.label)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all shrink-0 ${
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition-all shrink-0 ${
                   emirate === em.label
                     ? "bg-orange-600/15 border-orange-600/30 text-orange-400"
                     : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700 hover:text-white"
@@ -248,71 +305,96 @@ export default function PartsPage() {
             ))}
           </div>
 
-          {showFilters && (
-            <div className="mt-3 p-4 rounded-xl bg-[#080808] border border-[#1a1a1a]">
-              <button
-                onClick={() => setOpenOnly(!openOnly)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                  openOnly
-                    ? "bg-emerald-600/15 border-emerald-600/30 text-emerald-400"
-                    : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700 hover:text-white"
-                }`}
+          {/* Filters panel */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
               >
-                <Clock className="w-3 h-3" />
-                Open Now Only
-              </button>
-            </div>
-          )}
+                <div className="pt-2">
+                  <button
+                    onClick={() => setOpenOnly(!openOnly)}
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
+                      openOnly
+                        ? "bg-emerald-600/15 border-emerald-600/30 text-emerald-400"
+                        : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700"
+                    }`}
+                  >
+                    <Clock className="w-3 h-3" /> Open Now Only
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* No API key warning */}
-      {!hasApiKey && (
-        <div className="max-w-6xl mx-auto px-4 pt-4">
-          <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-950/40 border border-amber-800/30">
-            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-            <p className="text-xs text-amber-300/80">
-              Add <code className="text-amber-400 font-mono">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to <code className="text-amber-400 font-mono">.env.local</code> to see live results.
-            </p>
+      {/* Category tabs */}
+      <div className="sticky top-[calc(3.5rem+var(--header-h,140px))] z-20 bg-black/95 backdrop-blur border-b border-[#111]">
+        <div className="max-w-5xl mx-auto px-3 py-2">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
+            {PARTS_CATEGORIES.map(cat => (
+              <button
+                key={cat.label}
+                onClick={() => setCategory(cat.label)}
+                style={category === cat.label ? { borderColor: cat.color + "50", color: cat.color, backgroundColor: cat.color + "15" } : {}}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition-all shrink-0 ${
+                  category === cat.label
+                    ? ""
+                    : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700 hover:text-white"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-3">
-        {/* Parts categories */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
-          {PARTS_CATEGORIES.map(cat => (
-            <button
-              key={cat.label}
-              onClick={() => setCategory(cat.label)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all shrink-0 ${
-                category === cat.label
-                  ? "bg-orange-600/15 border-orange-600/30 text-orange-400"
-                  : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700 hover:text-white"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+      {/* Content */}
+      <div className="max-w-5xl mx-auto px-3 pt-4">
+        {/* Stats strip */}
+        {!loading && filtered.length > 0 && (
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            {[
+              { label: "Stores", value: stats.total, color: "text-orange-400" },
+              { label: "Open Now", value: stats.open, color: "text-emerald-400" },
+              { label: "Avg ★", value: stats.avgRating, color: "text-yellow-400" },
+            ].map(s => (
+              <div key={s.label} className="p-2.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-center">
+                <p className={`text-lg font-black ${s.color}`}>{s.value}</p>
+                <p className="text-[10px] text-zinc-600">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
+        {/* Chart */}
+        {!loading && filtered.length > 3 && <CategoryChart shops={filtered} />}
+
+        {/* Results */}
         {loading ? (
-          Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
+          <div className="space-y-2">
+            {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
         ) : error ? (
-          <div className="text-center py-16">
-            <Package className="w-12 h-12 text-zinc-800 mx-auto mb-4" />
-            <p className="text-zinc-400 mb-3">Failed to load parts stores</p>
+          <div className="text-center py-12">
+            <Package className="w-10 h-10 text-zinc-800 mx-auto mb-3" />
+            <p className="text-zinc-400 text-sm mb-3">Failed to load parts stores</p>
             <button
               onClick={() => fetchParts(category, emirate)}
-              className="px-4 py-2 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-500 transition-colors"
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-semibold hover:bg-orange-500"
             >
               Retry
             </button>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <Package className="w-12 h-12 text-zinc-800 mx-auto mb-4" />
-            <p className="text-zinc-400 mb-2">No parts stores found</p>
+          <div className="text-center py-12">
+            <Package className="w-10 h-10 text-zinc-800 mx-auto mb-3" />
+            <p className="text-zinc-400 text-sm mb-2">No parts stores found</p>
             <button
               onClick={() => { setSearch(""); setOpenOnly(false); setCategory("All Parts"); setEmirate("All UAE"); }}
               className="text-sm text-orange-400 hover:text-orange-300"
@@ -321,7 +403,11 @@ export default function PartsPage() {
             </button>
           </div>
         ) : (
-          filtered.map(shop => <PartsCard key={shop.place_id} shop={shop} />)
+          <div className="space-y-2">
+            {filtered.map((shop, i) => (
+              <PartsCard key={shop.place_id} shop={shop} rank={i + 1} />
+            ))}
+          </div>
         )}
       </div>
     </div>
