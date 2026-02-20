@@ -447,7 +447,12 @@ function HomeContent() {
   }, []);
 
   /* ── Search Logic ── */
-  const searchPlaces = useCallback(async (query: string, isAI = true, brandId: string | null = null) => {
+  const searchPlaces = useCallback(async (
+    query: string,
+    isAI = true,
+    brandId: string | null = null,
+    overrideCenter?: { lat: number; lng: number }
+  ) => {
     setIsLoading(true);
     setSearchPerformed(true);
     setCurrentQuery(query);
@@ -463,7 +468,7 @@ function HomeContent() {
     }
 
     try {
-      const center = userLocation || mapCenter;
+      const center = overrideCenter || userLocation || mapCenter;
       if (isAI) {
         const res = await fetch("/api/ai-search", {
           method: "POST",
@@ -589,8 +594,9 @@ function HomeContent() {
             <RegionPicker value={selectedRegion} onChange={(key) => {
               setSelectedRegion(key);
               const region = UAE_REGIONS[key];
-              if (region) setMapCenter({ lat: region.lat, lng: region.lng });
-              if (searchPerformed) searchPlaces(currentQuery, false, activeBrand);
+              const newCenter = region ? { lat: region.lat, lng: region.lng } : undefined;
+              if (newCenter) setMapCenter(newCenter);
+              if (searchPerformed) searchPlaces(currentQuery, false, activeBrand, newCenter);
             }} />
 
             <button

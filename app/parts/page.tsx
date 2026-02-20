@@ -169,18 +169,25 @@ export default function PartsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const fetchParts = useCallback(async (cat: string, em: string) => {
+  const fetchParts = useCallback(async (cat: string, em: string, searchTerm = "") => {
     setLoading(true);
     setError(false);
     try {
       const catFilter = PARTS_CATEGORIES.find(c => c.label === cat) || PARTS_CATEGORIES[0];
       const emFilter = EMIRATE_CONFIG.find(e => e.label === em) || EMIRATE_CONFIG[0];
 
-      // Build query with specific emirate context
-      let query = catFilter.query;
-      if (em !== "All UAE") {
+      // Build query — include search term in API call so brand names like "volkswagen" work
+      let query: string;
+      if (searchTerm.trim()) {
+        const catPart = cat === "All Parts" ? "spare parts" : cat.toLowerCase();
+        query = em !== "All UAE"
+          ? `${searchTerm.trim()} ${catPart} ${em}`
+          : `${searchTerm.trim()} ${catPart} UAE`;
+      } else if (em !== "All UAE") {
         const catPart = cat === "All Parts" ? "spare parts" : cat;
         query = `${catPart} auto shop ${em}`;
+      } else {
+        query = catFilter.query;
       }
 
       const params = new URLSearchParams({
@@ -201,21 +208,26 @@ export default function PartsPage() {
     }
   }, []);
 
+  // Fetch when category or emirate changes (reset search)
   useEffect(() => {
-    fetchParts(category, emirate);
+    fetchParts(category, emirate, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, emirate, fetchParts]);
+
+  // Debounced fetch when search text changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchParts(category, emirate, search);
+    }, 500);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   const filtered = useMemo(() => {
     return allShops
-      .filter(s =>
-        (!search ||
-          s.name.toLowerCase().includes(search.toLowerCase()) ||
-          (s.vicinity || "").toLowerCase().includes(search.toLowerCase()) ||
-          (s.formatted_address || "").toLowerCase().includes(search.toLowerCase())) &&
-        (!openOnly || s.opening_hours?.open_now)
-      )
+      .filter(s => !openOnly || s.opening_hours?.open_now)
       .sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }, [allShops, search, openOnly]);
+  }, [allShops, openOnly]);
 
   const stats = useMemo(() => {
     const open = filtered.filter(s => s.opening_hours?.open_now).length;
