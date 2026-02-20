@@ -6,14 +6,14 @@ import { ShieldCheck, Cpu, Clock, Award, MapPin, TrendingUp } from "lucide-react
 const FEATURES = [
   {
     icon: Cpu,
-    color: "text-violet-400",
-    bg: "bg-violet-600/10 border-violet-600/20",
-    glowColor: "bg-violet-600/5",
+    color: "text-blue-400",
+    bg: "bg-blue-600/10 border-blue-600/20",
+    glowColor: "bg-blue-600/5",
     title: "AI Diagnostics",
     desc: "Describe your problem in plain English. Our AI analyzes your issue and matches you instantly with the right specialist.",
     stat: "50+ data points",
-    statColor: "text-violet-400",
-    dot: "bg-violet-500",
+    statColor: "text-blue-400",
+    dot: "bg-blue-500",
   },
   {
     icon: ShieldCheck,
@@ -49,7 +49,7 @@ export default function WhyUs() {
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-violet-600/5 blur-[80px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-blue-600/5 blur-[80px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 relative z-10">
         <motion.div
@@ -58,11 +58,11 @@ export default function WhyUs() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-xs font-bold text-violet-500 tracking-widest uppercase mb-3">Why Choose Us</p>
+          <p className="text-xs font-bold text-blue-500 tracking-widest uppercase mb-3">Why Choose Us</p>
           <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white mb-4">
             15,000+ Drivers Trust
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-violet-200">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
               GarageFinder
             </span>
           </h2>

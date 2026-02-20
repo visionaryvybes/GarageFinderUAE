@@ -122,7 +122,7 @@ function UAECalendar() {
             className={`aspect-square flex items-center justify-center text-[11px] rounded-md font-semibold transition-colors ${
               day === null ? "" :
               day === today
-                ? "bg-violet-600 text-white font-black"
+                ? "bg-blue-600 text-white font-black"
                 : day % 7 === 6 || day % 7 === 0
                   ? "text-zinc-600"
                   : "text-zinc-400 hover:bg-[#1a1a1a]"
@@ -209,7 +209,7 @@ function QuickNav() {
               <l.icon className="w-4 h-4" style={{ color: l.color }} />
             </div>
             {l.badge && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/20">
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20">
                 {l.badge}
               </span>
             )}
@@ -266,7 +266,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-black tracking-tight text-white">
-                UAE <span className="text-violet-400">Dashboard</span>
+                UAE <span className="text-blue-400">Dashboard</span>
               </h1>
               <p className="text-xs text-zinc-600 mt-0.5">Auto repair ecosystem · real-time overview</p>
             </div>
@@ -424,7 +424,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     ))}
-                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-violet-400 hover:text-blue-300 mt-1">
+                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 mt-1">
                       See all <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>

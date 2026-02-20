@@ -74,12 +74,12 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
         <div
           className={`flex items-center gap-2 rounded-2xl border px-4 py-2.5 transition-all duration-200 ${
             isFocused
-              ? "bg-zinc-900 border-violet-500/40 shadow-[0_0_0_2px_rgba(139,92,246,0.15),0_0_24px_rgba(139,92,246,0.08)]"
+              ? "bg-zinc-900 border-blue-500/40 shadow-[0_0_0_2px_rgba(59,130,246,0.15),0_0_24px_rgba(59,130,246,0.08)]"
               : "bg-zinc-900/70 border-zinc-800 hover:border-zinc-700"
           }`}
         >
           {isLoading ? (
-            <Loader2 className="w-4 h-4 text-violet-400 animate-spin shrink-0" />
+            <Loader2 className="w-4 h-4 text-blue-400 animate-spin shrink-0" />
           ) : (
             <Search className="w-4 h-4 text-zinc-500 shrink-0" />
           )}
@@ -109,13 +109,13 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
             className="p-1.5 hover:bg-zinc-800 rounded-full transition-colors shrink-0 group"
             title="Voice search"
           >
-            <Mic className="w-3.5 h-3.5 text-zinc-600 group-hover:text-violet-400 transition-colors" />
+            <Mic className="w-3.5 h-3.5 text-zinc-600 group-hover:text-blue-400 transition-colors" />
           </button>
 
           <button
             type="submit"
             disabled={!query.trim() || isLoading}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 disabled:opacity-40 disabled:cursor-default text-white rounded-xl text-xs font-bold transition-all shrink-0 shadow-lg shadow-violet-900/20"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-40 disabled:cursor-default text-white rounded-xl text-xs font-bold transition-all shrink-0 shadow-lg shadow-blue-900/20"
           >
             <Sparkles className="w-3 h-3" />
             <span className="hidden sm:inline">Search</span>
@@ -137,8 +137,8 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
               onClick={() => handleSuggestion(s.text)}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-800/60 transition-colors text-left group"
             >
-              <div className="w-6 h-6 rounded-lg bg-zinc-800 group-hover:bg-violet-600/15 flex items-center justify-center transition-colors">
-                <s.icon className="w-3 h-3 text-zinc-600 group-hover:text-violet-400 transition-colors" />
+              <div className="w-6 h-6 rounded-lg bg-zinc-800 group-hover:bg-blue-600/15 flex items-center justify-center transition-colors">
+                <s.icon className="w-3 h-3 text-zinc-600 group-hover:text-blue-400 transition-colors" />
               </div>
               <span className="text-sm text-zinc-400 group-hover:text-zinc-200 transition-colors">{s.text}</span>
             </button>

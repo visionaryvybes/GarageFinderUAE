@@ -41,7 +41,7 @@ function Chip({
   color?: "violet" | "cyan" | "orange";
 }) {
   const activeStyles: Record<string, string> = {
-    violet: "bg-violet-600/15 border-violet-500/40 text-violet-300",
+    violet: "bg-blue-600/15 border-blue-500/40 text-blue-300",
     cyan: "bg-cyan-600/15 border-cyan-500/40 text-cyan-300",
     orange: "bg-orange-600/15 border-orange-500/40 text-orange-300",
   };
@@ -84,14 +84,14 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
           onClick={() => setExpanded(!expanded)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border shrink-0 transition-all ${
             expanded || activeCount > 0
-              ? "bg-violet-600/15 border-violet-500/40 text-violet-300"
+              ? "bg-blue-600/15 border-blue-500/40 text-blue-300"
               : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700"
           }`}
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           Filters
           {activeCount > 0 && (
-            <span className="ml-0.5 bg-gradient-to-br from-violet-600 to-violet-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm shadow-violet-900/40">
+            <span className="ml-0.5 bg-gradient-to-br from-blue-600 to-blue-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm shadow-blue-900/40">
               {activeCount}
             </span>
           )}
@@ -142,7 +142,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
             onClick={() => setExpanded(!expanded)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               filters.sortBy !== "relevance"
-                ? "border-violet-500/40 bg-violet-600/15 text-violet-300"
+                ? "border-blue-500/40 bg-blue-600/15 text-blue-300"
                 : "border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
             }`}
           >
@@ -177,7 +177,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
                       onClick={() => update({ sortBy: opt.id })}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         filters.sortBy === opt.id
-                          ? "bg-violet-600/15 border-violet-500/40 text-violet-300"
+                          ? "bg-blue-600/15 border-blue-500/40 text-blue-300"
                           : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
                       }`}
                     >
@@ -198,7 +198,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
                       onClick={() => update({ minRating: r })}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         filters.minRating === r
-                          ? "bg-violet-600/15 border-violet-500/40 text-violet-300"
+                          ? "bg-blue-600/15 border-blue-500/40 text-blue-300"
                           : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
                       }`}
                     >
@@ -231,7 +231,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
                       onClick={() => update({ maxPrice: opt.val })}
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         filters.maxPrice === opt.val
-                          ? "bg-violet-600/15 border-violet-500/40 text-violet-300"
+                          ? "bg-blue-600/15 border-blue-500/40 text-blue-300"
                           : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
                       }`}
                     >
@@ -260,7 +260,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
                   )}
                   <button
                     onClick={() => setExpanded(false)}
-                    className="px-4 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white transition-all shadow-lg shadow-violet-900/20"
+                    className="px-4 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white transition-all shadow-lg shadow-blue-900/20"
                   >
                     Apply
                   </button>

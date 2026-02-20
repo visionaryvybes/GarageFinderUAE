@@ -16,7 +16,7 @@ export default function ServiceBentoGrid({ onSearch }: ServiceBentoGridProps) {
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-2">
-                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-white">Services</span>
+                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">Services</span>
                     </h2>
                     <p className="text-zinc-500 font-medium max-w-md text-sm md:text-base">
                         23 expert solutions across all 7 UAE emirates.
@@ -40,7 +40,7 @@ export default function ServiceBentoGrid({ onSearch }: ServiceBentoGridProps) {
                         transition={{ delay: i * 0.03 }}
                         onClick={() => onSearch(svc.query, false)}
                         className={`
-              relative group cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 hover:border-violet-600/30 transition-all duration-500
+              relative group cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 hover:border-blue-600/30 transition-all duration-500
               ${svc.colSpan === 2 ? "col-span-2" : "col-span-1"}
               ${svc.rowSpan === 2 ? "row-span-2" : "row-span-1"}
             `}
@@ -68,8 +68,8 @@ export default function ServiceBentoGrid({ onSearch }: ServiceBentoGridProps) {
                                 )}
                             </div>
                             <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                                <div className="w-7 h-7 rounded-full bg-violet-600/20 backdrop-blur-sm flex items-center justify-center border border-violet-600/30">
-                                    <Search className="w-3.5 h-3.5 text-violet-400" />
+                                <div className="w-7 h-7 rounded-full bg-blue-600/20 backdrop-blur-sm flex items-center justify-center border border-blue-600/30">
+                                    <Search className="w-3.5 h-3.5 text-blue-400" />
                                 </div>
                             </div>
                         </div>

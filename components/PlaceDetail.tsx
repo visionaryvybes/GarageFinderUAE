@@ -23,7 +23,7 @@ function RatingStars({ rating, size = "sm" }: { rating: number; size?: "sm" | "l
         <Star
           key={star}
           className={`${starSize} ${star <= Math.round(rating)
-            ? "fill-blue-500 text-violet-500"
+            ? "fill-blue-500 text-blue-500"
             : "fill-zinc-800 text-zinc-800"
           }`}
         />
@@ -55,7 +55,7 @@ function ReviewCard({ review }: { review: PlaceReview }) {
             {isLong && !expanded ? review.text.slice(0, 200) + "..." : review.text}
           </p>
           {isLong && (
-            <button onClick={() => setExpanded(!expanded)} className="text-xs text-violet-500 mt-1.5 hover:text-violet-400 font-medium">
+            <button onClick={() => setExpanded(!expanded)} className="text-xs text-blue-500 mt-1.5 hover:text-blue-400 font-medium">
               {expanded ? "Show less" : "Read more"}
             </button>
           )}
@@ -135,7 +135,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                 {isPartsStore ? (
                   <Package className="w-4 h-4 text-orange-400" />
                 ) : (
-                  <BadgeCheck className="w-4 h-4 text-violet-400" />
+                  <BadgeCheck className="w-4 h-4 text-blue-400" />
                 )}
                 <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
                   {isPartsStore ? "Parts Store" : "Service Centre"}
@@ -195,7 +195,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                       <div className="flex flex-wrap items-center gap-2.5 mt-2">
                         {details.rating && (
                           <>
-                            <span className="text-xl font-bold text-violet-500">{details.rating.toFixed(1)}</span>
+                            <span className="text-xl font-bold text-blue-500">{details.rating.toFixed(1)}</span>
                             <RatingStars rating={details.rating} size="lg" />
                             {details.user_ratings_total && (
                               <span className="text-sm text-zinc-500">
@@ -228,7 +228,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                         href={getDirectionsUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-600/20"
+                        className="flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-600/20"
                       >
                         <Navigation className="w-4 h-4" />
                         Directions
@@ -307,7 +307,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                           <Phone className="w-4 h-4 text-zinc-600 shrink-0" />
                           <a
                             href={`tel:${details.formatted_phone_number}`}
-                            className="text-sm text-violet-400 hover:text-violet-300 font-medium"
+                            className="text-sm text-blue-400 hover:text-blue-300 font-medium"
                           >
                             {details.formatted_phone_number}
                           </a>
@@ -322,7 +322,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                             href={details.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-violet-400 hover:text-violet-300 truncate"
+                            className="text-sm text-blue-400 hover:text-blue-300 truncate"
                           >
                             {details.website.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
                           </a>
@@ -337,7 +337,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                             href={details.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-violet-400 hover:text-violet-300"
+                            className="text-sm text-blue-400 hover:text-blue-300"
                           >
                             View on Google Maps
                           </a>
@@ -347,10 +347,10 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
 
                     {/* AI Summary */}
                     {reviewSummary && (
-                      <div className="p-4 bg-violet-600/5 border border-violet-600/15 rounded-xl">
+                      <div className="p-4 bg-blue-600/5 border border-blue-600/15 rounded-xl">
                         <div className="flex items-center gap-2 mb-2">
-                          <Sparkles className="w-4 h-4 text-violet-500" />
-                          <span className="text-[11px] font-bold text-violet-400 uppercase tracking-wider">AI Summary</span>
+                          <Sparkles className="w-4 h-4 text-blue-500" />
+                          <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider">AI Summary</span>
                         </div>
                         <p className="text-sm text-zinc-400 leading-relaxed">{reviewSummary}</p>
                       </div>
@@ -380,7 +380,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                         {details.reviews.length > 3 && (
                           <button
                             onClick={() => setShowAllReviews(!showAllReviews)}
-                            className="w-full mt-3 py-2.5 text-sm font-medium text-violet-500 hover:bg-violet-600/5 rounded-xl transition-colors border border-zinc-800 hover:border-violet-600/20"
+                            className="w-full mt-3 py-2.5 text-sm font-medium text-blue-500 hover:bg-blue-600/5 rounded-xl transition-colors border border-zinc-800 hover:border-blue-600/20"
                           >
                             {showAllReviews ? "Show fewer reviews" : `See all ${details.reviews.length} reviews`}
                           </button>

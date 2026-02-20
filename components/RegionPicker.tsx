@@ -29,7 +29,7 @@ export default function RegionPicker({ value, onChange }: RegionPickerProps) {
                 onClick={() => setOpen(!open)}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors text-sm font-medium text-zinc-300"
             >
-                <MapPin className="w-3.5 h-3.5 text-violet-500" />
+                <MapPin className="w-3.5 h-3.5 text-blue-500" />
                 {current.label}
                 <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
@@ -41,7 +41,7 @@ export default function RegionPicker({ value, onChange }: RegionPickerProps) {
                             key={key}
                             onClick={() => { onChange(key); setOpen(false); }}
                             className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${key === value
-                                    ? "bg-violet-600/10 text-violet-400 font-semibold"
+                                    ? "bg-blue-600/10 text-blue-400 font-semibold"
                                     : "text-zinc-400 hover:bg-zinc-900 hover:text-white"
                                 }`}
                         >

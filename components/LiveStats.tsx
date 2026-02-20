@@ -44,7 +44,7 @@ function Counter({
       <motion.div className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-1 tabular-nums">
         {prefix}
         <motion.span>{display}</motion.span>
-        <span className="text-violet-400">{suffix}</span>
+        <span className="text-blue-400">{suffix}</span>
       </motion.div>
       <p className="text-zinc-400 font-semibold text-sm mb-1">{label}</p>
       {sublabel && <p className="text-zinc-700 text-[11px] mb-3">{sublabel}</p>}
@@ -64,7 +64,7 @@ export default function LiveStats() {
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 overflow-hidden backdrop-blur-sm">
           {/* Top label */}
           <div className="flex items-center gap-2 px-6 py-3 border-b border-zinc-800/60">
-            <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
+            <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
             <span className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest">Platform Stats · Updated Daily</span>
             <span className="ml-auto flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

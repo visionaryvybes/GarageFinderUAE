@@ -63,7 +63,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
           <div className="w-20 absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#040404] to-transparent pointer-events-none" />
           <button
             onClick={() => setShowModal(true)}
-            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-violet-600/40 hover:text-violet-400 transition-all z-20 shrink-0"
+            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-blue-600/40 hover:text-blue-400 transition-all z-20 shrink-0"
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Browse</span>
@@ -94,7 +94,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                 {isSelected && (
                   <motion.div
                     layoutId="brand-indicator"
-                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1 h-1 bg-violet-500 rounded-full shadow-[0_0_8px_#3b82f6]"
+                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"
                   />
                 )}
               </button>
@@ -105,11 +105,11 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
         {/* Active brand pill */}
         {activeBrand && currentBrand && (
           <div className="absolute left-16 top-1/2 -translate-y-1/2 z-10 flex items-center gap-2">
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-violet-600/15 border border-violet-600/30 backdrop-blur-sm">
-              <span className="text-xs font-bold text-violet-400">{currentBrand.name}</span>
+            <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-600/15 border border-blue-600/30 backdrop-blur-sm">
+              <span className="text-xs font-bold text-blue-400">{currentBrand.name}</span>
               <button
                 onClick={() => onBrandSelect("auto repair", null)}
-                className="text-violet-400/60 hover:text-violet-400 transition-colors"
+                className="text-blue-400/60 hover:text-blue-400 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -171,7 +171,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                     onClick={() => setActiveCategory(cat.id)}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${
                       activeCategory === cat.id
-                        ? "bg-violet-600/15 border-violet-600/40 text-violet-400"
+                        ? "bg-blue-600/15 border-blue-600/40 text-blue-400"
                         : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
                     }`}
                   >
@@ -196,7 +196,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                         }}
                         className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                           isActive
-                            ? "bg-violet-600/10 border-violet-600/30"
+                            ? "bg-blue-600/10 border-blue-600/30"
                             : "bg-zinc-900 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900"
                         }`}
                       >
@@ -211,7 +211,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                           />
                         </div>
                         <div className="text-left min-w-0">
-                          <p className={`text-sm font-bold truncate ${isActive ? "text-violet-400" : "text-zinc-200"}`}>
+                          <p className={`text-sm font-bold truncate ${isActive ? "text-blue-400" : "text-zinc-200"}`}>
                             {brand.name}
                           </p>
                           <p className="text-[10px] text-zinc-600 truncate">Find specialists</p>

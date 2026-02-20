@@ -125,7 +125,7 @@ function MaintenanceCard({ item, index }: { item: MaintenanceItem; index: number
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[11px] text-[#71717a]">{item.category}</span>
             <span className="text-[11px] text-[#3f3f46]">·</span>
-            <span className="text-[11px] font-semibold text-violet-400">{item.estimatedCostAed} AED</span>
+            <span className="text-[11px] font-semibold text-blue-400">{item.estimatedCostAed} AED</span>
           </div>
         </div>
         <ChevronDown className={`w-4 h-4 text-[#52525b] shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -160,7 +160,7 @@ function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }
   return (
     <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
-        <Gauge className="w-4 h-4 text-violet-400" />
+        <Gauge className="w-4 h-4 text-blue-400" />
         <span className="text-sm font-bold text-[#fafafa]">Tyre Pressure</span>
         <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/12 border border-orange-500/20 text-orange-400">UAE Adjusted</span>
       </div>
@@ -172,7 +172,7 @@ function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }
             { label: "Spare", psi: data.sparePsi, bar: Math.round(data.sparePsi * 0.0689 * 10) / 10 },
           ].map(t => (
             <div key={t.label} className="text-center p-3 rounded-xl bg-[#1c1c1f] border border-[#27272a]">
-              <div className="text-2xl font-black text-violet-400">{t.psi}</div>
+              <div className="text-2xl font-black text-blue-400">{t.psi}</div>
               <div className="text-[10px] text-[#52525b] font-semibold">PSI</div>
               <div className="text-[10px] text-[#71717a] mt-0.5">{t.bar} bar</div>
               <div className="text-[11px] font-bold text-[#a1a1aa] mt-1">{t.label}</div>
@@ -197,7 +197,7 @@ function SafetySection({ alerts }: { alerts: SafetyAlert[] }) {
   const cfg: Record<string, { bg: string; border: string; badge: string; icon: React.ElementType; ic: string }> = {
     critical: { bg: "bg-red-500/8", border: "border-red-500/25", badge: "bg-red-500/15 text-red-400", icon: Shield, ic: "text-red-400" },
     warning: { bg: "bg-amber-500/8", border: "border-amber-500/25", badge: "bg-amber-500/15 text-amber-400", icon: AlertTriangle, ic: "text-amber-400" },
-    info: { bg: "bg-violet-500/8", border: "border-violet-500/25", badge: "bg-violet-500/15 text-violet-400", icon: Info, ic: "text-violet-400" },
+    info: { bg: "bg-blue-500/8", border: "border-blue-500/25", badge: "bg-blue-500/15 text-blue-400", icon: Info, ic: "text-blue-400" },
   };
   const sorted = [...alerts].sort((a, b) => { const o = { critical: 0, warning: 1, info: 2 }; return o[a.severity] - o[b.severity]; });
   return (
@@ -221,7 +221,7 @@ function SafetySection({ alerts }: { alerts: SafetyAlert[] }) {
                 <div className="p-2 rounded-lg bg-black/20 border border-white/5">
                   <p className="text-[12px] text-[#fafafa] font-medium"><span className={`font-bold ${c.ic}`}>Action: </span>{alert.action}</p>
                 </div>
-                {alert.estimatedCostAed && <p className="text-[11px] text-[#71717a] mt-2">Est. cost: <span className="text-violet-400 font-semibold">{alert.estimatedCostAed} AED</span></p>}
+                {alert.estimatedCostAed && <p className="text-[11px] text-[#71717a] mt-2">Est. cost: <span className="text-blue-400 font-semibold">{alert.estimatedCostAed} AED</span></p>}
               </div>
             </div>
           </motion.div>
@@ -317,14 +317,14 @@ function ServiceReminderWidget({ data, brand, model }: { data: CarAdvisorRespons
   );
   return (
     <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4">
-      <div className="flex items-center gap-2 mb-3"><BellRing className="w-4 h-4 text-violet-400" /><h3 className="text-sm font-bold text-[#fafafa]">Set Service Reminder</h3></div>
+      <div className="flex items-center gap-2 mb-3"><BellRing className="w-4 h-4 text-blue-400" /><h3 className="text-sm font-bold text-[#fafafa]">Set Service Reminder</h3></div>
       <div className="flex gap-2 mb-3">
         <input type="number" value={customKm} onChange={e => setCustomKm(e.target.value)}
           placeholder={`e.g. ${data.nextServiceKm.toLocaleString()}`}
-          className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+          className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
         <span className="text-sm text-[#71717a] self-center">km</span>
       </div>
-      <button onClick={save} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 text-white text-sm font-bold transition-all">
+      <button onClick={save} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-bold transition-all">
         <BellRing className="w-4 h-4" />Save Reminder
       </button>
       <p className="text-[11px] text-[#52525b] mt-2 text-center">Saved locally to your browser</p>
@@ -364,20 +364,20 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
   return (
     <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
-        <MessageSquare className="w-4 h-4 text-violet-400" />
+        <MessageSquare className="w-4 h-4 text-blue-400" />
         <span className="text-sm font-bold text-[#fafafa]">Ask Your AI Advisor</span>
         <div className="ml-auto flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[10px] text-[#71717a]">Online</span></div>
       </div>
       <div className="h-56 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-3">
-            <div className="w-10 h-10 rounded-full bg-violet-500/15 flex items-center justify-center"><Sparkles className="w-5 h-5 text-violet-400" /></div>
+            <div className="w-10 h-10 rounded-full bg-blue-500/15 flex items-center justify-center"><Sparkles className="w-5 h-5 text-blue-400" /></div>
             <p className="text-sm text-[#71717a] text-center">Ask me anything about your {carDetails.brand} {carDetails.model}</p>
           </div>
         )}
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${m.role === "user" ? "bg-violet-600 text-white rounded-tr-sm" : "bg-[#1c1c1f] text-[#a1a1aa] rounded-tl-sm border border-[#27272a]"}`}>
+            <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${m.role === "user" ? "bg-blue-600 text-white rounded-tr-sm" : "bg-[#1c1c1f] text-[#a1a1aa] rounded-tl-sm border border-[#27272a]"}`}>
               {m.content}
             </div>
           </div>
@@ -385,7 +385,7 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
         {loading && (
           <div className="flex justify-start">
             <div className="bg-[#1c1c1f] rounded-2xl rounded-tl-sm px-3.5 py-2.5 border border-[#27272a] flex gap-1 items-center">
-              <Loader2 className="w-3.5 h-3.5 text-violet-400 animate-spin" /><span className="text-[12px] text-[#52525b]">Thinking...</span>
+              <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin" /><span className="text-[12px] text-[#52525b]">Thinking...</span>
             </div>
           </div>
         )}
@@ -397,7 +397,7 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
           <div className="flex flex-wrap gap-1.5">
             {QUICK_QUESTIONS.slice(0, 4).map(q => (
               <button key={q} onClick={() => send(q)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-[#1c1c1f] border border-[#27272a] text-[#71717a] hover:text-violet-400 hover:border-violet-500/30 transition-all">
+                className="text-[11px] px-2.5 py-1 rounded-full bg-[#1c1c1f] border border-[#27272a] text-[#71717a] hover:text-blue-400 hover:border-blue-500/30 transition-all">
                 {q.length > 32 ? q.slice(0, 32) + "…" : q}
               </button>
             ))}
@@ -408,9 +408,9 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
         <div className="flex gap-2">
           <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()}
             placeholder="Ask about your car..."
-            className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3.5 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+            className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3.5 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
           <button onClick={() => send()} disabled={!input.trim() || loading}
-            className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 disabled:opacity-40 text-white transition-all">
+            className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:opacity-40 text-white transition-all">
             <Send className="w-4 h-4" />
           </button>
         </div>
@@ -467,9 +467,9 @@ export default function MyCarPage() {
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="relative w-9 h-9">
-            <div className="absolute inset-0 bg-violet-600 rounded-2xl blur opacity-50" />
-            <div className="relative w-9 h-9 bg-gradient-to-br from-[#1c1c1f] to-[#09090b] border border-violet-500/30 rounded-2xl flex items-center justify-center">
-              <Car className="w-5 h-5 text-violet-400" />
+            <div className="absolute inset-0 bg-blue-600 rounded-2xl blur opacity-50" />
+            <div className="relative w-9 h-9 bg-gradient-to-br from-[#1c1c1f] to-[#09090b] border border-blue-500/30 rounded-2xl flex items-center justify-center">
+              <Car className="w-5 h-5 text-blue-400" />
             </div>
           </div>
           <div>
@@ -494,14 +494,14 @@ export default function MyCarPage() {
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Brand</label>
                     <select value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors">
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
                       {CAR_BRANDS.map(b => <option key={b}>{b}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Model</label>
                     <input type="text" value={form.model} onChange={e => setForm(f => ({ ...f, model: e.target.value }))}
-                      placeholder="e.g. Camry, X5..." className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+                      placeholder="e.g. Camry, X5..." className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -509,12 +509,12 @@ export default function MyCarPage() {
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Year</label>
                     <input type="number" value={form.year} onChange={e => setForm(f => ({ ...f, year: parseInt(e.target.value) || f.year }))}
                       min={1990} max={new Date().getFullYear()}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors" />
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Engine</label>
                     <select value={form.engineType} onChange={e => setForm(f => ({ ...f, engineType: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors">
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
                       {["Petrol / Gasoline", "Diesel", "Hybrid", "Plug-in Hybrid (PHEV)", "Electric (EV)"].map(e => <option key={e}>{e}</option>)}
                     </select>
                   </div>
@@ -522,7 +522,7 @@ export default function MyCarPage() {
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider">Mileage</label>
-                    <span className="text-sm font-black text-violet-400">{form.mileage.toLocaleString()} km</span>
+                    <span className="text-sm font-black text-blue-400">{form.mileage.toLocaleString()} km</span>
                   </div>
                   <input type="range" min={0} max={500000} step={5000} value={form.mileage}
                     onChange={e => setForm(f => ({ ...f, mileage: parseInt(e.target.value) }))}
@@ -533,23 +533,23 @@ export default function MyCarPage() {
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Oil Change <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                     <input type="number" value={form.lastOilChangeMileage} onChange={e => setForm(f => ({ ...f, lastOilChangeMileage: e.target.value }))}
-                      placeholder="e.g. 70000" className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors" />
+                      placeholder="e.g. 70000" className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Service <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                     <input type="date" value={form.lastServiceDate} onChange={e => setForm(f => ({ ...f, lastServiceDate: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-violet-500/40 transition-colors" />
+                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                 </div>
                 <div>
                   <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Issues / Notes <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                   <textarea value={form.additionalInfo} onChange={e => setForm(f => ({ ...f, additionalInfo: e.target.value }))}
                     placeholder="Any issues, warning lights, unusual sounds..." rows={2}
-                    className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-violet-500/40 transition-colors resize-none" />
+                    className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors resize-none" />
                 </div>
                 {error && <p className="text-sm text-red-400 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" />{error}</p>}
                 <button onClick={generate} disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 hover:from-violet-500 hover:to-violet-600 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-violet-900/30">
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-violet-900/30">
                   {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Analyzing {form.brand} {form.model}...</> : <><Sparkles className="w-4 h-4" />Generate Full Analysis</>}
                 </button>
               </div>
@@ -579,7 +579,7 @@ export default function MyCarPage() {
           <div className="space-y-4">
             {!data && !loading && (
               <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-10 flex flex-col items-center justify-center min-h-[400px] text-center gap-5">
-                <div className="w-16 h-16 rounded-full bg-violet-500/10 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center">
                   <Car className="w-8 h-8 text-[#27272a]" />
                 </div>
                 <div>
@@ -603,8 +603,8 @@ export default function MyCarPage() {
             {loading && (
               <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-12 flex flex-col items-center justify-center gap-6 min-h-[400px]">
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-full bg-violet-500/15 flex items-center justify-center"><Loader2 className="w-8 h-8 text-violet-400 animate-spin" /></div>
-                  <div className="absolute inset-0 rounded-full border-2 border-violet-500/20 animate-ping" />
+                  <div className="w-16 h-16 rounded-full bg-blue-500/15 flex items-center justify-center"><Loader2 className="w-8 h-8 text-blue-400 animate-spin" /></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-ping" />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-bold text-[#fafafa]">AI analyzing your {form.brand} {form.model}</p>
@@ -618,14 +618,14 @@ export default function MyCarPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                   {/* AI Summary */}
                   {data.aiSummary && (
-                    <div className="rounded-2xl bg-gradient-to-br from-violet-600/10 to-violet-500/5 border border-violet-500/20 p-4">
-                      <div className="flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-violet-400" /><span className="text-sm font-bold text-violet-400">AI Advisor Says</span></div>
+                    <div className="rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 p-4">
+                      <div className="flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-blue-400" /><span className="text-sm font-bold text-blue-400">AI Advisor Says</span></div>
                       <p className="text-[13px] text-[#d4d4d8] leading-relaxed">{data.aiSummary}</p>
                       {data.estimatedAnnualCostAed && (
-                        <div className="mt-3 pt-3 border-t border-violet-500/15 flex items-center gap-2">
-                          <TrendingUp className="w-3.5 h-3.5 text-violet-400" />
+                        <div className="mt-3 pt-3 border-t border-blue-500/15 flex items-center gap-2">
+                          <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
                           <span className="text-[12px] text-[#a1a1aa]">Est. annual maintenance: </span>
-                          <span className="text-[12px] font-bold text-violet-400">{data.estimatedAnnualCostAed} AED</span>
+                          <span className="text-[12px] font-bold text-blue-400">{data.estimatedAnnualCostAed} AED</span>
                         </div>
                       )}
                     </div>
@@ -639,7 +639,7 @@ export default function MyCarPage() {
                     {[
                       { label: "Urgent", value: String(urgentCount), color: "text-red-400", ic: AlertTriangle, bg: "bg-red-500/10" },
                       { label: "Due Soon", value: String(dueSoonCount), color: "text-amber-400", ic: Clock, bg: "bg-amber-500/10" },
-                      { label: "Next Service", value: data.nextServiceEstimatedDate || "—", color: "text-violet-400", ic: Zap, bg: "bg-violet-500/10" },
+                      { label: "Next Service", value: data.nextServiceEstimatedDate || "—", color: "text-blue-400", ic: Zap, bg: "bg-blue-500/10" },
                     ].map(({ label, value, color, ic: Icon, bg }) => (
                       <div key={label} className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4 flex flex-col justify-between">
                         <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center mb-2`}><Icon className={`w-4 h-4 ${color}`} /></div>
@@ -665,7 +665,7 @@ export default function MyCarPage() {
                         { id: "warnings", label: "Warning Lights", icon: AlertTriangle, count: data.warningLights?.length },
                       ].map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                          className={`flex items-center gap-1.5 px-4 py-3 text-xs font-bold transition-all shrink-0 relative ${activeTab === tab.id ? "text-violet-400 border-b-2 border-violet-500 bg-violet-500/5" : "text-[#71717a] hover:text-[#a1a1aa]"}`}>
+                          className={`flex items-center gap-1.5 px-4 py-3 text-xs font-bold transition-all shrink-0 relative ${activeTab === tab.id ? "text-blue-400 border-b-2 border-blue-500 bg-blue-500/5" : "text-[#71717a] hover:text-[#a1a1aa]"}`}>
                           <tab.icon className="w-3.5 h-3.5" />{tab.label}
                           {tab.count != null && <span className="text-[9px] font-black px-1 py-0.5 rounded-full bg-[#27272a] text-[#71717a]">{tab.count}</span>}
                           {tab.alert && <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
@@ -683,7 +683,7 @@ export default function MyCarPage() {
                               { id: "ok", label: "OK", count: (data.maintenanceItems?.filter(i => i.status === "ok").length ?? 0) },
                             ].map(f => (
                               <button key={f.id} onClick={() => setFilterStatus(f.id as typeof filterStatus)}
-                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterStatus === f.id ? "bg-violet-600/12 border-violet-600/35 text-violet-400" : "bg-[#1c1c1f] border-[#27272a] text-[#71717a] hover:border-[#3f3f46]"}`}>
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterStatus === f.id ? "bg-blue-600/12 border-blue-600/35 text-blue-400" : "bg-[#1c1c1f] border-[#27272a] text-[#71717a] hover:border-[#3f3f46]"}`}>
                                 {f.label}<span className="text-[10px] opacity-70">{f.count}</span>
                               </button>
                             ))}
@@ -698,7 +698,7 @@ export default function MyCarPage() {
                               <div className="space-y-2">
                                 {data.tips.map((tip, i) => (
                                   <div key={i} className="flex gap-2 items-start">
-                                    <Star className="w-3.5 h-3.5 text-violet-400 shrink-0 mt-0.5" />
+                                    <Star className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
                                     <p className="text-[12px] text-[#a1a1aa] leading-relaxed">{tip}</p>
                                   </div>
                                 ))}
