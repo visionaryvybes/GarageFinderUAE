@@ -460,7 +460,7 @@ export default function MyCarPage() {
 
   return (
     <div className="min-h-screen bg-[#09090b]">
-      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 pt-6 pb-20 md:pb-6 space-y-6">
 
         {/* Header */}
         <div className="flex items-center gap-3">

@@ -197,7 +197,7 @@ function StatsCharts({ shops }: { shops: ExtendedPlaceResult[] }) {
         <p className="text-[10px] text-zinc-500 font-semibold mb-2 flex items-center gap-1">
           <Clock className="w-3 h-3" /> Open Right Now
         </p>
-        <div style={{ height: 80 }} className="flex items-center justify-center">
+        <div style={{ height: 80 }} className="relative flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={openData} cx="50%" cy="50%" innerRadius={22} outerRadius={36} dataKey="value" strokeWidth={0}>
@@ -300,7 +300,7 @@ function GaragesContent() {
   const activeEmirate = EMIRATE_CONFIG.find(e => e.label === emirate);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-6">
+    <div className="min-h-screen bg-black text-zinc-100 pb-20 md:pb-6">
       {/* Compact Header */}
       <div className="border-b border-zinc-800/60 bg-zinc-950 sticky top-14 z-30">
         <div className="max-w-5xl mx-auto px-3 py-3">
@@ -415,7 +415,7 @@ function GaragesContent() {
       <div className="max-w-5xl mx-auto px-3 pt-4">
         {/* Stats strip */}
         {!loading && garages.length > 0 && (
-          <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
             {[
               { label: "Total", value: stats.total, color: "text-blue-400" },
               { label: "Open Now", value: stats.open, color: "text-emerald-400" },

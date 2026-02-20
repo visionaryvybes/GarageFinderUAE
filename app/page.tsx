@@ -560,7 +560,7 @@ function HomeContent() {
     <div className="min-h-screen bg-black text-zinc-100">
 
       {/* ── STICKY HEADER ── */}
-      <header className="sticky top-0 z-40 bg-black/95 backdrop-blur-xl border-b border-[#1a1a1a]">
+      <header className="sticky top-14 z-40 bg-black/95 backdrop-blur-xl border-b border-[#1a1a1a]">
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
         <div className="px-4 py-3 flex items-center gap-3">
           <button

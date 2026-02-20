@@ -259,7 +259,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-8">
+    <div className="min-h-screen bg-black text-zinc-100 pb-20 md:pb-8">
       {/* Header */}
       <div className="border-b border-zinc-800/60 bg-zinc-950">
         <div className="max-w-6xl mx-auto px-3 py-4">

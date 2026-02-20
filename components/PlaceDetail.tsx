@@ -406,7 +406,7 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                     </div>
 
                     {/* Bottom safe area */}
-                    <div className="h-6" />
+                    <div className="h-20 md:h-6" />
                   </div>
                 </>
               ) : null}

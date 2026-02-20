@@ -30,7 +30,7 @@ export default function RegionPicker({ value, onChange }: RegionPickerProps) {
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors text-sm font-medium text-zinc-300"
             >
                 <MapPin className="w-3.5 h-3.5 text-blue-500" />
-                {current.label}
+                <span className="hidden sm:inline">{current.label}</span>
                 <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
 

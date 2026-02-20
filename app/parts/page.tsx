@@ -245,7 +245,7 @@ export default function PartsPage() {
   const activeCat = PARTS_CATEGORIES.find(c => c.label === category);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-6">
+    <div className="min-h-screen bg-black text-zinc-100 pb-20 md:pb-6">
       {/* Compact sticky header */}
       <div className="border-b border-zinc-800/60 bg-zinc-950 sticky top-14 z-30">
         <div className="max-w-5xl mx-auto px-3 py-3">
@@ -349,7 +349,7 @@ export default function PartsPage() {
       </div>
 
       {/* Category tabs */}
-      <div className="sticky top-[calc(3.5rem+var(--header-h,140px))] z-20 bg-zinc-950/95 backdrop-blur border-b border-zinc-800/60">
+      <div className="bg-zinc-950/95 backdrop-blur border-b border-zinc-800/60">
         <div className="max-w-5xl mx-auto px-3 py-2">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
             {PARTS_CATEGORIES.map(cat => (
