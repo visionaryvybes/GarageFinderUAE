@@ -46,8 +46,8 @@ export default function Hero({ onSearch }: HeroProps) {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-black -mx-4 -mt-6"
-      style={{ width: "calc(100% + 2rem)", minHeight: "90vh" }}
+      className="relative w-full overflow-hidden bg-black"
+      style={{ minHeight: "90vh" }}
     >
       {/* ── Background image ── */}
       <div className="absolute inset-0 z-0">

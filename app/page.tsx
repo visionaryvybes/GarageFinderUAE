@@ -557,7 +557,7 @@ function HomeContent() {
     : null;
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
+    <div className="min-h-screen bg-black text-zinc-100 overflow-x-hidden">
 
       {/* ── STICKY HEADER ── */}
       <header className="sticky top-14 z-40 bg-black/95 backdrop-blur-xl border-b border-[#1a1a1a]">
@@ -631,6 +631,11 @@ function HomeContent() {
         </div>
       )}
 
+      {/* ── HERO (full-width, outside padded main) ── */}
+      {!searchPerformed && !isLoading && (
+        <Hero onSearch={searchPlaces} />
+      )}
+
       {/* ── MAIN CONTENT ── */}
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-2">
 
@@ -639,7 +644,6 @@ function HomeContent() {
         {/* ── LANDING PAGE ── */}
         {!searchPerformed && !isLoading && (
           <>
-            <Hero onSearch={searchPlaces} />
             <DashboardStrip />
             <QuickActionGrid onSearch={searchPlaces} />
             <FeaturedShops

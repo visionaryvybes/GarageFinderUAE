@@ -226,7 +226,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="md:hidden h-14" />
     </>
   );
 }
