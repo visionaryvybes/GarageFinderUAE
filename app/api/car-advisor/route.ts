@@ -719,6 +719,26 @@ CRITICAL: Return ONLY valid JSON. No markdown. No explanation. No code fences.`;
     const parsed = JSON.parse(jsonMatch[0]) as CarAdvisorResponse;
     parsed.generatedAt = new Date().toISOString();
 
+    // Forcibly override with server-calculated values — Gemini may ignore prompt instructions
+    const frontBar = parseFloat((tyreSpec.front * 0.0689476).toFixed(1));
+    const rearBar = parseFloat((tyreSpec.rear * 0.0689476).toFixed(1));
+    parsed.tyrePressure = {
+      ...parsed.tyrePressure,
+      frontPsi: tyreSpec.front,
+      rearPsi: tyreSpec.rear,
+      sparePsi: tyreSpec.spare,
+      frontBar,
+      rearBar,
+      uaeNote: tyreNote,
+    };
+    parsed.estimatedAnnualCostAed = annualCostRange;
+    // Clamp health score within ±5 of our calculation to allow minor AI nuance
+    if (parsed.overallScore) {
+      parsed.overallScore = Math.max(healthScore - 5, Math.min(healthScore + 5, parsed.overallScore));
+    } else {
+      parsed.overallScore = healthScore;
+    }
+
     return NextResponse.json(parsed, {
       headers: { "Cache-Control": "no-store" },
     });
