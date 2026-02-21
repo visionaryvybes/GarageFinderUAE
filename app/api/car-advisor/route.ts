@@ -67,6 +67,182 @@ export interface CarAdvisorResponse {
   generatedAt: string;
 }
 
+// ─── Vehicle-specific tyre pressure lookup ───────────────────────────────────
+// Format: { front: PSI, rear: PSI, spare: PSI }
+// Sources: manufacturer door-sticker specs (driver side door jamb label)
+const TYRE_PRESSURE_DB: Record<string, { front: number; rear: number; spare: number }> = {
+  // Ford
+  "ford f-150": { front: 35, rear: 60, spare: 60 },
+  "ford f-250": { front: 50, rear: 70, spare: 60 },
+  "ford mustang": { front: 35, rear: 35, spare: 60 },
+  "ford explorer": { front: 35, rear: 35, spare: 60 },
+  "ford ranger": { front: 35, rear: 50, spare: 60 },
+  "ford focus": { front: 32, rear: 30, spare: 60 },
+  "ford fusion": { front: 33, rear: 33, spare: 60 },
+  // Toyota
+  "toyota camry": { front: 32, rear: 32, spare: 60 },
+  "toyota corolla": { front: 32, rear: 32, spare: 60 },
+  "toyota land cruiser": { front: 35, rear: 35, spare: 60 },
+  "toyota fortuner": { front: 33, rear: 33, spare: 60 },
+  "toyota hilux": { front: 33, rear: 47, spare: 60 },
+  "toyota rav4": { front: 33, rear: 33, spare: 60 },
+  "toyota prado": { front: 33, rear: 33, spare: 60 },
+  "toyota prius": { front: 35, rear: 33, spare: 60 },
+  "toyota yaris": { front: 32, rear: 29, spare: 60 },
+  // Nissan
+  "nissan patrol": { front: 36, rear: 40, spare: 60 },
+  "nissan navara": { front: 33, rear: 47, spare: 60 },
+  "nissan altima": { front: 32, rear: 32, spare: 60 },
+  "nissan sentra": { front: 32, rear: 32, spare: 60 },
+  "nissan pathfinder": { front: 33, rear: 33, spare: 60 },
+  "nissan x-trail": { front: 33, rear: 33, spare: 60 },
+  "nissan kicks": { front: 33, rear: 33, spare: 60 },
+  // BMW
+  "bmw 3 series": { front: 35, rear: 38, spare: 60 },
+  "bmw 5 series": { front: 35, rear: 38, spare: 60 },
+  "bmw 7 series": { front: 36, rear: 42, spare: 60 },
+  "bmw x3": { front: 36, rear: 39, spare: 60 },
+  "bmw x5": { front: 36, rear: 44, spare: 60 },
+  "bmw m3": { front: 32, rear: 35, spare: 60 },
+  "bmw m5": { front: 32, rear: 39, spare: 60 },
+  "bmw 1 series": { front: 33, rear: 35, spare: 60 },
+  // Mercedes-Benz
+  "mercedes c-class": { front: 35, rear: 35, spare: 60 },
+  "mercedes e-class": { front: 35, rear: 38, spare: 60 },
+  "mercedes s-class": { front: 38, rear: 41, spare: 60 },
+  "mercedes glc": { front: 36, rear: 39, spare: 60 },
+  "mercedes gle": { front: 35, rear: 38, spare: 60 },
+  "mercedes gls": { front: 35, rear: 38, spare: 60 },
+  "mercedes amg": { front: 32, rear: 35, spare: 60 },
+  // Audi
+  "audi a3": { front: 33, rear: 30, spare: 60 },
+  "audi a4": { front: 35, rear: 33, spare: 60 },
+  "audi a6": { front: 36, rear: 33, spare: 60 },
+  "audi q3": { front: 33, rear: 33, spare: 60 },
+  "audi q5": { front: 36, rear: 36, spare: 60 },
+  "audi q7": { front: 36, rear: 41, spare: 60 },
+  "audi a8": { front: 33, rear: 33, spare: 60 },
+  // Volkswagen
+  "volkswagen golf": { front: 32, rear: 30, spare: 60 },
+  "volkswagen passat": { front: 33, rear: 30, spare: 60 },
+  "volkswagen tiguan": { front: 33, rear: 33, spare: 60 },
+  // Honda
+  "honda civic": { front: 32, rear: 30, spare: 60 },
+  "honda accord": { front: 32, rear: 32, spare: 60 },
+  "honda cr-v": { front: 33, rear: 33, spare: 60 },
+  "honda pilot": { front: 35, rear: 35, spare: 60 },
+  // Hyundai / Kia
+  "hyundai elantra": { front: 33, rear: 33, spare: 60 },
+  "hyundai tucson": { front: 33, rear: 33, spare: 60 },
+  "hyundai santa fe": { front: 35, rear: 35, spare: 60 },
+  "kia sportage": { front: 33, rear: 33, spare: 60 },
+  "kia sorento": { front: 35, rear: 35, spare: 60 },
+  // Chevrolet / GMC
+  "chevrolet tahoe": { front: 35, rear: 35, spare: 60 },
+  "chevrolet suburban": { front: 35, rear: 35, spare: 60 },
+  "chevrolet silverado": { front: 35, rear: 50, spare: 60 },
+  "chevrolet malibu": { front: 32, rear: 32, spare: 60 },
+  "gmc yukon": { front: 35, rear: 35, spare: 60 },
+  // Dodge / Jeep
+  "dodge challenger": { front: 33, rear: 33, spare: 60 },
+  "dodge charger": { front: 33, rear: 33, spare: 60 },
+  "jeep wrangler": { front: 37, rear: 37, spare: 37 },
+  "jeep cherokee": { front: 33, rear: 33, spare: 60 },
+  "jeep grand cherokee": { front: 36, rear: 36, spare: 60 },
+  // Land Rover
+  "land rover range rover": { front: 38, rear: 38, spare: 60 },
+  "land rover discovery": { front: 35, rear: 38, spare: 60 },
+  "land rover defender": { front: 42, rear: 42, spare: 42 },
+  // Porsche
+  "porsche 911": { front: 29, rear: 36, spare: 60 },
+  "porsche cayenne": { front: 33, rear: 36, spare: 60 },
+  "porsche macan": { front: 33, rear: 36, spare: 60 },
+  // Tesla
+  "tesla model 3": { front: 42, rear: 42, spare: 60 },
+  "tesla model s": { front: 42, rear: 42, spare: 60 },
+  "tesla model x": { front: 45, rear: 45, spare: 60 },
+  "tesla model y": { front: 42, rear: 42, spare: 60 },
+  // Lexus
+  "lexus es": { front: 33, rear: 33, spare: 60 },
+  "lexus rx": { front: 33, rear: 33, spare: 60 },
+  "lexus lx": { front: 35, rear: 35, spare: 60 },
+  // Mitsubishi
+  "mitsubishi pajero": { front: 33, rear: 33, spare: 60 },
+  "mitsubishi outlander": { front: 33, rear: 33, spare: 60 },
+  // Infiniti
+  "infiniti qx80": { front: 36, rear: 36, spare: 60 },
+  "infiniti q50": { front: 33, rear: 33, spare: 60 },
+};
+
+// Vehicle class → annual cost range (AED)
+type VehicleClass = "economy" | "midsize" | "luxury" | "premium_luxury" | "compact_suv" | "midsize_suv" | "fullsize_suv" | "pickup" | "sports" | "hypercar" | "ev";
+const COST_BY_CLASS: Record<VehicleClass, string> = {
+  economy: "1,500 - 3,000",
+  midsize: "2,500 - 4,500",
+  luxury: "5,000 - 10,000",
+  premium_luxury: "10,000 - 25,000",
+  compact_suv: "2,500 - 5,000",
+  midsize_suv: "3,500 - 7,000",
+  fullsize_suv: "6,000 - 15,000",
+  pickup: "3,000 - 7,000",
+  sports: "7,000 - 18,000",
+  hypercar: "20,000 - 60,000",
+  ev: "2,000 - 5,000",
+};
+
+function getVehicleClass(brand: string, model: string, engineType: string): VehicleClass {
+  const b = brand.toLowerCase();
+  const m = model.toLowerCase();
+  if (engineType === "Electric") return "ev";
+  if (["ferrari", "lamborghini", "bugatti", "koenigsegg", "mclaren"].some(x => b.includes(x))) return "hypercar";
+  if (["porsche", "bmw m", "mercedes amg", "audi rs", "dodge challenger", "dodge charger", "chevrolet corvette"].some(x => (b + " " + m).includes(x))) return "sports";
+  if (["range rover", "s-class", "7 series", "a8", "q8", "lexus ls", "infiniti qx80"].some(x => (b + " " + m).includes(x))) return "premium_luxury";
+  if (["bmw", "mercedes", "audi", "lexus", "infiniti", "cadillac", "lincoln"].some(x => b.includes(x))) return "luxury";
+  if (["land cruiser", "patrol", "tahoe", "suburban", "navigator", "expedition", "gls", "gle", "x5", "q7", "prado", "defender"].some(x => (b + " " + m).includes(x))) return "fullsize_suv";
+  if (["f-150", "f150", "hilux", "navara", "silverado", "ranger", "tundra", "ram 1500"].some(x => (b + " " + m).includes(x))) return "pickup";
+  if (["rav4", "cr-v", "tiguan", "tucson", "sportage", "x3", "q3", "glc", "macan"].some(x => (b + " " + m).includes(x))) return "compact_suv";
+  if (["fortuner", "pathfinder", "explorer", "santa fe", "sorento", "4runner", "pilot", "x5", "q5"].some(x => (b + " " + m).includes(x))) return "midsize_suv";
+  if (["corolla", "civic", "sentra", "golf", "focus", "yaris", "elantra", "kicks", "fit"].some(x => (b + " " + m).includes(x))) return "economy";
+  return "midsize";
+}
+
+function getTyrePressure(brand: string, model: string): { front: number; rear: number; spare: number } {
+  const key = `${brand.toLowerCase()} ${model.toLowerCase()}`;
+  if (TYRE_PRESSURE_DB[key]) return TYRE_PRESSURE_DB[key];
+  // Try partial match
+  for (const [k, v] of Object.entries(TYRE_PRESSURE_DB)) {
+    if (key.includes(k) || k.includes(key.split(" ")[1] || "")) return v;
+  }
+  // Fallback by brand
+  const brandMap: Record<string, { front: number; rear: number; spare: number }> = {
+    toyota: { front: 33, rear: 33, spare: 60 }, nissan: { front: 33, rear: 33, spare: 60 },
+    honda: { front: 32, rear: 30, spare: 60 }, ford: { front: 35, rear: 35, spare: 60 },
+    bmw: { front: 35, rear: 38, spare: 60 }, mercedes: { front: 35, rear: 38, spare: 60 },
+    audi: { front: 35, rear: 33, spare: 60 }, chevrolet: { front: 35, rear: 35, spare: 60 },
+    hyundai: { front: 33, rear: 33, spare: 60 }, kia: { front: 33, rear: 33, spare: 60 },
+    volkswagen: { front: 32, rear: 30, spare: 60 }, porsche: { front: 32, rear: 35, spare: 60 },
+    lexus: { front: 33, rear: 33, spare: 60 }, land: { front: 36, rear: 38, spare: 60 },
+    tesla: { front: 42, rear: 42, spare: 60 }, mitsubishi: { front: 33, rear: 33, spare: 60 },
+  };
+  for (const [k, v] of Object.entries(brandMap)) {
+    if (brand.toLowerCase().includes(k)) return v;
+  }
+  return { front: 33, rear: 33, spare: 60 };
+}
+
+function calcHealthScore(mileage: number, vehicleAge: number, vehicleClass: VehicleClass): number {
+  // Base score starts at 95, degrades with age and mileage
+  let score = 95;
+  // Age penalty: -3 per year after year 2
+  score -= Math.max(0, vehicleAge - 2) * 3;
+  // Mileage penalty: -5 per 50k km after 30k
+  score -= Math.max(0, Math.floor((mileage - 30000) / 50000)) * 5;
+  // Luxury/premium cars have higher base maintenance risk
+  if (vehicleClass === "premium_luxury" || vehicleClass === "luxury") score -= 3;
+  // Keep within 30-95 range
+  return Math.max(30, Math.min(95, Math.round(score)));
+}
+
 export async function POST(request: NextRequest) {
   if (!GEMINI_KEY) {
     return NextResponse.json({ error: "Gemini API key not configured" }, { status: 500 });
@@ -98,6 +274,14 @@ export async function POST(request: NextRequest) {
   const vehicleAge = currentYear - year;
   const avgKmPerYear = Math.round(mileage / Math.max(vehicleAge, 1));
 
+  // Pre-calculate vehicle-specific values server-side
+  const tyreSpec = getTyrePressure(brand, model);
+  const vehicleClass = getVehicleClass(brand, model, engineType);
+  const annualCostRange = COST_BY_CLASS[vehicleClass];
+  const healthScore = calcHealthScore(mileage, vehicleAge, vehicleClass);
+  const tyreNote = `For your ${brand} ${model}, manufacturer-specified cold tyre pressures are: Front ${tyreSpec.front} PSI, Rear ${tyreSpec.rear} PSI. In UAE summer heat, tyres expand — always check pressure in the morning when cool. Your tyres can gain 4-6 PSI when hot. ${tyreSpec.front !== tyreSpec.rear ? `Note: Front and rear pressures differ for your vehicle — this is intentional for handling balance.` : ""}`;
+
+
   const prompt = `You are a senior automotive service advisor at a premium UAE dealership. You are speaking DIRECTLY to the car owner. Be conversational, helpful, and specific to their vehicle and UAE conditions.
 
 Vehicle Details:
@@ -105,22 +289,32 @@ Vehicle Details:
 - Year: ${year} (${vehicleAge} years old)
 - Current Mileage: ${mileage.toLocaleString()} km
 - Engine Type: ${engineType}
+- Vehicle Class: ${vehicleClass}
 - Estimated annual mileage: ~${avgKmPerYear.toLocaleString()} km/year
 - Last Oil Change: ${lastOilChangeMileage ? `at ${lastOilChangeMileage.toLocaleString()} km (${(mileage - lastOilChangeMileage).toLocaleString()} km ago)` : "Unknown"}
 - Last Major Service: ${lastServiceDate || "Unknown"}
 ${additionalInfo ? `- Driver reported issues: ${additionalInfo}` : ""}
+
+IMPORTANT — USE THESE EXACT PRE-CALCULATED VALUES (do NOT change these numbers):
+- overallScore: ${healthScore} (pre-calculated based on age + mileage)
+- estimatedAnnualCostAed: "${annualCostRange}" (pre-calculated for this vehicle class)
+- tyrePressure.frontPsi: ${tyreSpec.front} (manufacturer door-sticker spec)
+- tyrePressure.rearPsi: ${tyreSpec.rear} (manufacturer door-sticker spec)
+- tyrePressure.sparePsi: ${tyreSpec.spare}
+- tyrePressure.frontBar: ${(tyreSpec.front * 0.0689476).toFixed(1)}
+- tyrePressure.rearBar: ${(tyreSpec.rear * 0.0689476).toFixed(1)}
 
 UAE Operating Conditions: Extreme heat (40-50°C summer), heavy desert dust, high UV radiation, occasional sandstorms, Abu Dhabi/Dubai heavy traffic, E11 highway high-speed driving, fuel quality variations (ADNOC 98 recommended for performance cars).
 
 Respond with ONLY valid JSON (no markdown, no code blocks) with this EXACT structure:
 
 {
-  "aiSummary": "A warm, conversational 3-4 sentence paragraph speaking directly to the owner. Mention the car by name. Highlight the most important thing they need to know. Be specific about UAE conditions. Sound like a trusted mechanic friend.",
-  "summary": "2-sentence factual technical summary",
-  "overallScore": 72,
-  "nextServiceKm": 85000,
-  "nextServiceEstimatedDate": "April 2026",
-  "estimatedAnnualCostAed": "3,200 - 4,800",
+  "aiSummary": "A warm, conversational 3-4 sentence paragraph speaking directly to the owner. Mention the car by name (${brand} ${model}). Highlight the most important thing they need to know based on their specific mileage and age. Be specific about UAE conditions. Sound like a trusted mechanic friend.",
+  "summary": "2-sentence factual technical summary for a ${year} ${brand} ${model} at ${mileage.toLocaleString()} km in UAE",
+  "overallScore": ${healthScore},
+  "nextServiceKm": ${Math.ceil((mileage + 10000) / 5000) * 5000},
+  "nextServiceEstimatedDate": "${new Date(Date.now() + (10000 / Math.max(avgKmPerYear, 5000)) * 365 * 24 * 3600000).toLocaleDateString("en-AE", { month: "long", year: "numeric" })}",
+  "estimatedAnnualCostAed": "${annualCostRange}",
   "urgentCount": 2,
   "dueSoonCount": 4,
   "tips": [
@@ -131,12 +325,12 @@ Respond with ONLY valid JSON (no markdown, no code blocks) with this EXACT struc
     "UAE-specific practical tip 5"
   ],
   "tyrePressure": {
-    "frontPsi": 33,
-    "rearPsi": 33,
-    "sparePsi": 60,
-    "frontBar": 2.3,
-    "rearBar": 2.3,
-    "uaeNote": "In UAE summer heat, tyres expand. Check pressure in the morning when cool. Increase by 2-3 PSI in peak summer (June-August) as tyres heat up on hot tarmac. Your tyres can lose 1 PSI per 10°C temperature increase.",
+    "frontPsi": ${tyreSpec.front},
+    "rearPsi": ${tyreSpec.rear},
+    "sparePsi": ${tyreSpec.spare},
+    "frontBar": ${(tyreSpec.front * 0.0689476).toFixed(1)},
+    "rearBar": ${(tyreSpec.rear * 0.0689476).toFixed(1)},
+    "uaeNote": "${tyreNote}",
     "checkFrequency": "Weekly in summer, bi-weekly in winter"
   },
   "safetyAlerts": [
