@@ -30,8 +30,8 @@ import { getBrandTierLabel, applyFilters, type ExtendedPlaceResult } from "@/lib
 const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+    <div className="w-full h-full bg-[#050505] border-grid flex items-center justify-center uppercase font-black tracking-widest text-xs text-zinc-500">
+      INITIALIZING MAP ENGINE...
     </div>
   ),
 });
@@ -55,9 +55,9 @@ function UAEClock() {
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-0.5">UAE TIME</p>
-      <p className="text-2xl font-black text-white tabular-nums tracking-tight leading-none">{timeStr}</p>
-      <p className="text-xs text-zinc-500 mt-1">{dateStr} · GST (UTC+4)</p>
+      <p className="text-[10px] font-black text-white uppercase tracking-widest mb-2 border-b border-white pb-1 w-full text-center">UAE TIME</p>
+      <p className="text-3xl font-black text-white tabular-nums tracking-tighter leading-none">{timeStr}</p>
+      <p className="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-widest">{dateStr} · GST (UTC+4)</p>
     </div>
   );
 }
@@ -76,37 +76,39 @@ function AnimCounter({ value, suffix = "" }: { value: number; suffix?: string })
 /* ─── Dashboard Strip (live stats on homepage) ───────────── */
 function DashboardStrip() {
   const stats = [
-    { label: "Garages Indexed", value: 850, suffix: "+", icon: Wrench, color: "text-blue-400", bg: "bg-blue-600/10" },
-    { label: "Parts Stores", value: 320, suffix: "+", icon: Package, color: "text-orange-400", bg: "bg-orange-600/10" },
-    { label: "Open Right Now", value: 89, suffix: "", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-600/10" },
-    { label: "AI Searches Today", value: 1240, suffix: "+", icon: Sparkles, color: "text-blue-400", bg: "bg-blue-600/10" },
+    { label: "Garages Indexed", value: 850, suffix: "+", icon: Wrench, color: "text-blue-500", bg: "bg-blue-500/10 border-blue-500/20" },
+    { label: "Parts Stores", value: 320, suffix: "+", icon: Package, color: "text-orange-500", bg: "bg-orange-500/10 border-orange-500/20" },
+    { label: "Open Right Now", value: 89, suffix: "", icon: Activity, color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20" },
+    { label: "AI Searches Today", value: 1240, suffix: "+", icon: Sparkles, color: "text-white", bg: "bg-white/10 border-white/20" },
   ];
 
   return (
-    <section className="py-6">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+    <section className="py-8 bg-[#000] border-grid-b">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-0 border-grid">
           {/* UAE Clock card */}
-          <div className="col-span-2 lg:col-span-1 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center py-5 px-4">
-            <UAEClock />
+          <div className="col-span-2 lg:col-span-1 bg-[#050505] border-grid flex items-center justify-center p-8 group hover:bg-white transition-colors duration-500">
+            <div className="group-hover:invert transition-colors duration-500 w-full">
+              <UAEClock />
+            </div>
           </div>
           {/* Stats */}
           {stats.map((s) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 0 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] p-4 flex flex-col gap-2"
+              className="bg-[#0a0a0a] border-grid p-6 md:p-8 flex flex-col justify-between group hover:bg-white transition-colors duration-500 min-h-[160px]"
             >
-              <div className={`w-8 h-8 rounded-xl ${s.bg} flex items-center justify-center`}>
-                <s.icon className={`w-4 h-4 ${s.color}`} />
+              <div className={`w-10 h-10 border flex items-center justify-center mb-6 group-hover:border-black group-hover:bg-transparent transition-colors ${s.bg}`}>
+                <s.icon className={`w-5 h-5 group-hover:text-black transition-colors ${s.color}`} />
               </div>
               <div>
-                <p className={`text-xl font-black tabular-nums ${s.color}`}>
+                <p className="text-3xl font-black tabular-nums text-white group-hover:text-black transition-colors tracking-tighter">
                   <AnimCounter value={s.value} suffix={s.suffix} />
                 </p>
-                <p className="text-[11px] text-zinc-600 font-medium mt-0.5">{s.label}</p>
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-2">{s.label}</p>
               </div>
             </motion.div>
           ))}
@@ -122,91 +124,78 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
     {
       href: "/garages",
       icon: Wrench,
-      title: "Find a Garage",
-      desc: "AI-matched repair shops across all UAE emirates",
-      accent: "from-blue-600/20 to-blue-600/5 hover:from-blue-600/30",
-      border: "hover:border-blue-600/30",
-      iconBg: "bg-blue-600/15",
-      iconColor: "text-blue-400",
+      title: "FIND A GARAGE",
+      desc: "AI-MATCHED REPAIR SHOPS ACROSS ALL UAE EMIRATES",
+      iconColor: "text-blue-500",
       badge: null,
       large: true,
     },
     {
       href: "/parts",
       icon: Package,
-      title: "Find Parts",
-      desc: "Spare parts stores & suppliers near you",
-      accent: "from-orange-600/20 to-orange-600/5 hover:from-orange-600/30",
-      border: "hover:border-orange-600/30",
-      iconBg: "bg-orange-600/15",
-      iconColor: "text-orange-400",
+      title: "FIND PARTS",
+      desc: "SPARE PARTS STORES & SUPPLIERS NEAR YOU",
+      iconColor: "text-orange-500",
       badge: null,
       large: false,
     },
     {
       href: "/my-car",
       icon: Car,
-      title: "My Car Advisor",
-      desc: "AI health check & maintenance planner",
-      accent: "from-blue-600/20 to-blue-600/5 hover:from-blue-600/30",
-      border: "hover:border-blue-600/30",
-      iconBg: "bg-blue-600/15",
-      iconColor: "text-blue-400",
+      title: "MY CAR ADVISOR",
+      desc: "AI HEALTH CHECK & MAINTENANCE PLANNER",
+      iconColor: "text-blue-500",
       badge: "AI",
       large: false,
     },
     {
       href: "/dashboard",
       icon: LayoutDashboard,
-      title: "Dashboard",
-      desc: "UAE automotive stats, charts & insights",
-      accent: "from-zinc-800/60 to-zinc-900/30",
-      border: "hover:border-zinc-700",
-      iconBg: "bg-zinc-800",
-      iconColor: "text-zinc-300",
+      title: "DASHBOARD",
+      desc: "UAE AUTOMOTIVE STATS, CHARTS & INSIGHTS",
+      iconColor: "text-white",
       badge: null,
       large: false,
     },
   ];
 
   return (
-    <section className="py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black text-white tracking-tight">Quick Access</h2>
-          <Link href="/services" className="text-xs text-zinc-500 hover:text-blue-400 transition-colors flex items-center gap-1">
-            All Services <ChevronRight className="w-3 h-3" />
+    <section className="py-12 bg-[#050505] border-grid-b">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between mb-8 pb-4 border-grid-b">
+          <h2 className="text-2xl font-black text-white tracking-tighter uppercase">QUICK ACCESS PORTALS</h2>
+          <Link href="/services" className="text-[10px] font-black tracking-widest uppercase text-zinc-500 hover:text-white transition-colors flex items-center gap-2">
+            ALL EXECUTABLES <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-grid">
           {actions.map((a) => (
             <motion.div
               key={a.href}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              className="border-grid bg-[#0a0a0a]"
             >
               <Link
                 href={a.href}
-                className={`group flex flex-col gap-3 p-5 rounded-2xl bg-gradient-to-br ${a.accent} border border-[#1a1a1a] ${a.border} transition-all duration-300 h-full min-h-[140px]`}
+                className={`group flex flex-col p-8 transition-colors duration-300 h-full min-h-[220px] hover:bg-white`}
               >
-                <div className="flex items-start justify-between">
-                  <div className={`w-10 h-10 rounded-xl ${a.iconBg} flex items-center justify-center`}>
-                    <a.icon className={`w-5 h-5 ${a.iconColor}`} />
+                <div className="flex items-start justify-between mb-8">
+                  <div className={`w-12 h-12 border flex items-center justify-center group-hover:border-black group-hover:bg-transparent transition-colors border-white/20 bg-white/5`}>
+                    <a.icon className={`w-6 h-6 group-hover:text-black transition-colors ${a.iconColor}`} />
                   </div>
                   {a.badge && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/20 text-blue-400">
+                    <span className="text-[10px] font-black px-2 py-1 border border-blue-500 bg-blue-500/10 text-blue-500 group-hover:bg-blue-100 group-hover:border-blue-600 transition-colors">
                       {a.badge}
                     </span>
                   )}
                 </div>
-                <div>
-                  <p className="font-bold text-sm text-white mb-1 group-hover:text-white">{a.title}</p>
-                  <p className="text-[11px] text-zinc-600 leading-relaxed">{a.desc}</p>
+                <div className="mt-auto">
+                  <p className="font-black text-lg text-white mb-2 group-hover:text-black uppercase tracking-tight transition-colors">{a.title}</p>
+                  <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest leading-relaxed group-hover:text-zinc-600 transition-colors">{a.desc}</p>
                 </div>
-                <ArrowRight className={`w-4 h-4 ${a.iconColor} opacity-0 group-hover:opacity-100 transition-opacity mt-auto`} />
+                <ArrowRight className={`w-5 h-5 text-black opacity-0 group-hover:opacity-100 transition-opacity mt-6`} />
               </Link>
             </motion.div>
           ))}
@@ -218,8 +207,8 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
 
 /* ─── Car Advisor Teaser ─────────────────────────────────── */
 const DEMO_MESSAGES = [
-  { role: "user", text: "My AC is blowing warm air in this heat 😩" },
-  { role: "ai", text: "In UAE summer (45°C+), warm AC usually means low refrigerant or a failing compressor. First check: is the compressor clutch engaging? A recharge costs AED 150–300 at most workshops. Book a diagnostic ASAP — driving without AC in this heat stresses the engine." },
+  { role: "user", text: "My AC is blowing warm air in this heat." },
+  { role: "ai", text: "IN UAE SUMMER (45°C+), WARM AC TYPICALLY INDICATES LOW REFRIGERANT OR COMPRESSOR FAILURE. DIAGNOSTIC RECHARGE COST: ~AED 150-300. PROCEED IMMEDIATELY TO PREVENT ENGINE OVERHEATING." },
 ];
 
 function CarAdvisorTeaser() {
@@ -235,35 +224,37 @@ function CarAdvisorTeaser() {
   }, [inView]);
 
   return (
-    <section className="py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="rounded-3xl bg-[#080808] border border-[#1a1a1a] overflow-hidden">
+    <section className="py-24 bg-[#0a0a0a] border-grid-b">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+        <div className="border border-white bg-[#050505]">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left: info */}
-            <div className="p-8 md:p-12 flex flex-col justify-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-600/25 bg-blue-600/8 mb-6 w-fit">
-                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                <span className="text-[11px] font-bold text-blue-400 tracking-wider uppercase">AI-Powered</span>
+            <div className="p-10 md:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/20 relative">
+              <div className="absolute top-0 right-0 w-8 h-8 border-l border-b border-white/20" />
+
+              <div className="inline-flex items-center gap-2 px-3 py-1 border border-blue-500 mb-8 w-fit bg-blue-500/5">
+                <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                <span className="text-[10px] font-black text-blue-500 tracking-widest uppercase">AI DIAGNOSTIC PROTOCOL</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-white mb-4 leading-tight">
-                Your Personal
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-6 uppercase leading-[0.9]">
+                VEHICLE
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-                  Car Advisor
+                <span className="text-zinc-600">
+                  HEALTH ENGINE
                 </span>
               </h2>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-6 max-w-sm">
-                Describe any car problem in plain English. Get instant UAE-specific advice, cost estimates in AED, and urgency ratings — tailored for extreme heat, desert dust, and E11 driving.
+              <p className="text-zinc-400 text-xs font-bold tracking-widest uppercase leading-relaxed mb-10 max-w-sm">
+                INPUT SYMPTOMS. GET INSTANT UAE-SPECIFIC ADVICE, COST PROJECTIONS IN AED, AND URGENCY RATINGS.
               </p>
-              <div className="space-y-3 mb-8">
+              <div className="space-y-4 mb-10">
                 {[
-                  { icon: Cpu, text: "AI trained on UAE automotive data" },
-                  { icon: Clock, text: "Maintenance timeline & reminders" },
-                  { icon: ShieldCheck, text: "AED cost estimates for all services" },
+                  { icon: Cpu, text: "TRAINED ON LOCAL DATA" },
+                  { icon: Clock, text: "ROUTINE MAINTENANCE TIMELINES" },
+                  { icon: ShieldCheck, text: "EXACT AED EXPENDITURE PROJECTIONS" },
                 ].map((f) => (
-                  <div key={f.text} className="flex items-center gap-3 text-sm text-zinc-400">
-                    <div className="w-6 h-6 rounded-lg bg-blue-600/10 flex items-center justify-center">
-                      <f.icon className="w-3.5 h-3.5 text-blue-400" />
+                  <div key={f.text} className="flex items-center gap-4 text-[10px] font-black tracking-widest text-zinc-300 uppercase">
+                    <div className="w-8 h-8 border border-white/20 flex items-center justify-center">
+                      <f.icon className="w-4 h-4 text-white" />
                     </div>
                     {f.text}
                   </div>
@@ -271,57 +262,58 @@ function CarAdvisorTeaser() {
               </div>
               <Link
                 href="/my-car"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02] w-fit"
+                className="inline-flex items-center justify-between px-6 py-4 bg-white hover:bg-zinc-200 text-black font-black text-xs uppercase tracking-widest transition-colors w-full sm:w-fit group border border-transparent"
               >
-                <Car className="w-4 h-4" />
-                Try My Car Advisor
-                <ArrowRight className="w-4 h-4" />
+                <div className="flex items-center gap-3">
+                  <Car className="w-4 h-4" />
+                  INITIALIZE SCAN
+                </div>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-8" />
               </Link>
             </div>
 
             {/* Right: chat demo */}
-            <div ref={ref} className="relative bg-[#040404] border-l border-[#1a1a1a] p-6 md:p-8 flex flex-col justify-end min-h-[340px]">
-              <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#040404] to-transparent z-10 pointer-events-none" />
-              <div className="space-y-4">
+            <div ref={ref} className="relative bg-[#000] p-8 md:p-12 flex flex-col justify-end min-h-[400px]">
+              <div className="space-y-6 flex-1 flex flex-col justify-end">
                 {visible >= 1 && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     className="flex justify-end"
                   >
-                    <div className="max-w-[80%] bg-blue-600 rounded-2xl rounded-tr-sm px-3.5 py-2.5 text-[13px] text-white leading-relaxed">
+                    <div className="max-w-[80%] bg-white text-black p-4 text-[11px] font-black uppercase tracking-widest leading-relaxed border border-white">
                       {DEMO_MESSAGES[0].text}
                     </div>
                   </motion.div>
                 )}
                 {visible >= 2 && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="max-w-[85%]">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-5 h-5 rounded-full bg-blue-600/20 flex items-center justify-center">
-                          <Sparkles className="w-3 h-3 text-blue-400" />
+                    <div className="max-w-[90%] font-mono">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 border border-blue-500 flex items-center justify-center bg-blue-500/10">
+                          <Sparkles className="w-3 h-3 text-blue-500" />
                         </div>
-                        <span className="text-[10px] font-bold text-zinc-600">GarageFinder AI</span>
+                        <span className="text-[10px] font-black tracking-widest text-blue-500 uppercase">GARAGEFINDER TERMINAL</span>
                       </div>
-                      <div className="bg-[#111] rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-[13px] text-zinc-300 leading-relaxed border border-[#1e1e1e]">
+                      <div className="bg-[#0a0a0a] border border-blue-500/30 p-5 text-[11px] text-zinc-300 leading-relaxed uppercase tracking-widest">
                         {DEMO_MESSAGES[1].text}
                       </div>
                     </div>
                   </motion.div>
                 )}
                 {/* Demo input */}
-                <div className="flex items-center gap-2 mt-4 p-2 rounded-xl bg-[#0d0d0d] border border-[#1e1e1e]">
+                <div className="flex items-center gap-3 mt-6 p-3 bg-[#050505] border border-white/20">
                   <input
                     readOnly
-                    placeholder="Ask about your car..."
-                    className="flex-1 bg-transparent text-sm text-zinc-500 px-2 outline-none cursor-default"
+                    placeholder="ENTER SYMPTOMS..."
+                    className="flex-1 bg-transparent text-[10px] font-black tracking-widest text-zinc-500 px-3 outline-none cursor-default uppercase"
                   />
-                  <Link href="/my-car" className="p-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors">
-                    <Send className="w-3.5 h-3.5 text-white" />
+                  <Link href="/my-car" className="p-3 bg-white hover:bg-zinc-200 transition-colors">
+                    <Send className="w-4 h-4 text-black" />
                   </Link>
                 </div>
               </div>
@@ -346,35 +338,35 @@ function FeaturedShops({
   if (!isLoading && shops.length === 0) return null;
 
   return (
-    <section className="py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between mb-5">
+    <section className="py-24 bg-[#000] border-grid-b border-grid-t">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 border-b border-white pb-6 gap-4">
           <div>
-            <h2 className="text-xl font-black text-white tracking-tight">Top Rated Near You</h2>
-            <p className="text-xs text-zinc-600 mt-0.5">Live data · Dubai area</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.9]">HIGHLY RANKED<br /><span className="text-zinc-600">NODES</span></h2>
+            <p className="text-[10px] font-bold tracking-widest text-zinc-500 mt-4 uppercase">LIVE TELEMETRY · DUBAI SECTOR</p>
           </div>
           <button
             onClick={() => onSelect(shops[0])}
-            className="text-xs text-zinc-500 hover:text-blue-400 transition-colors flex items-center gap-1"
+            className="text-[10px] font-black uppercase tracking-widest text-black bg-white px-6 py-3 hover:bg-zinc-200 transition-colors flex items-center gap-2"
           >
-            View all <ChevronRight className="w-3 h-3" />
+            EXECUTE OVERVIEW <ChevronRight className="w-3 h-3" />
           </button>
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-2xl overflow-hidden border border-[#1a1a1a] bg-[#0a0a0a]">
-                <div className="skeleton h-44 w-full" />
-                <div className="p-4 space-y-2">
-                  <div className="skeleton h-5 w-3/4 rounded" />
-                  <div className="skeleton h-3 w-1/2 rounded" />
+              <div key={i} className="border-grid bg-[#050505]">
+                <div className="h-44 w-full bg-white/5 animate-pulse" />
+                <div className="p-8 space-y-4">
+                  <div className="h-6 w-3/4 bg-white/5 animate-pulse" />
+                  <div className="h-3 w-1/2 bg-white/5 animate-pulse" />
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
             {shops.slice(0, 3).map((place, i) => (
               <ShopCard
                 key={place.place_id}
@@ -433,7 +425,7 @@ function HomeContent() {
     }
   }, []);
 
-  // Load featured shops silently for landing page (does NOT set searchPerformed)
+  // Load featured shops silently for landing page
   useEffect(() => {
     if (!HAS_API_KEY || didFeatured.current) return;
     didFeatured.current = true;
@@ -442,7 +434,7 @@ function HomeContent() {
     fetch(`/api/places?query=car+repair+service&lat=${center.lat}&lng=${center.lng}&radius=20000`)
       .then(r => r.json())
       .then(d => setFeaturedShops((d.results || []).slice(0, 3)))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setFeaturedLoading(false));
   }, []);
 
@@ -522,9 +514,12 @@ function HomeContent() {
   }, [initialQuery, searchPlaces]);
 
   const handleBrandSelect = useCallback((query: string, brandId: string | null) => {
+    if (filters.placeType === "parts") {
+      setFilters(prev => ({ ...prev, placeType: "all" }));
+    }
     setActiveBrand(brandId);
     searchPlaces(query, false, brandId);
-  }, [searchPlaces]);
+  }, [searchPlaces, filters.placeType]);
 
   const handlePlaceSelect = useCallback((placeId: string) => {
     setSelectedPlaceId(placeId);
@@ -545,7 +540,13 @@ function HomeContent() {
   const handleFiltersChange = useCallback((newFilters: ActiveFilters) => {
     setFilters(newFilters);
     if (searchPerformed) {
-      searchPlaces(currentQuery, false, activeBrand);
+      if (newFilters.placeType === "parts" && activeBrand) {
+        const formattedBrand = activeBrand.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        setActiveBrand(null);
+        searchPlaces(`${formattedBrand} spare parts`, false, null);
+      } else {
+        searchPlaces(currentQuery, false, activeBrand);
+      }
     }
   }, [searchPerformed, activeBrand, currentQuery, searchPlaces]);
 
@@ -557,12 +558,11 @@ function HomeContent() {
     : null;
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden uppercase font-mono selection:bg-white selection:text-black">
 
       {/* ── STICKY HEADER ── */}
-      <header className="sticky top-14 z-40 bg-black/95 backdrop-blur-xl border-b border-[#1a1a1a]">
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-        <div className="px-4 py-3 flex items-center gap-3">
+      <header className="sticky top-0 z-40 bg-[#050505] border-grid-b">
+        <div className="px-4 py-3 flex items-center gap-4 max-w-screen-2xl mx-auto border-grid-b bg-[#0a0a0a] border-l border-r border-[#1a1a1a]">
           <button
             onClick={() => {
               setSearchPerformed(false);
@@ -570,27 +570,24 @@ function HomeContent() {
               setSelectedPlaceId(null);
               setActiveBrand(null);
             }}
-            className="flex items-center gap-2.5 shrink-0 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 shrink-0 group hover:opacity-100 transition-opacity"
           >
-            <div className="relative w-9 h-9">
-              <div className="absolute inset-0 bg-blue-600 rounded-xl blur opacity-40" />
-              <div className="relative w-9 h-9 bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700 rounded-xl flex items-center justify-center">
-                <Wrench className="w-4 h-4 text-blue-400" />
-              </div>
+            <div className="w-10 h-10 bg-white group-hover:bg-zinc-200 border border-white flex items-center justify-center transition-colors">
+              <Wrench className="w-5 h-5 text-black" />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-[17px] font-black tracking-tight leading-none text-white">
-                Garage<span className="text-blue-400">Finder</span>
+            <div className="hidden sm:block text-left">
+              <h1 className="text-xl font-black tracking-tighter leading-none text-white uppercase">
+                GARAGE<span className="text-zinc-500">FINDER</span>
               </h1>
-              <p className="text-[10px] text-zinc-500 font-medium tracking-wide">UAE · AI-POWERED</p>
+              <p className="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mt-0.5">UAE TERMINAL</p>
             </div>
           </button>
 
-          <div className="flex-1">
+          <div className="flex-1 ml-4 border-l border-white/10 pl-4">
             <SearchBar onSearch={searchPlaces} isLoading={isLoading} />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 border-l border-white/10 pl-4 h-12">
             <RegionPicker value={selectedRegion} onChange={(key) => {
               setSelectedRegion(key);
               const region = UAE_REGIONS[key];
@@ -601,14 +598,14 @@ function HomeContent() {
 
             <button
               onClick={() => setShowMap(!showMap)}
-              className={`shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium transition-all ${
-                showMap
-                  ? "bg-blue-500/10 border-blue-500/40 text-blue-400"
-                  : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
-              }`}
+              className={`shrink-0 flex items-center gap-1.5 px-3 sm:px-6 h-full border text-xs font-black tracking-widest transition-colors ${showMap
+                  ? "bg-white border-white text-black"
+                  : "bg-[#050505] border-white/20 text-white hover:border-white hover:bg-white/5"
+                }`}
             >
-              <MapIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">{showMap ? "Hide Map" : "Map"}</span>
+              <MapIcon className="w-4 h-4 shrink-0" />
+              <span className="inline sm:hidden text-[10px]">{showMap ? "HIDE" : "MAP"}</span>
+              <span className="hidden sm:inline">{showMap ? "CLOSE MAP" : "TOGGLE MAP"}</span>
             </button>
           </div>
         </div>
@@ -623,21 +620,21 @@ function HomeContent() {
 
       {/* Demo banner */}
       {isDemoMode && !HAS_API_KEY && (
-        <div className="sticky top-0 z-30 flex items-center gap-2 px-4 py-2 bg-amber-950/60 border-b border-amber-800/30 backdrop-blur-sm">
-          <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-          <p className="text-xs text-amber-300/80">
-            Add <code className="text-amber-400 font-mono">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to <code className="text-amber-400 font-mono">.env.local</code> for live search.
+        <div className="sticky top-0 z-30 flex items-center justify-center gap-3 px-4 py-3 bg-red-600 border-grid-b">
+          <AlertCircle className="w-4 h-4 text-white shrink-0" />
+          <p className="text-[10px] font-black tracking-widest text-white uppercase">
+            AUTHORIZATION REQUIRED: SET NEXT_PUBLIC_GOOGLE_MAPS_API_KEY IN ENV TO ENABLE LIVE DATA FEED.
           </p>
         </div>
       )}
 
-      {/* ── HERO (full-width, outside padded main) ── */}
+      {/* ── HERO ── */}
       {!searchPerformed && !isLoading && (
         <Hero onSearch={searchPlaces} />
       )}
 
       {/* ── MAIN CONTENT ── */}
-      <main className="max-w-7xl mx-auto px-4 py-6 space-y-2">
+      <main className="max-w-screen-2xl mx-auto bg-[#000] border-l border-r border-[#1a1a1a] min-h-screen">
 
         {aiAnalysis && <AIInsight analysis={aiAnalysis} onDismiss={() => setAiAnalysis(null)} />}
 
@@ -660,18 +657,18 @@ function HomeContent() {
 
         {/* ── LOADING ── */}
         {isLoading && (
-          <section>
-            <div className="skeleton h-6 w-40 mb-4 rounded-lg" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <section className="p-8">
+            <div className="h-8 w-64 bg-white/5 animate-pulse mb-8 border border-white/10" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden border border-[#1a1a1a] bg-[#0a0a0a]">
-                  <div className="skeleton h-44 w-full" />
-                  <div className="p-4 space-y-2">
-                    <div className="skeleton h-5 w-3/4 rounded" />
-                    <div className="skeleton h-3 w-1/2 rounded" />
-                    <div className="flex gap-1 mt-3">
-                      <div className="skeleton h-5 w-16 rounded-full" />
-                      <div className="skeleton h-5 w-20 rounded-full" />
+                <div key={i} className="bg-[#050505] border-grid">
+                  <div className="h-44 w-full bg-white/5 animate-pulse" />
+                  <div className="p-8 space-y-4">
+                    <div className="h-6 w-3/4 bg-white/5 animate-pulse" />
+                    <div className="h-3 w-1/2 bg-white/5 animate-pulse" />
+                    <div className="pt-4 border-t border-white/5 flex gap-2">
+                      <div className="h-4 w-12 bg-white/5 animate-pulse" />
+                      <div className="h-4 w-16 bg-white/5 animate-pulse" />
                     </div>
                   </div>
                 </div>
@@ -682,47 +679,46 @@ function HomeContent() {
 
         {/* ── RESULTS ── */}
         {!isLoading && searchPerformed && places.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+          <section className="p-8 bg-[#000]">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white">
               <div>
-                <h3 className="text-xl font-bold text-zinc-100 flex items-center gap-2 flex-wrap">
+                <h3 className="text-3xl font-black text-white flex items-center gap-3 uppercase tracking-tighter">
                   {brandName ? (
                     <>
                       <span>{brandName}</span>
-                      <span className="text-zinc-500">Specialists</span>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-600/10 border border-blue-600/20 text-blue-400">
-                        {places.length} found
+                      <span className="text-zinc-600">SPECIALISTS</span>
+                      <span className="text-[10px] uppercase font-black px-3 py-1 bg-white text-black tracking-widest">
+                        {places.length} IDENTIFIED
                       </span>
                     </>
                   ) : (
                     <>
                       {currentQuery === "auto repair in UAE" || currentQuery === "auto repair near me"
-                        ? "Service Centres Near You"
-                        : `Results for "${currentQuery}"`}
+                        ? "PROXIMAL FACILITIES"
+                        : `QUERY RESULTS: ${currentQuery}`}
                     </>
                   )}
                 </h3>
-                <p className="text-sm text-zinc-600 mt-0.5">
-                  {places.length} shops · {selectedRegion === "all" ? "All UAE" : UAE_REGIONS[selectedRegion]?.label}
-                  {isDemoMode ? " · demo data" : " · live data"}
+                <p className="text-[10px] font-bold tracking-widest text-zinc-500 mt-2 uppercase">
+                  {places.length} ACTIVE NODES // {selectedRegion === "all" ? "GLOBAL UAE SCAN" : UAE_REGIONS[selectedRegion]?.label.toUpperCase()}
+                  {isDemoMode ? " // SIMULATION FEED" : " // LIVE TELEMETRY"}
                 </p>
               </div>
-              <div className="hidden sm:flex items-center gap-4 text-xs text-zinc-600">
-                <span className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-yellow-400" /> Top rated</span>
-                <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-blue-400" /> AI matched</span>
+              <div className="hidden md:flex items-center gap-6 text-[10px] font-black tracking-widest text-zinc-500 uppercase">
+                <span className="flex items-center gap-2"><Star className="w-4 h-4 text-white" /> OPTIMAL RATING</span>
+                <span className="flex items-center gap-2"><Zap className="w-4 h-4 text-white" /> AI VERIFIED</span>
               </div>
             </div>
 
             {serviceShops.length > 0 && (
               <>
                 {serviceShops.length >= 3 && (
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <TrendingUp className="w-4 h-4 text-yellow-400" />
-                      <span className="text-sm font-bold text-zinc-300">Top Ranked</span>
-                      <span className="text-xs text-zinc-600">{brandName ? `${brandName} specialists` : "near you"}</span>
+                  <div className="mb-16">
+                    <div className="flex items-center gap-3 mb-6 bg-white text-black py-2 px-4 w-fit">
+                      <TrendingUp className="w-4 h-4" />
+                      <span className="text-xs font-black uppercase tracking-widest">TIER 1 FACILITIES</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
                       {serviceShops.slice(0, 3).map((place, i) => (
                         <ShopCard
                           key={place.place_id}
@@ -738,12 +734,12 @@ function HomeContent() {
                 )}
 
                 {serviceShops.length > 3 && (
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="mb-16">
+                    <div className="flex items-center gap-3 mb-6 bg-[#050505] text-white border border-white py-2 px-4 w-fit">
                       <BadgeCheck className="w-4 h-4 text-zinc-500" />
-                      <span className="text-sm font-bold text-zinc-400">More Nearby</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-zinc-300">ADDITIONAL NODES</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-grid">
                       {serviceShops.slice(3).map((place, i) => (
                         <ShopCard
                           key={place.place_id}
@@ -760,13 +756,13 @@ function HomeContent() {
             )}
 
             {partsShops.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-[#1a1a1a]">
-                <div className="flex items-center gap-2 mb-4">
-                  <Package className="w-4 h-4 text-orange-400" />
-                  <span className="text-sm font-bold text-zinc-300">Spare Parts Stores</span>
-                  <span className="text-xs text-zinc-600">{partsShops.length} locations</span>
+              <div className="pt-16 border-t border-white/20">
+                <div className="flex items-center gap-3 mb-6 bg-white text-black py-2 px-4 w-fit">
+                  <Package className="w-4 h-4" />
+                  <span className="text-xs font-black uppercase tracking-widest">HARDWARE SUPPLIERS</span>
+                  <span className="text-[10px] text-zinc-500 ml-2">[{partsShops.length}]</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-grid">
                   {partsShops.map((place, i) => (
                     <ShopCard
                       key={place.place_id}
@@ -783,62 +779,32 @@ function HomeContent() {
 
         {/* No results */}
         {!isLoading && searchPerformed && places.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center mx-auto mb-4">
-              <Wrench className="w-8 h-8 text-zinc-700" />
+          <div className="p-24 bg-[#0a0a0a] border-grid flex flex-col items-center justify-center text-center">
+            <div className="w-24 h-24 bg-red-600 text-white flex items-center justify-center mb-8">
+              <X className="w-12 h-12" />
             </div>
             {!HAS_API_KEY ? (
               <>
-                <h3 className="text-lg font-bold text-zinc-400 mb-2">Google Maps API key required</h3>
-                <p className="text-sm text-zinc-600 max-w-sm mx-auto leading-relaxed">
-                  Add <code className="text-zinc-400 bg-[#111] px-1.5 py-0.5 rounded font-mono">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to <code className="text-zinc-400 bg-[#111] px-1.5 py-0.5 rounded font-mono">.env.local</code>.
+                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">SYSTEM OFFLINE</h3>
+                <p className="text-xs text-zinc-400 max-w-sm uppercase tracking-widest leading-relaxed">
+                  MISSING CREDENTIAL: <span className="text-white border border-white px-2 py-1 mx-1 block my-2 text-center bg-[#050505]">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</span>
                 </p>
               </>
             ) : (
               <>
-                <h3 className="text-lg font-bold text-zinc-400 mb-2">No results found</h3>
-                <p className="text-sm text-zinc-600 mb-4">Try adjusting your filters, expanding your area, or using different keywords.</p>
+                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">NO QUERY RESULTS</h3>
+                <p className="text-xs text-zinc-500 mb-8 uppercase tracking-widest">ADJUST PARAMETERS AND RETRY SEQUENCE.</p>
                 <button
                   onClick={() => { setFilters(DEFAULT_FILTERS); searchPlaces(currentQuery, false, activeBrand); }}
-                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-500 transition-colors"
+                  className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
                 >
-                  Clear filters & retry
+                  RESET FILTERS
                 </button>
               </>
             )}
           </div>
         )}
 
-        {/* ── TRENDING ── */}
-        {!isLoading && (
-          <section className={searchPerformed ? "border-t border-[#1a1a1a] pt-8" : ""}>
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-4 h-4 text-blue-400" />
-              <h3 className="text-lg font-bold text-zinc-100">Trending in UAE</h3>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { label: "BMW specialist Dubai" },
-                { label: "Oil change near me" },
-                { label: "Emergency towing UAE" },
-                { label: "Check engine light" },
-                { label: "Tyre change Abu Dhabi" },
-                { label: "AC repair Sharjah" },
-                { label: "Ceramic coating Dubai" },
-                { label: "Pre-purchase inspection" },
-              ].map(({ label }) => (
-                <button
-                  key={label}
-                  onClick={() => searchPlaces(label, true)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700 hover:bg-zinc-900/80 transition-all text-left group"
-                >
-                  <span className="text-sm text-zinc-400 group-hover:text-white transition-colors line-clamp-1">{label}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-zinc-700 group-hover:text-blue-400 transition-colors shrink-0 ml-1" />
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
       </main>
 
       {/* ── MAP OVERLAY ── */}
@@ -848,18 +814,23 @@ function HomeContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-zinc-950"
+            className="fixed inset-0 z-50 bg-[#000]"
           >
-            <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-3 px-4 py-3 bg-zinc-950/90 backdrop-blur border-b border-[#1a1a1a]">
-              <h2 className="font-bold text-zinc-100 flex-1">{places.length} locations on map</h2>
-              <button onClick={handleLocate} className="p-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-blue-500/40 transition-colors">
-                <Locate className="w-4 h-4 text-zinc-400" />
-              </button>
-              <button onClick={() => setShowMap(false)} className="p-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-zinc-600 transition-colors">
-                <X className="w-4 h-4 text-zinc-400" />
-              </button>
+            <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-6 py-4 bg-[#050505] border-b border-white">
+              <h2 className="text-xs font-black tracking-widest text-white uppercase flex items-center gap-3">
+                <span className="w-2 h-2 bg-white animate-pulse" />
+                {places.length} ACTIVE LOCATIONS
+              </h2>
+              <div className="flex items-center gap-4">
+                <button onClick={handleLocate} className="px-4 py-2 bg-[#000] border border-white/20 text-xs font-black tracking-widest uppercase hover:bg-white hover:text-black hover:border-white transition-colors flex items-center gap-2">
+                  <Locate className="w-4 h-4" /> RELOCATE
+                </button>
+                <button onClick={() => setShowMap(false)} className="px-4 py-2 bg-white text-black hover:bg-zinc-300 font-black tracking-widest uppercase text-xs transition-colors flex items-center gap-2">
+                  <X className="w-4 h-4" /> CLOSE
+                </button>
+              </div>
             </div>
-            <div className="w-full h-full pt-[56px]">
+            <div className="w-full h-full pt-[64px] bg-[#000]">
               <Map
                 places={places}
                 selectedPlaceId={selectedPlaceId}
@@ -885,8 +856,8 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#000] flex items-center justify-center font-mono text-zinc-500 uppercase font-black tracking-widest text-[10px]">
+        INITIALIZING GARAGEFINDER TERMINAL...
       </div>
     }>
       <HomeContent />
