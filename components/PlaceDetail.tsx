@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Star, Clock, Phone, Globe, MapPin, Navigation,
   ExternalLink, Share2, ChevronDown, ChevronUp,
-  Sparkles, User, BadgeCheck, Package,
+  Sparkles, BadgeCheck, Package, Wrench,
 } from "lucide-react";
 import type { PlaceDetails, PlaceReview } from "@/types";
 
@@ -22,42 +22,53 @@ function RatingStars({ rating, size = "sm" }: { rating: number; size?: "sm" | "l
       {[1, 2, 3, 4, 5].map((star) => (
         <Star
           key={star}
-          className={`${starSize} ${star <= Math.round(rating)
-            ? "fill-white text-white"
-            : "fill-[#111] text-[#111]"
-            }`}
+          className={`${starSize} ${
+            star <= Math.round(rating)
+              ? "fill-amber-400 text-amber-400"
+              : "fill-zinc-700 text-zinc-700"
+          }`}
         />
       ))}
     </div>
   );
 }
 
-function ReviewCard({ review }: { review: PlaceReview }) {
+const AVATAR_COLORS = [
+  "bg-orange-500", "bg-violet-500", "bg-cyan-500",
+  "bg-emerald-500", "bg-pink-500", "bg-blue-500",
+];
+
+function ReviewCard({ review, index }: { review: PlaceReview; index: number }) {
   const [expanded, setExpanded] = useState(false);
   const isLong = review.text.length > 200;
+  const avatarColor = AVATAR_COLORS[index % AVATAR_COLORS.length];
+  const initial = review.author_name?.[0]?.toUpperCase() || "?";
+
   return (
-    <div className="py-6 border-b border-white/20 last:border-0 relative">
-      <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/20" />
-      <div className="flex items-start gap-4">
-        <div className="w-10 h-10 border border-white/20 bg-[#111] flex items-center justify-center shrink-0">
+    <div className="py-4 border-b border-white/[0.06] last:border-0">
+      <div className="flex items-start gap-3">
+        <div className={`w-9 h-9 rounded-xl ${avatarColor} flex items-center justify-center text-white font-bold text-sm shrink-0 overflow-hidden`}>
           {review.profile_photo_url ? (
-            <img src={review.profile_photo_url} alt="" className="w-full h-full object-cover filter grayscale" />
+            <img src={review.profile_photo_url} alt="" className="w-full h-full object-cover" />
           ) : (
-            <User className="w-5 h-5 text-white" />
+            initial
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
-            <span className="text-xs font-black uppercase text-white tracking-widest truncate">{review.author_name}</span>
-            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">{review.relative_time_description}</span>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-sm font-semibold text-white truncate">{review.author_name}</span>
+            <span className="text-xs text-zinc-600 shrink-0">{review.relative_time_description}</span>
           </div>
-          <div className="mb-4"><RatingStars rating={review.rating} /></div>
-          <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-relaxed break-words">
+          <div className="mb-2"><RatingStars rating={review.rating} /></div>
+          <p className="text-sm text-zinc-400 leading-relaxed break-words">
             {isLong && !expanded ? review.text.slice(0, 200) + "..." : review.text}
           </p>
           {isLong && (
-            <button onClick={() => setExpanded(!expanded)} className="text-[10px] font-black text-white mt-4 border border-white px-3 py-1 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">
-              {expanded ? "[ COMPRESS ]" : "[ EXPAND ]"}
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center gap-1 mt-2 text-xs font-semibold text-orange-400 hover:text-orange-300 transition-colors"
+            >
+              {expanded ? <><ChevronUp className="w-3 h-3" /> Show less</> : <><ChevronDown className="w-3 h-3" /> Read more</>}
             </button>
           )}
         </div>
@@ -70,17 +81,12 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
   const [details, setDetails] = useState<PlaceDetails | null>(null);
   const [reviewSummary, setReviewSummary] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showHours, setShowHours] = useState(false);
-  const [showAllReviews, setShowAllReviews] = useState(false);
-  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   useEffect(() => {
     if (!placeId) { setDetails(null); return; }
     setLoading(true);
-    setShowHours(false);
-    setShowAllReviews(false);
-    setActivePhotoIndex(0);
     setReviewSummary("");
+    setDetails(null);
 
     fetch(`/api/place-details?placeId=${placeId}`)
       .then((res) => res.json())
@@ -99,222 +105,232 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
     return `https://www.google.com/maps/dir/${origin}/${dest}`;
   };
 
-  const isPartsStore = details?.types?.includes("store") || details?.name?.toLowerCase().includes("parts");
+  const isOpen = details?.opening_hours?.open_now;
+  const isPartsStore = details?.types?.includes("store") && !details?.types?.includes("car_repair");
+
+  const content = (
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Header */}
+      <div className="flex-shrink-0 px-5 pt-5 pb-4 border-b border-white/[0.07]">
+        <div className="flex items-start gap-3">
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isPartsStore ? "bg-orange-500/15" : "bg-blue-500/15"}`}>
+            {isPartsStore
+              ? <Package className="w-6 h-6 text-orange-400" />
+              : <Wrench className="w-6 h-6 text-blue-400" />
+            }
+          </div>
+          <div className="flex-1 min-w-0">
+            {loading ? (
+              <div className="space-y-2">
+                <div className="h-5 w-48 bg-zinc-800 rounded-lg animate-pulse" />
+                <div className="h-4 w-32 bg-zinc-800 rounded-lg animate-pulse" />
+              </div>
+            ) : (
+              <>
+                <h2 className="text-base font-bold text-white leading-tight line-clamp-2">
+                  {details?.name || "Loading..."}
+                </h2>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  {details?.rating && (
+                    <div className="flex items-center gap-1">
+                      <RatingStars rating={details.rating} />
+                      <span className="text-xs font-semibold text-white ml-1">{details.rating}</span>
+                      {details.user_ratings_total && (
+                        <span className="text-xs text-zinc-500">({details.user_ratings_total})</span>
+                      )}
+                    </div>
+                  )}
+                  <span className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                    isOpen
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25"
+                      : "bg-zinc-800 text-zinc-500 border border-white/10"
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
+                    {isOpen ? "Open now" : "Closed"}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center shrink-0 transition-colors"
+          >
+            <X className="w-4 h-4 text-zinc-400" />
+          </button>
+        </div>
+      </div>
+
+      {/* Scrollable body */}
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="w-10 h-10 rounded-full border-2 border-orange-500/30 border-t-orange-500 animate-spin" />
+            <p className="text-sm text-zinc-500">Loading details...</p>
+          </div>
+        )}
+
+        {details && !loading && (
+          <div className="p-5 space-y-4">
+            {/* Photos strip */}
+            {details.photos && details.photos.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto scrollbar-none -mx-5 px-5">
+                {details.photos.slice(0, 6).map((photo, i) => (
+                  <img
+                    key={i}
+                    src={`/api/photo?ref=${photo.photo_reference}&maxwidth=400`}
+                    alt={`${details.name} ${i + 1}`}
+                    className="h-28 w-44 rounded-xl object-cover shrink-0 border border-white/[0.07]"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <a
+                href={getDirectionsUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-orange-500/20 transition-all active:scale-95"
+              >
+                <Navigation className="w-4 h-4" />
+                Directions
+              </a>
+              {details.formatted_phone_number ? (
+                <a
+                  href={`tel:${details.formatted_phone_number}`}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95"
+                >
+                  <Phone className="w-4 h-4" />
+                  Call
+                </a>
+              ) : (
+                <button className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95">
+                  <Share2 className="w-4 h-4" />
+                  Share
+                </button>
+              )}
+            </div>
+
+            {/* Info cards */}
+            <div className="space-y-2">
+              {details.formatted_address && (
+                <div className="flex items-start gap-3 p-4 bg-zinc-900/50 rounded-2xl">
+                  <MapPin className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                  <p className="text-sm text-zinc-300">{details.formatted_address}</p>
+                </div>
+              )}
+              {details.formatted_phone_number && (
+                <div className="flex items-center gap-3 p-4 bg-zinc-900/50 rounded-2xl">
+                  <Phone className="w-4 h-4 text-orange-400 shrink-0" />
+                  <p className="text-sm text-zinc-300">{details.formatted_phone_number}</p>
+                </div>
+              )}
+              {details.website && (
+                <a
+                  href={details.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 bg-zinc-900/50 rounded-2xl hover:bg-zinc-800/50 transition-colors"
+                >
+                  <Globe className="w-4 h-4 text-orange-400 shrink-0" />
+                  <p className="text-sm text-zinc-300 truncate flex-1">{details.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}</p>
+                  <ExternalLink className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+                </a>
+              )}
+            </div>
+
+            {/* Opening hours */}
+            {details.opening_hours?.weekday_text && (
+              <div className="p-4 bg-zinc-900/50 rounded-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock className="w-4 h-4 text-orange-400" />
+                  <span className="text-sm font-semibold text-white">Opening Hours</span>
+                </div>
+                <div className="space-y-1.5">
+                  {details.opening_hours.weekday_text.map((line, i) => {
+                    const [day, ...rest] = line.split(": ");
+                    return (
+                      <div key={i} className="flex items-center justify-between text-xs">
+                        <span className="text-zinc-500">{day}</span>
+                        <span className="text-zinc-300 font-medium">{rest.join(": ")}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* AI Review Summary */}
+            {reviewSummary && (
+              <div className="p-4 bg-violet-500/8 border border-violet-500/20 rounded-2xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-violet-400" />
+                  <span className="text-xs font-semibold text-violet-400">AI Summary</span>
+                </div>
+                <p className="text-sm text-zinc-300 leading-relaxed">{reviewSummary}</p>
+              </div>
+            )}
+
+            {/* Reviews */}
+            {details.reviews && details.reviews.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <BadgeCheck className="w-4 h-4 text-orange-400" />
+                  <span className="text-sm font-semibold text-white">Reviews ({details.reviews.length})</span>
+                </div>
+                <div>
+                  {details.reviews.map((review, i) => (
+                    <ReviewCard key={i} review={review} index={i} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <AnimatePresence>
       {placeId && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-[#000]/80 z-40 sm:hidden"
-          />
-
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
-            className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-[#050505] border-l border-white z-50 flex flex-col overflow-hidden"
-          >
-            {/* ── Brutalist Header ── */}
-            <div className="flex items-center justify-between border-grid-b bg-white text-black shrink-0">
-              <div className="flex items-center gap-3 px-6 py-4">
-                {isPartsStore ? (
-                  <Package className="w-5 h-5 text-black" />
-                ) : (
-                  <BadgeCheck className="w-5 h-5 text-black" />
-                )}
-                <span className="text-[10px] font-black uppercase tracking-widest">
-                  {isPartsStore ? "HARDWARE NODE" : "SERVICE CENTRE"}
-                </span>
+          {/* Mobile: bottom modal */}
+          <div className="md:hidden">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-[60]"
+              onClick={onClose}
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 32, stiffness: 320 }}
+              className="fixed inset-x-0 bottom-0 z-[70] bg-[#111113] rounded-t-3xl border-t border-white/[0.08]"
+              style={{ maxHeight: "90vh", display: "flex", flexDirection: "column" }}
+            >
+              <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+                <div className="w-10 h-1 rounded-full bg-zinc-700" />
               </div>
-              <button
-                onClick={onClose}
-                className="w-16 h-full flex items-center justify-center border-l border-black hover:bg-black hover:text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+              {content}
+            </motion.div>
+          </div>
 
-            {/* ── Scrollable Body ── */}
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-12">
-              {loading ? (
-                <div className="p-8 space-y-6">
-                  <div className="h-48 w-full bg-[#111] animate-pulse border border-white/20" />
-                  <div className="h-8 w-3/4 bg-[#111] animate-pulse border border-white/20" />
-                  <div className="h-4 w-1/2 bg-[#111] animate-pulse" />
-                  <div className="space-y-3 pt-6 border-t border-white/20">
-                    <div className="h-4 w-full bg-[#111] animate-pulse" />
-                    <div className="h-4 w-2/3 bg-[#111] animate-pulse" />
-                  </div>
-                </div>
-              ) : details ? (
-                <>
-                  {/* Photos Grid */}
-                  {details.photos && details.photos.length > 0 && (
-                    <div className="border-b border-white">
-                      <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none h-64 bg-[#111]">
-                        {details.photos.slice(0, 8).map((photo, i) => (
-                          <img
-                            key={i}
-                            src={`/api/photo?ref=${photo.photo_reference}&maxwidth=600`}
-                            alt={`${details.name} ${i + 1}`}
-                            className={`h-full shrink-0 snap-center object-cover cursor-pointer transition-all duration-500 filter ${i === 0 ? "w-full" : "w-72 border-l border-black"
-                              } ${i === activePhotoIndex ? "grayscale-0" : "grayscale opacity-50 hover:opacity-100 hover:grayscale-0"}`}
-                            onClick={() => setActivePhotoIndex(i)}
-                            loading="lazy"
-                          />
-                        ))}
-                      </div>
-                      <div className="px-4 py-2 bg-black text-white text-[9px] font-black tracking-widest uppercase border-t border-white/20">
-                        {details.photos.length} VISUAL RECORDS
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="p-8">
-                    {/* Header Info */}
-                    <div className="mb-8">
-                      <h2 className="text-3xl font-black text-white leading-[0.9] tracking-tighter uppercase mb-6">{details.name}</h2>
-
-                      {details.rating && (
-                        <div className="flex items-center gap-4 border border-white/20 p-3 w-fit">
-                          <span className="text-2xl font-black text-white leading-none">{details.rating.toFixed(1)}</span>
-                          <div className="flex flex-col gap-1 border-l border-white/20 pl-4">
-                            <RatingStars rating={details.rating} size="lg" />
-                            {details.user_ratings_total && (
-                              <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
-                                {details.user_ratings_total} EVALUATIONS
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Action Grid */}
-                    <div className="grid grid-cols-2 gap-0 border border-white mb-8 bg-[#000]">
-                      <a
-                        href={getDirectionsUrl()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex flex-col items-center justify-center gap-3 p-4 border-r border-white hover:bg-white hover:text-black transition-colors group"
-                      >
-                        <Navigation className="w-5 h-5 text-white group-hover:text-black" />
-                        <span className="text-[10px] font-black tracking-widest uppercase">NAVIGATE</span>
-                      </a>
-                      <button className="flex flex-col items-center justify-center gap-3 p-4 hover:bg-white hover:text-black transition-colors group">
-                        <Share2 className="w-5 h-5 text-white group-hover:text-black" />
-                        <span className="text-[10px] font-black tracking-widest uppercase">TRANSMIT</span>
-                      </button>
-                    </div>
-
-                    {/* Info Lines */}
-                    <div className="space-y-0 border border-white/20 bg-[#0a0a0a] mb-8">
-                      {/* Address */}
-                      <div className="flex items-start gap-4 p-4 border-b border-white/20">
-                        <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                        <p className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 leading-relaxed">{details.formatted_address}</p>
-                      </div>
-
-                      {/* Hours */}
-                      {details.opening_hours && (
-                        <div className="flex items-start gap-4 p-4 border-b border-white/20">
-                          <Clock className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                          <div className="flex-1 min-w-0">
-                            <button
-                              onClick={() => setShowHours(!showHours)}
-                              className="flex items-center justify-between w-full"
-                            >
-                              <span className={`text-[10px] font-black tracking-widest uppercase ${details.opening_hours.open_now ? "text-white" : "text-zinc-600"}`}>
-                                {details.opening_hours.open_now ? "STATUS: ONLINE" : "STATUS: OFFLINE"}
-                              </span>
-                              {showHours
-                                ? <ChevronUp className="w-4 h-4 text-white" />
-                                : <ChevronDown className="w-4 h-4 text-white" />}
-                            </button>
-                            {showHours && details.opening_hours.weekday_text && (
-                              <div className="mt-4 space-y-2 border-t border-white/20 pt-4">
-                                {details.opening_hours.weekday_text.map((day) => {
-                                  const [name, ...rest] = day.split(": ");
-                                  return (
-                                    <div key={day} className="flex justify-between text-[10px] font-bold uppercase tracking-widest">
-                                      <span className="text-zinc-600 w-24 shrink-0">{name}</span>
-                                      <span className="text-zinc-300 text-right">{rest.join(": ")}</span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Phone */}
-                      {details.formatted_phone_number && (
-                        <div className="flex items-center gap-4 p-4 border-b border-white/20">
-                          <Phone className="w-4 h-4 text-white shrink-0" />
-                          <a href={`tel:${details.formatted_phone_number}`} className="text-[11px] font-black tracking-widest uppercase text-white hover:text-zinc-400">
-                            {details.formatted_phone_number}
-                          </a>
-                        </div>
-                      )}
-
-                      {/* Web */}
-                      {details.website && (
-                        <div className="flex items-center gap-4 p-4">
-                          <Globe className="w-4 h-4 text-white shrink-0" />
-                          <a href={details.website} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black tracking-widest uppercase text-white hover:text-zinc-400 truncate">
-                            {details.website.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
-                          </a>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* AI Insight Module */}
-                    {reviewSummary && (
-                      <div className="p-6 border border-white bg-[#000] mb-8 relative">
-                        <div className="absolute top-0 right-0 w-8 h-8 border-b border-l border-white/20" />
-                        <div className="flex items-center gap-3 mb-4 inline-flex bg-white text-black px-3 py-1">
-                          <Sparkles className="w-3.5 h-3.5" />
-                          <span className="text-[10px] font-black uppercase tracking-widest">AI SUMMARY MODULE</span>
-                        </div>
-                        <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-relaxed">{reviewSummary}</p>
-                      </div>
-                    )}
-
-                    {/* Reviews list */}
-                    {details.reviews && details.reviews.length > 0 && (
-                      <div className="border border-white/20 p-6 bg-[#000]">
-                        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/20">
-                          <h3 className="text-sm font-black text-white uppercase tracking-widest">FIELD REPORTS</h3>
-                          <span className="text-[10px] font-black text-zinc-500 bg-white/5 px-2 py-1 border border-white/10 uppercase tracking-widest">
-                            {details.reviews.length} ENTRIES
-                          </span>
-                        </div>
-                        <div>
-                          {(showAllReviews ? details.reviews : details.reviews.slice(0, 3)).map((review, i) => (
-                            <ReviewCard key={i} review={review} />
-                          ))}
-                        </div>
-                        {details.reviews.length > 3 && (
-                          <button
-                            onClick={() => setShowAllReviews(!showAllReviews)}
-                            className="w-full mt-6 py-4 border border-white bg-transparent text-white text-[10px] font-black tracking-widest uppercase hover:bg-white hover:text-black transition-colors"
-                          >
-                            {showAllReviews ? "COLLAPSE REPORTS" : `LOAD ALL ${details.reviews.length} REPORTS`}
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : null}
-            </div>
+          {/* Desktop: right side panel */}
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="hidden md:flex fixed right-0 top-0 bottom-0 w-[460px] z-[60] bg-[#111113] border-l border-white/[0.08] flex-col shadow-2xl shadow-black/50"
+          >
+            {content}
           </motion.div>
         </>
       )}

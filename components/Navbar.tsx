@@ -5,130 +5,214 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Wrench, Newspaper, Car, Scale, Menu, X, Package,
-  MapPin, LayoutDashboard, Gauge, Server
+  Wrench, Newspaper, Car, Scale, Package,
+  LayoutDashboard, Gauge, X, ChevronRight,
+  Home, MoreHorizontal, MapPin,
 } from "lucide-react";
 
-const NAV_LINKS = [
-  { href: "/", label: "HOLO-MAP", icon: MapPin },
-  { href: "/garages", label: "NODE DB", icon: Wrench },
-  { href: "/parts", label: "HARDWARE", icon: Package },
-  { href: "/my-car", label: "AI DIAGNOSTIC", icon: Car, badge: "AI" },
-  { href: "/dashboard", label: "TELEMETRY", icon: LayoutDashboard },
-  { href: "/news", label: "ARCHIVES", icon: Newspaper },
-  { href: "/laws", label: "PROTOCOLS", icon: Scale },
-  { href: "/services", label: "OPERATIONS", icon: Gauge },
+const BOTTOM_TABS = [
+  { href: "/", label: "Find", icon: Home },
+  { href: "/garages", label: "Garages", icon: Wrench },
+  { href: "/parts", label: "Parts", icon: Package },
+  { href: "/my-car", label: "My Car", icon: Car, badge: "AI" },
+  { href: "/more", label: "More", icon: MoreHorizontal, isMore: true },
+];
+
+const MORE_LINKS = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, desc: "Analytics & stats" },
+  { href: "/news", label: "News", icon: Newspaper, desc: "UAE automotive news" },
+  { href: "/laws", label: "UAE Laws", icon: Scale, desc: "Traffic regulations" },
+  { href: "/services", label: "Services", icon: Gauge, desc: "Browse service types" },
+];
+
+const DESKTOP_NAV = [
+  { href: "/", label: "Find", icon: MapPin },
+  { href: "/garages", label: "Garages", icon: Wrench },
+  { href: "/parts", label: "Parts", icon: Package },
+  { href: "/my-car", label: "My Car", icon: Car, badge: "AI" },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/news", label: "News", icon: Newspaper },
+  { href: "/laws", label: "Laws", icon: Scale },
+  { href: "/services", label: "Services", icon: Gauge },
 ];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const isMoreActive = MORE_LINKS.some((l) => pathname.startsWith(l.href));
+
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full bg-[#050505] border-grid-b font-mono">
-        <div className="flex items-stretch h-14 border-grid-b bg-[#000]">
-          {/* Logo Block */}
-          <Link href="/" className="flex items-center gap-3 px-6 h-full border-r border-white/20 hover:bg-white hover:text-black transition-colors group relative overflow-hidden shrink-0">
-            <div className="absolute top-0 right-0 w-4 h-4 border-b border-l border-white/20 group-hover:border-black" />
-            <Server className="w-4 h-4 text-white group-hover:text-black" />
-            <span className="text-[11px] font-black tracking-widest uppercase">
-              GARAGE<span className="text-zinc-500 group-hover:text-zinc-600">FINDER</span>
-            </span>
-          </Link>
+      {/* ── Mobile Top Header ── */}
+      <header className="lg:hidden sticky top-0 z-40 flex items-center justify-between h-14 px-4 bg-[#09090b]/95 backdrop-blur-xl border-b border-white/[0.06]">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
+            <Wrench className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-[15px] font-bold text-white tracking-tight">
+            Garage<span className="text-orange-500">UAE</span>
+          </span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[11px] font-semibold text-emerald-400">Live</span>
+          </div>
+        </div>
+      </header>
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex flex-1 items-stretch overflow-x-auto scrollbar-none">
-            {NAV_LINKS.map((link) => {
-              const active = isActive(link.href);
+      {/* ── Desktop Sticky Nav ── */}
+      <nav className="hidden lg:flex sticky top-0 z-50 items-center h-14 px-6 bg-[#09090b]/95 backdrop-blur-xl border-b border-white/[0.06]">
+        <Link href="/" className="flex items-center gap-2.5 mr-8 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
+            <Wrench className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-[15px] font-bold text-white">
+            Garage<span className="text-orange-500">UAE</span>
+          </span>
+        </Link>
+
+        <div className="flex items-center gap-1 flex-1 overflow-x-auto scrollbar-none">
+          {DESKTOP_NAV.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap shrink-0 ${
+                  active
+                    ? "bg-orange-500/15 text-orange-400 border border-orange-500/20"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+                }`}
+              >
+                <link.icon className="w-4 h-4" />
+                {link.label}
+                {"badge" in link && link.badge && (
+                  <span className="badge-violet py-0 text-[10px]">{link.badge}</span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 ml-4">
+          <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-semibold text-emerald-400">450+ shops live</span>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Mobile Bottom Tab Bar ── */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe">
+        <div className="bg-[#09090b]/96 backdrop-blur-xl border-t border-white/[0.08] px-2 pt-2 pb-1">
+          <div className="flex items-center justify-around">
+            {BOTTOM_TABS.map((tab) => {
+              const active = tab.isMore ? isMoreActive : isActive(tab.href);
+              if (tab.isMore) {
+                return (
+                  <button
+                    key="more"
+                    onClick={() => setMoreOpen(true)}
+                    className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] ${
+                      active ? "text-orange-400" : "text-zinc-500"
+                    }`}
+                  >
+                    <div className={`p-1.5 rounded-xl transition-all ${active ? "bg-orange-500/15" : ""}`}>
+                      <tab.icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-semibold">{tab.label}</span>
+                  </button>
+                );
+              }
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex items-center gap-2 px-6 h-full border-r transition-colors shrink-0 text-[10px] font-black tracking-widest uppercase ${active
-                      ? "bg-white text-black border-white"
-                      : "bg-[#050505] text-zinc-500 hover:text-white border-white/20 hover:bg-white/5"
-                    }`}
+                  key={tab.href}
+                  href={tab.href}
+                  className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] relative ${
+                    active ? "text-orange-400" : "text-zinc-500"
+                  }`}
                 >
-                  <link.icon className={`w-3.5 h-3.5 ${active ? "text-black" : "opacity-70"}`} />
-                  {link.label}
-                  {"badge" in link && link.badge && (
-                    <span className={`px-1.5 py-0.5 border text-[9px] ${active ? "border-black bg-black text-white" : "border-white/20 bg-white/5 text-white"}`}>
-                      {link.badge}
-                    </span>
+                  <div className={`p-1.5 rounded-xl transition-all ${active ? "bg-orange-500/15" : ""}`}>
+                    <tab.icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-semibold">{tab.label}</span>
+                  {"badge" in tab && tab.badge && (
+                    <span className="absolute top-0.5 right-1.5 badge-violet text-[9px] px-1.5 py-0">{tab.badge}</span>
                   )}
                 </Link>
               );
             })}
           </div>
-
-          <div className="hidden lg:flex items-center px-6 h-full border-l border-white/20 bg-[#050505] shrink-0 gap-3">
-            <div className="w-2 h-2 bg-emerald-400 border border-black animate-pulse" />
-            <span className="text-[10px] font-black tracking-widest uppercase text-zinc-500">SYSTEM ONLINE</span>
-          </div>
-
-          {/* Mobile hamburger */}
-          <div className="lg:hidden ml-auto flex items-stretch border-l border-white/20">
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="px-6 h-full flex items-center justify-center hover:bg-white hover:text-black transition-colors text-white"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Mobile drawer */}
+      {/* ── More Drawer ── */}
       <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.2 }}
-            className="fixed inset-0 bg-[#050505] z-50 flex flex-col font-mono"
-          >
-            <div className="flex items-center justify-between h-14 border-grid-b bg-white text-black px-6">
-              <span className="text-[11px] font-black tracking-widest uppercase">MAIN TERMINAL</span>
-              <button onClick={() => setMobileOpen(false)} className="p-2 hover:bg-black hover:text-white transition-colors border border-transparent hover:border-black">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto w-full">
-              {NAV_LINKS.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-4 px-6 py-5 border-grid-b text-[11px] font-black uppercase tracking-widest transition-colors ${active
-                        ? "bg-white text-black"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
-                      }`}
+        {moreOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-[60] lg:hidden"
+              onClick={() => setMoreOpen(false)}
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-[70] lg:hidden bg-[#111113] rounded-t-3xl border-t border-white/[0.08] pb-safe"
+            >
+              <div className="flex flex-col">
+                <div className="flex justify-center pt-3 pb-1">
+                  <div className="w-10 h-1 rounded-full bg-zinc-700" />
+                </div>
+                <div className="flex items-center justify-between px-5 py-3">
+                  <span className="text-lg font-bold text-white">More</span>
+                  <button
+                    onClick={() => setMoreOpen(false)}
+                    className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center"
                   >
-                    <link.icon className="w-5 h-5 shrink-0" />
-                    <span>{link.label}</span>
-                    {"badge" in link && link.badge && (
-                      <span className={`ml-auto px-2 py-1 border text-[9px] ${active ? "border-black bg-black text-white" : "border-white/20 bg-white/5 text-white"}`}>
-                        {link.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div className="p-6 border-grid-t bg-[#000] flex items-center gap-3">
-              <div className="w-3 h-3 bg-emerald-400 border border-black animate-pulse" />
-              <span className="text-[10px] font-black tracking-widest uppercase text-zinc-500">SYSTEM ONLINE · 2,200+ NODES</span>
-            </div>
-          </motion.div>
+                    <X className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </div>
+                <div className="px-4 pb-6 grid grid-cols-1 gap-2">
+                  {MORE_LINKS.map((link) => {
+                    const active = pathname.startsWith(link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMoreOpen(false)}
+                        className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
+                          active
+                            ? "bg-orange-500/10 border border-orange-500/20"
+                            : "bg-zinc-900/60 border border-white/[0.05] hover:bg-zinc-800/60"
+                        }`}
+                      >
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                          active ? "bg-orange-500/20" : "bg-zinc-800"
+                        }`}>
+                          <link.icon className={`w-5 h-5 ${active ? "text-orange-400" : "text-zinc-400"}`} />
+                        </div>
+                        <div className="flex-1">
+                          <p className={`text-sm font-semibold ${active ? "text-orange-400" : "text-white"}`}>{link.label}</p>
+                          <p className="text-xs text-zinc-500 mt-0.5">{link.desc}</p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
