@@ -78,11 +78,11 @@ function GarageCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={() => onSelect(shop.place_id)}
-      className="flex items-center gap-3 p-3.5  bg-zinc-900 border border-zinc-800 hover:border-blue-600/30 hover:bg-zinc-900/80 active:scale-[0.99] transition-all group cursor-pointer"
+      className="flex items-center gap-3 p-3.5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-orange-500/30 active:scale-[0.99] transition-all group cursor-pointer"
     >
       {/* Rank badge */}
       {rank && rank <= 3 ? (
-        <div className={`w-9 h-9  flex items-center justify-center text-xs font-black shrink-0 ${
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 ${
           rank === 1 ? "rank-badge-gold text-white" :
           rank === 2 ? "rank-badge-silver text-white" :
           "rank-badge-bronze text-white"
@@ -90,8 +90,8 @@ function GarageCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?
           #{rank}
         </div>
       ) : (
-        <div className="w-9 h-9  bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-          <Wrench className="w-4 h-4 text-zinc-600" />
+        <div className="w-9 h-9 rounded-xl bg-[var(--bg)] border border-[var(--border)] flex items-center justify-center shrink-0">
+          <Wrench className="w-4 h-4 text-zinc-500" />
         </div>
       )}
 
@@ -101,12 +101,12 @@ function GarageCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?
           <p className="font-semibold text-[13px] text-zinc-100 leading-tight truncate pr-1">
             {shop.name}
           </p>
-          <div className={`flex items-center gap-1 px-1.5 py-0.5  text-[10px] font-bold border shrink-0 ${
+          <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold border shrink-0 ${
             isOpen
-              ? "bg-emerald-900/40 border-emerald-600/25 text-emerald-400"
-              : "bg-zinc-900/60 border-zinc-700/25 text-zinc-500"
+              ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              : "bg-zinc-800/50 border-zinc-700/30 text-zinc-500"
           }`}>
-            <span className={`w-1 h-1  ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
             {isOpen ? "Open" : "Closed"}
           </div>
         </div>
@@ -127,18 +127,18 @@ function GarageCard({ shop, rank, onSelect }: { shop: ExtendedPlaceResult; rank?
         </div>
       </div>
 
-      <ChevronRight className="w-3.5 h-3.5 text-zinc-700 group-hover:text-blue-400 transition-colors shrink-0" />
+      <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-orange-400 transition-colors shrink-0" />
     </motion.div>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="flex items-center gap-3 p-3.5  bg-zinc-900 border border-zinc-800">
-      <div className="skeleton w-9 h-9  shrink-0" />
+    <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+      <div className="shimmer w-9 h-9 rounded-xl shrink-0" />
       <div className="flex-1 space-y-1.5">
-        <div className="skeleton h-3.5 w-3/4 " />
-        <div className="skeleton h-2.5 w-1/2 " />
+        <div className="shimmer h-3.5 w-3/4 rounded-lg" />
+        <div className="shimmer h-2.5 w-1/2 rounded-lg" />
       </div>
     </div>
   );
@@ -173,7 +173,7 @@ function StatsCharts({ shops }: { shops: ExtendedPlaceResult[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 mb-4">
       {/* Rating distribution */}
-      <div className="p-3  bg-zinc-900 border border-zinc-800">
+      <div className="p-3 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
         <p className="text-[10px] text-zinc-500 font-semibold mb-2 flex items-center gap-1">
           <Activity className="w-3 h-3" /> Rating Distribution
         </p>
@@ -193,7 +193,7 @@ function StatsCharts({ shops }: { shops: ExtendedPlaceResult[] }) {
       </div>
 
       {/* Open/Closed donut */}
-      <div className="p-3  bg-zinc-900 border border-zinc-800">
+      <div className="p-3 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
         <p className="text-[10px] text-zinc-500 font-semibold mb-2 flex items-center gap-1">
           <Clock className="w-3 h-3" /> Open Right Now
         </p>
@@ -300,16 +300,16 @@ function GaragesContent() {
   const activeEmirate = EMIRATE_CONFIG.find(e => e.label === emirate);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-20 md:pb-6">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] pb-20 md:pb-6">
       {/* Compact Header */}
-      <div className="border-b border-zinc-800/60 bg-zinc-950 sticky top-14 z-30">
+      <div className="border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-xl sticky top-14 z-30">
         <div className="max-w-5xl mx-auto px-3 py-3">
           {/* Title row */}
           <div className="flex items-center gap-2 mb-3">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black tracking-tight text-white">
-                  UAE <span className="text-blue-400">Garages</span>
+                <h1 className="text-xl font-bold tracking-tight text-[var(--text)]">
+                  UAE <span className="text-orange-400">Garages</span>
                 </h1>
                 {loading && <RefreshCw className="w-3.5 h-3.5 text-zinc-600 animate-spin" />}
               </div>
@@ -327,21 +327,21 @@ function GaragesContent() {
           {/* Search + filter row */}
           <div className="flex items-center gap-2 mb-2">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search garage or area..."
-                className="w-full pl-8 pr-3 py-2  bg-zinc-900 border border-zinc-800 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-600/40 transition-colors"
+                className="w-full pl-8 pr-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm text-[var(--text)] placeholder:text-zinc-500 outline-none focus:border-orange-500/40 transition-colors"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-1.5 px-3 py-2  border text-xs font-semibold transition-all shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all shrink-0 ${
                 showFilters || openOnly || minRating > 0
-                  ? "bg-blue-600/15 border-blue-600/30 text-blue-400"
-                  : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+                  ? "bg-orange-500/10 border-orange-500/25 text-orange-400"
+                  : "bg-[var(--surface)] border-[var(--border)] text-zinc-500 hover:border-[var(--border-glow)]"
               }`}
             >
               <Filter className="w-3.5 h-3.5" />
@@ -359,10 +359,10 @@ function GaragesContent() {
                 key={em.label}
                 onClick={() => setEmirate(em.label)}
                 style={emirate === em.label ? { borderColor: em.color + "50", color: em.color, backgroundColor: em.color + "15" } : {}}
-                className={`px-2.5 py-1  text-[11px] font-semibold border whitespace-nowrap transition-all shrink-0 ${
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition-all shrink-0 ${
                   emirate === em.label
                     ? ""
-                    : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
+                    : "bg-[var(--surface)] border-[var(--border)] text-zinc-500 hover:border-[var(--border-glow)] hover:text-[var(--text)]"
                 }`}
               >
                 {em.label}
@@ -383,10 +383,10 @@ function GaragesContent() {
                 <div className="pt-2 flex flex-wrap gap-1.5">
                   <button
                     onClick={() => setOpenOnly(!openOnly)}
-                    className={`flex items-center gap-1 px-2.5 py-1.5  text-[11px] font-semibold border transition-all ${
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
                       openOnly
-                        ? "bg-emerald-600/15 border-emerald-600/30 text-emerald-400"
-                        : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+                        ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+                        : "bg-[var(--surface)] border-[var(--border)] text-zinc-500 hover:border-[var(--border-glow)]"
                     }`}
                   >
                     <Clock className="w-3 h-3" /> Open Now
@@ -395,10 +395,10 @@ function GaragesContent() {
                     <button
                       key={r}
                       onClick={() => setMinRating(minRating === r && r !== 0 ? 0 : r)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5  text-[11px] font-semibold border transition-all ${
+                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
                         minRating === r
-                          ? "bg-yellow-500/15 border-yellow-500/30 text-yellow-400"
-                          : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+                          ? "bg-amber-500/15 border-amber-500/30 text-amber-400"
+                          : "bg-[var(--surface)] border-[var(--border)] text-zinc-500 hover:border-[var(--border-glow)]"
                       }`}
                     >
                       {r === 0 ? "All Ratings" : <><Star className="w-2.5 h-2.5 fill-current" />{r}+</>}
@@ -417,14 +417,14 @@ function GaragesContent() {
         {!loading && garages.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
             {[
-              { label: "Total", value: stats.total, color: "text-blue-400" },
+              { label: "Total", value: stats.total, color: "text-orange-400" },
               { label: "Open Now", value: stats.open, color: "text-emerald-400" },
-              { label: "Avg ★", value: stats.avgRating, color: "text-yellow-400" },
-              { label: "4.5+ ★", value: stats.topRated, color: "text-blue-400" },
+              { label: "Avg ★", value: stats.avgRating, color: "text-amber-400" },
+              { label: "4.5+ ★", value: stats.topRated, color: "text-violet-400" },
             ].map(s => (
-              <div key={s.label} className="p-2.5  bg-zinc-900 border border-zinc-800 text-center">
-                <p className={`text-lg font-black ${s.color}`}>{s.value}</p>
-                <p className="text-[10px] text-zinc-600">{s.label}</p>
+              <div key={s.label} className="p-2.5 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-center">
+                <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+                <p className="text-[10px] text-zinc-500">{s.label}</p>
               </div>
             ))}
           </div>
@@ -485,8 +485,8 @@ function GaragesContent() {
 export default function GaragesPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent  animate-spin" />
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <GaragesContent />

@@ -1,12 +1,34 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/app/providers";
 
 export const metadata: Metadata = {
-  title: "GarageFinder UAE — Find Auto Repair, Parts & Services",
+  title: "GarageFinder UAE — Find Auto Repair, Parts & Services Near You",
   description:
-    "AI-powered directory of UAE auto repair shops, spare parts stores, car services and more. Real reviews, live hours, all 7 emirates.",
+    "Find top-rated auto repair shops, car service centres, and spare parts stores across all UAE — Dubai, Abu Dhabi, Sharjah, Ajman, RAK & more. AI-powered search, real reviews, live hours.",
   manifest: "/manifest.webmanifest",
+  keywords: [
+    "auto repair UAE", "car service Dubai", "garage Dubai", "spare parts UAE",
+    "car repair Abu Dhabi", "auto workshop Sharjah", "mechanic near me UAE",
+    "car service centre UAE", "automobile repair Dubai", "tyre shop UAE",
+    "engine repair Dubai", "AC service car UAE", "brake repair UAE"
+  ],
+  openGraph: {
+    title: "GarageFinder UAE — Find Top Auto Repair & Parts",
+    description: "AI-powered directory of 850+ verified garages and parts stores across all 7 UAE emirates.",
+    type: "website",
+    locale: "en_AE",
+    siteName: "GarageFinder UAE",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GarageFinder UAE",
+    description: "Find top-rated auto repair shops & parts stores across all UAE emirates.",
+  },
+  alternates: {
+    canonical: "https://garage-finder-uae.vercel.app",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -17,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#09090b" />
@@ -26,13 +48,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-title" content="GarageUAE" />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-512.png" />
+        {/* Prevent flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('garage-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})()`,
+          }}
+        />
       </head>
-      <body className="bg-[#09090b] text-white antialiased min-h-screen selection:bg-orange-500 selection:text-white">
-        <div className="relative z-10 flex flex-col min-h-screen">
-          <Navbar />
-          {children}
-        </div>
+      <body className="theme-bg theme-text antialiased min-h-screen">
+        <ThemeProvider>
+          <div className="relative z-10 flex flex-col min-h-screen">
+            <Navbar />
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

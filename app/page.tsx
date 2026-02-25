@@ -9,7 +9,7 @@ import {
   Sparkles, ChevronRight, TrendingUp, Star, Zap, Clock,
   Package, BadgeCheck, Car, LayoutDashboard, Newspaper,
   ShieldCheck, Search, ArrowRight, Activity, MapPin, Cpu,
-  MessageSquare, Send,
+  MessageSquare, Send, CheckCircle2, Timer,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,13 +30,27 @@ import { getBrandTierLabel, applyFilters, type ExtendedPlaceResult } from "@/lib
 const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-[#050505] border-grid flex items-center justify-center uppercase font-black tracking-widest text-xs text-zinc-500">
-      INITIALIZING MAP ENGINE...
+    <div className="w-full h-full bg-[var(--bg)] flex items-center justify-center text-sm text-zinc-500">
+      Loading map…
     </div>
   ),
 });
 
 const HAS_API_KEY = !!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+/* ─── SEO Structured Data ────────────────────────────────── */
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GarageFinder UAE",
+  "url": "https://garage-finder-uae.vercel.app",
+  "description": "Find top-rated auto repair shops, car service centers, and spare parts stores across all UAE emirates — Dubai, Abu Dhabi, Sharjah, Ajman, Ras Al Khaimah, Fujairah, Umm Al Quwain.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://garage-finder-uae.vercel.app/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
 
 /* ─── UAE Live Clock ─────────────────────────────────────── */
 function UAEClock() {
@@ -50,14 +64,14 @@ function UAEClock() {
 
   if (!time) return null;
 
-  const timeStr = time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, timeZone: "Asia/Dubai" });
+  const timeStr = time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Dubai" });
   const dateStr = time.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", timeZone: "Asia/Dubai" });
 
   return (
-    <div className="flex flex-col items-center">
-      <p className="text-[10px] font-black text-white uppercase tracking-widest mb-2 border-b border-white pb-1 w-full text-center">UAE TIME</p>
-      <p className="text-3xl font-black text-white tabular-nums tracking-tighter leading-none">{timeStr}</p>
-      <p className="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-widest">{dateStr} · GST (UTC+4)</p>
+    <div className="flex flex-col items-start gap-1">
+      <p className="text-[11px] font-semibold text-zinc-500 tracking-wide">UAE Time (GST)</p>
+      <p className="text-2xl font-bold text-[var(--text)] tabular-nums leading-none">{timeStr}</p>
+      <p className="text-[11px] text-zinc-500 mt-0.5">{dateStr}</p>
     </div>
   );
 }
@@ -73,42 +87,41 @@ function AnimCounter({ value, suffix = "" }: { value: number; suffix?: string })
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-/* ─── Dashboard Strip (live stats on homepage) ───────────── */
-function DashboardStrip() {
+/* ─── Live Stats Strip ───────────────────────────────────── */
+function LiveStatsStrip() {
   const stats = [
-    { label: "Garages Indexed", value: 850, suffix: "+", icon: Wrench, color: "text-blue-500", bg: "bg-blue-500/10 border-blue-500/20" },
-    { label: "Parts Stores", value: 320, suffix: "+", icon: Package, color: "text-orange-500", bg: "bg-orange-500/10 border-orange-500/20" },
-    { label: "Open Right Now", value: 89, suffix: "", icon: Activity, color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20" },
-    { label: "AI Searches Today", value: 1240, suffix: "+", icon: Sparkles, color: "text-white", bg: "bg-white/10 border-white/20" },
+    { label: "Garages Indexed", value: 850, suffix: "+", icon: Wrench, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20" },
+    { label: "Parts Stores", value: 320, suffix: "+", icon: Package, color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/20" },
+    { label: "Open Right Now", value: 89, suffix: "", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
+    { label: "AI Searches Today", value: 1240, suffix: "+", icon: Sparkles, color: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/20" },
   ];
 
   return (
-    <section className="py-8 bg-[#000] border-grid-b">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-0 border-grid">
-          {/* UAE Clock card */}
-          <div className="col-span-2 lg:col-span-1 bg-[#050505] border-grid flex items-center justify-center p-8 group hover:bg-white transition-colors duration-500">
-            <div className="group-hover:invert transition-colors duration-500 w-full">
-              <UAEClock />
-            </div>
+    <section className="py-6 bg-[var(--surface)] border-b border-[var(--border)]">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
+          {/* UAE Clock */}
+          <div className="col-span-2 lg:col-span-1 bg-[var(--bg)] border border-[var(--border)] rounded-2xl p-4 flex items-center">
+            <UAEClock />
           </div>
           {/* Stats */}
-          {stats.map((s) => (
+          {stats.map((s, i) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 0 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-[#0a0a0a] border-grid p-6 md:p-8 flex flex-col justify-between group hover:bg-white transition-colors duration-500 min-h-[160px]"
+              transition={{ delay: i * 0.08 }}
+              className="bg-[var(--bg)] border border-[var(--border)] rounded-2xl p-4 flex items-center gap-3 hover:border-[var(--border-glow)] transition-colors"
             >
-              <div className={`w-10 h-10 border flex items-center justify-center mb-6 group-hover:border-black group-hover:bg-transparent transition-colors ${s.bg}`}>
-                <s.icon className={`w-5 h-5 group-hover:text-black transition-colors ${s.color}`} />
+              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${s.bg}`}>
+                <s.icon className={`w-5 h-5 ${s.color}`} />
               </div>
               <div>
-                <p className="text-3xl font-black tabular-nums text-white group-hover:text-black transition-colors tracking-tighter">
+                <p className={`text-2xl font-bold tabular-nums leading-none ${s.color}`}>
                   <AnimCounter value={s.value} suffix={s.suffix} />
                 </p>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-2">{s.label}</p>
+                <p className="text-[11px] text-zinc-500 font-medium mt-0.5">{s.label}</p>
               </div>
             </motion.div>
           ))}
@@ -124,78 +137,81 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
     {
       href: "/garages",
       icon: Wrench,
-      title: "FIND A GARAGE",
-      desc: "AI-MATCHED REPAIR SHOPS ACROSS ALL UAE EMIRATES",
-      iconColor: "text-blue-500",
+      title: "Find a Garage",
+      desc: "AI-matched repair shops across all UAE emirates",
+      gradient: "from-orange-500/15 to-orange-600/5",
+      border: "hover:border-orange-500/40",
+      iconBg: "bg-orange-500/15 border-orange-500/25",
+      iconColor: "text-orange-400",
       badge: null,
-      large: true,
     },
     {
       href: "/parts",
       icon: Package,
-      title: "FIND PARTS",
-      desc: "SPARE PARTS STORES & SUPPLIERS NEAR YOU",
-      iconColor: "text-orange-500",
+      title: "Find Parts",
+      desc: "Spare parts stores & suppliers near you",
+      gradient: "from-violet-500/15 to-violet-600/5",
+      border: "hover:border-violet-500/40",
+      iconBg: "bg-violet-500/15 border-violet-500/25",
+      iconColor: "text-violet-400",
       badge: null,
-      large: false,
     },
     {
       href: "/my-car",
       icon: Car,
-      title: "MY CAR ADVISOR",
-      desc: "AI HEALTH CHECK & MAINTENANCE PLANNER",
-      iconColor: "text-blue-500",
+      title: "My Car Advisor",
+      desc: "AI health check & maintenance planner",
+      gradient: "from-violet-500/15 to-orange-500/10",
+      border: "hover:border-violet-500/40",
+      iconBg: "bg-violet-500/15 border-violet-500/25",
+      iconColor: "text-violet-400",
       badge: "AI",
-      large: false,
     },
     {
       href: "/dashboard",
       icon: LayoutDashboard,
-      title: "DASHBOARD",
-      desc: "UAE AUTOMOTIVE STATS, CHARTS & INSIGHTS",
-      iconColor: "text-white",
+      title: "Dashboard",
+      desc: "UAE automotive stats, charts & insights",
+      gradient: "from-cyan-500/10 to-cyan-600/5",
+      border: "hover:border-cyan-500/40",
+      iconBg: "bg-cyan-500/10 border-cyan-500/20",
+      iconColor: "text-cyan-400",
       badge: null,
-      large: false,
     },
   ];
 
   return (
-    <section className="py-12 bg-[#050505] border-grid-b">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between mb-8 pb-4 border-grid-b">
-          <h2 className="text-2xl font-black text-white tracking-tighter uppercase">QUICK ACCESS PORTALS</h2>
-          <Link href="/services" className="text-[10px] font-black tracking-widest uppercase text-zinc-500 hover:text-white transition-colors flex items-center gap-2">
-            ALL EXECUTABLES <ChevronRight className="w-3 h-3" />
+    <section className="py-10 bg-[var(--bg)]">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-[var(--text)]">What are you looking for?</h2>
+          <Link href="/services" className="text-sm text-zinc-500 hover:text-orange-400 transition-colors flex items-center gap-1">
+            All services <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-grid">
-          {actions.map((a) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {actions.map((a, i) => (
             <motion.div
               key={a.href}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="border-grid bg-[#0a0a0a]"
+              transition={{ delay: i * 0.07 }}
             >
               <Link
                 href={a.href}
-                className={`group flex flex-col p-8 transition-colors duration-300 h-full min-h-[220px] hover:bg-white`}
+                className={`group flex flex-col p-4 md:p-5 rounded-2xl bg-gradient-to-br ${a.gradient} border border-[var(--border)] ${a.border} transition-all duration-200 h-full min-h-[140px] hover:shadow-lg`}
               >
-                <div className="flex items-start justify-between mb-8">
-                  <div className={`w-12 h-12 border flex items-center justify-center group-hover:border-black group-hover:bg-transparent transition-colors border-white/20 bg-white/5`}>
-                    <a.icon className={`w-6 h-6 group-hover:text-black transition-colors ${a.iconColor}`} />
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${a.iconBg}`}>
+                    <a.icon className={`w-5 h-5 ${a.iconColor}`} />
                   </div>
                   {a.badge && (
-                    <span className="text-[10px] font-black px-2 py-1 border border-blue-500 bg-blue-500/10 text-blue-500 group-hover:bg-blue-100 group-hover:border-blue-600 transition-colors">
-                      {a.badge}
-                    </span>
+                    <span className="badge-violet text-[10px] px-2 py-0">{a.badge}</span>
                   )}
                 </div>
-                <div className="mt-auto">
-                  <p className="font-black text-lg text-white mb-2 group-hover:text-black uppercase tracking-tight transition-colors">{a.title}</p>
-                  <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest leading-relaxed group-hover:text-zinc-600 transition-colors">{a.desc}</p>
-                </div>
-                <ArrowRight className={`w-5 h-5 text-black opacity-0 group-hover:opacity-100 transition-opacity mt-6`} />
+                <p className="text-[var(--text)] font-semibold text-sm mt-auto leading-snug">{a.title}</p>
+                <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">{a.desc}</p>
               </Link>
             </motion.div>
           ))}
@@ -207,8 +223,8 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
 
 /* ─── Car Advisor Teaser ─────────────────────────────────── */
 const DEMO_MESSAGES = [
-  { role: "user", text: "My AC is blowing warm air in this heat." },
-  { role: "ai", text: "IN UAE SUMMER (45°C+), WARM AC TYPICALLY INDICATES LOW REFRIGERANT OR COMPRESSOR FAILURE. DIAGNOSTIC RECHARGE COST: ~AED 150-300. PROCEED IMMEDIATELY TO PREVENT ENGINE OVERHEATING." },
+  { role: "user", text: "My AC is blowing warm air in this Dubai heat." },
+  { role: "ai", text: "In UAE summer (45°C+), warm AC typically means low refrigerant or a failing compressor. A recharge typically costs AED 150–300. I'd recommend addressing this soon to avoid engine strain." },
 ];
 
 function CarAdvisorTeaser() {
@@ -219,42 +235,37 @@ function CarAdvisorTeaser() {
   useEffect(() => {
     if (!inView) return;
     const t1 = setTimeout(() => setVisible(1), 400);
-    const t2 = setTimeout(() => setVisible(2), 1600);
+    const t2 = setTimeout(() => setVisible(2), 1800);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [inView]);
 
   return (
-    <section className="py-24 bg-[#0a0a0a] border-grid-b">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-        <div className="border border-white bg-[#050505]">
+    <section className="py-16 bg-[var(--surface)] border-t border-b border-[var(--border)]">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        <div className="rounded-3xl bg-gradient-to-br from-violet-500/10 via-[var(--bg)] to-orange-500/5 border border-violet-500/20 overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left: info */}
-            <div className="p-10 md:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/20 relative">
-              <div className="absolute top-0 right-0 w-8 h-8 border-l border-b border-white/20" />
-
-              <div className="inline-flex items-center gap-2 px-3 py-1 border border-blue-500 mb-8 w-fit bg-blue-500/5">
-                <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                <span className="text-[10px] font-black text-blue-500 tracking-widest uppercase">AI DIAGNOSTIC PROTOCOL</span>
+            <div className="p-8 md:p-12 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/25 mb-6 w-fit">
+                <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                <span className="text-[11px] font-semibold text-violet-400">AI Car Advisor</span>
               </div>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-6 uppercase leading-[0.9]">
-                VEHICLE
-                <br />
-                <span className="text-zinc-600">
-                  HEALTH ENGINE
-                </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4 leading-tight">
+                Know your car's health<br />
+                <span className="text-violet-400">before issues escalate</span>
               </h2>
-              <p className="text-zinc-400 text-xs font-bold tracking-widest uppercase leading-relaxed mb-10 max-w-sm">
-                INPUT SYMPTOMS. GET INSTANT UAE-SPECIFIC ADVICE, COST PROJECTIONS IN AED, AND URGENCY RATINGS.
+              <p className="text-zinc-400 text-sm leading-relaxed mb-8 max-w-sm">
+                Describe your symptoms and get instant UAE-specific advice, AED cost estimates, and urgency ratings — powered by Gemini AI.
               </p>
-              <div className="space-y-4 mb-10">
+              <div className="space-y-3 mb-8">
                 {[
-                  { icon: Cpu, text: "TRAINED ON LOCAL DATA" },
-                  { icon: Clock, text: "ROUTINE MAINTENANCE TIMELINES" },
-                  { icon: ShieldCheck, text: "EXACT AED EXPENDITURE PROJECTIONS" },
+                  { icon: Cpu, text: "Trained on UAE-specific vehicle data" },
+                  { icon: Clock, text: "Maintenance timeline reminders" },
+                  { icon: ShieldCheck, text: "AED cost projections included" },
                 ].map((f) => (
-                  <div key={f.text} className="flex items-center gap-4 text-[10px] font-black tracking-widest text-zinc-300 uppercase">
-                    <div className="w-8 h-8 border border-white/20 flex items-center justify-center">
-                      <f.icon className="w-4 h-4 text-white" />
+                  <div key={f.text} className="flex items-center gap-3 text-sm text-zinc-300">
+                    <div className="w-8 h-8 rounded-xl bg-violet-500/15 border border-violet-500/20 flex items-center justify-center shrink-0">
+                      <f.icon className="w-4 h-4 text-violet-400" />
                     </div>
                     {f.text}
                   </div>
@@ -262,58 +273,66 @@ function CarAdvisorTeaser() {
               </div>
               <Link
                 href="/my-car"
-                className="inline-flex items-center justify-between px-6 py-4 bg-white hover:bg-zinc-200 text-black font-black text-xs uppercase tracking-widest transition-colors w-full sm:w-fit group border border-transparent"
+                className="btn-violet inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold w-full sm:w-fit"
               >
-                <div className="flex items-center gap-3">
-                  <Car className="w-4 h-4" />
-                  INITIALIZE SCAN
-                </div>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-8" />
+                <Car className="w-4 h-4" />
+                Check My Car
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             {/* Right: chat demo */}
-            <div ref={ref} className="relative bg-[#000] p-8 md:p-12 flex flex-col justify-end min-h-[400px]">
-              <div className="space-y-6 flex-1 flex flex-col justify-end">
+            <div ref={ref} className="relative bg-[var(--bg)] p-6 md:p-10 flex flex-col justify-end min-h-[340px]">
+              {/* Background illustration */}
+              <div className="absolute inset-0 z-0 opacity-10 overflow-hidden rounded-r-3xl">
+                <Image
+                  src="/illustrations/car-advisor.png"
+                  alt=""
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
+              <div className="relative z-10 space-y-4 flex-1 flex flex-col justify-end">
                 {visible >= 1 && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex justify-end"
                   >
-                    <div className="max-w-[80%] bg-white text-black p-4 text-[11px] font-black uppercase tracking-widest leading-relaxed border border-white">
+                    <div className="max-w-[80%] bg-[var(--surface)] text-[var(--text)] p-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed border border-[var(--border)]">
                       {DEMO_MESSAGES[0].text}
                     </div>
                   </motion.div>
                 )}
                 {visible >= 2 && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
                     className="flex justify-start"
                   >
-                    <div className="max-w-[90%] font-mono">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-6 h-6 border border-blue-500 flex items-center justify-center bg-blue-500/10">
-                          <Sparkles className="w-3 h-3 text-blue-500" />
+                    <div className="max-w-[90%]">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
+                          <Sparkles className="w-3 h-3 text-violet-400" />
                         </div>
-                        <span className="text-[10px] font-black tracking-widest text-blue-500 uppercase">GARAGEFINDER TERMINAL</span>
+                        <span className="text-[11px] font-semibold text-violet-400">AI Advisor</span>
                       </div>
-                      <div className="bg-[#0a0a0a] border border-blue-500/30 p-5 text-[11px] text-zinc-300 leading-relaxed uppercase tracking-widest">
+                      <div className="bg-violet-500/10 border border-violet-500/20 p-4 rounded-2xl rounded-tl-sm text-sm text-zinc-300 leading-relaxed">
                         {DEMO_MESSAGES[1].text}
                       </div>
                     </div>
                   </motion.div>
                 )}
                 {/* Demo input */}
-                <div className="flex items-center gap-3 mt-6 p-3 bg-[#050505] border border-white/20">
+                <div className="flex items-center gap-2 mt-4 p-2 bg-[var(--surface)] border border-[var(--border)] rounded-2xl">
                   <input
                     readOnly
-                    placeholder="ENTER SYMPTOMS..."
-                    className="flex-1 bg-transparent text-[10px] font-black tracking-widest text-zinc-500 px-3 outline-none cursor-default uppercase"
+                    placeholder="Describe your car issue…"
+                    className="flex-1 bg-transparent text-sm text-zinc-500 px-3 outline-none cursor-default"
                   />
-                  <Link href="/my-car" className="p-3 bg-white hover:bg-zinc-200 transition-colors">
-                    <Send className="w-4 h-4 text-black" />
+                  <Link href="/my-car" className="p-2.5 bg-violet-500 hover:bg-violet-600 transition-colors rounded-xl">
+                    <Send className="w-4 h-4 text-white" />
                   </Link>
                 </div>
               </div>
@@ -338,35 +357,41 @@ function FeaturedShops({
   if (!isLoading && shops.length === 0) return null;
 
   return (
-    <section className="py-24 bg-[#000] border-grid-b border-grid-t">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 border-b border-white pb-6 gap-4">
+    <section className="py-12 bg-[var(--bg)]">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase leading-[0.9]">HIGHLY RANKED<br /><span className="text-zinc-600">NODES</span></h2>
-            <p className="text-[10px] font-bold tracking-widest text-zinc-500 mt-4 uppercase">LIVE TELEMETRY · DUBAI SECTOR</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-3">
+              <TrendingUp className="w-3.5 h-3.5 text-orange-400" />
+              <span className="text-[11px] font-semibold text-orange-400">Top Rated in Dubai</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text)]">
+              Highly Rated Garages
+            </h2>
+            <p className="text-sm text-zinc-500 mt-1">Live data · Updated daily</p>
           </div>
           <button
             onClick={() => onSelect(shops[0])}
-            className="text-[10px] font-black uppercase tracking-widest text-black bg-white px-6 py-3 hover:bg-zinc-200 transition-colors flex items-center gap-2"
+            className="text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1"
           >
-            EXECUTE OVERVIEW <ChevronRight className="w-3 h-3" />
+            View top shop <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="border-grid bg-[#050505]">
-                <div className="h-44 w-full bg-white/5 animate-pulse" />
-                <div className="p-8 space-y-4">
-                  <div className="h-6 w-3/4 bg-white/5 animate-pulse" />
-                  <div className="h-3 w-1/2 bg-white/5 animate-pulse" />
+              <div key={i} className="rounded-2xl border border-[var(--border)] overflow-hidden">
+                <div className="h-44 w-full shimmer" />
+                <div className="p-5 space-y-3">
+                  <div className="h-5 w-3/4 rounded-lg shimmer" />
+                  <div className="h-3.5 w-1/2 rounded-lg shimmer" />
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {shops.slice(0, 3).map((place, i) => (
               <ShopCard
                 key={place.place_id}
@@ -425,7 +450,7 @@ function HomeContent() {
     }
   }, []);
 
-  // Load featured shops silently for landing page
+  // Load featured shops for landing page
   useEffect(() => {
     if (!HAS_API_KEY || didFeatured.current) return;
     didFeatured.current = true;
@@ -558,36 +583,22 @@ function HomeContent() {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden uppercase font-mono selection:bg-white selection:text-black">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] overflow-x-hidden">
 
-      {/* ── STICKY HEADER ── */}
-      <header className="sticky top-0 z-40 bg-[#050505] border-grid-b">
-        <div className="px-4 py-3 flex items-center gap-4 max-w-screen-2xl mx-auto border-grid-b bg-[#0a0a0a] border-l border-r border-[#1a1a1a]">
-          <button
-            onClick={() => {
-              setSearchPerformed(false);
-              setShowDetail(false);
-              setSelectedPlaceId(null);
-              setActiveBrand(null);
-            }}
-            className="flex items-center gap-3 shrink-0 group hover:opacity-100 transition-opacity"
-          >
-            <div className="w-10 h-10 bg-white group-hover:bg-zinc-200 border border-white flex items-center justify-center transition-colors">
-              <Wrench className="w-5 h-5 text-black" />
-            </div>
-            <div className="hidden sm:block text-left">
-              <h1 className="text-xl font-black tracking-tighter leading-none text-white uppercase">
-                GARAGE<span className="text-zinc-500">FINDER</span>
-              </h1>
-              <p className="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mt-0.5">UAE TERMINAL</p>
-            </div>
-          </button>
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
 
-          <div className="flex-1 ml-4 border-l border-white/10 pl-4">
+      {/* ── STICKY SEARCH HEADER ── */}
+      <header className="sticky top-14 z-40 bg-[var(--bg)]/95 backdrop-blur-xl border-b border-[var(--border)]">
+        <div className="px-4 py-2.5 flex items-center gap-3 max-w-screen-xl mx-auto">
+          <div className="flex-1">
             <SearchBar onSearch={searchPlaces} isLoading={isLoading} />
           </div>
 
-          <div className="flex items-center gap-3 border-l border-white/10 pl-4 h-12">
+          <div className="flex items-center gap-2 shrink-0">
             <RegionPicker value={selectedRegion} onChange={(key) => {
               setSelectedRegion(key);
               const region = UAE_REGIONS[key];
@@ -598,13 +609,13 @@ function HomeContent() {
 
             <button
               onClick={() => setShowMap(!showMap)}
-              className={`shrink-0 flex items-center gap-2 px-6 h-full border text-xs font-black tracking-widest transition-colors ${showMap
-                  ? "bg-white border-white text-black"
-                  : "bg-[#050505] border-white/20 text-white hover:border-white hover:bg-white/5"
+              className={`shrink-0 flex items-center gap-2 px-4 h-10 rounded-xl border text-sm font-medium transition-all ${showMap
+                  ? "bg-orange-500 border-orange-500 text-white"
+                  : "bg-[var(--surface)] border-[var(--border)] text-zinc-400 hover:border-orange-500/40 hover:text-orange-400"
                 }`}
             >
               <MapIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">{showMap ? "CLOSE MAP" : "TOGGLE MAP"}</span>
+              <span className="hidden sm:inline">{showMap ? "Close Map" : "Map"}</span>
             </button>
           </div>
         </div>
@@ -617,12 +628,12 @@ function HomeContent() {
         />
       </header>
 
-      {/* Demo banner */}
+      {/* API Key missing banner */}
       {isDemoMode && !HAS_API_KEY && (
-        <div className="sticky top-0 z-30 flex items-center justify-center gap-3 px-4 py-3 bg-red-600 border-grid-b">
-          <AlertCircle className="w-4 h-4 text-white shrink-0" />
-          <p className="text-[10px] font-black tracking-widest text-white uppercase">
-            AUTHORIZATION REQUIRED: SET NEXT_PUBLIC_GOOGLE_MAPS_API_KEY IN ENV TO ENABLE LIVE DATA FEED.
+        <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500/10 border-b border-amber-500/20">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+          <p className="text-xs font-medium text-amber-400">
+            Set <code className="bg-amber-500/15 px-1.5 py-0.5 rounded">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> in your env to enable live data.
           </p>
         </div>
       )}
@@ -633,14 +644,14 @@ function HomeContent() {
       )}
 
       {/* ── MAIN CONTENT ── */}
-      <main className="max-w-screen-2xl mx-auto bg-[#000] border-l border-r border-[#1a1a1a] min-h-screen">
+      <main className="min-h-screen">
 
         {aiAnalysis && <AIInsight analysis={aiAnalysis} onDismiss={() => setAiAnalysis(null)} />}
 
-        {/* ── LANDING PAGE ── */}
+        {/* ── LANDING PAGE SECTIONS ── */}
         {!searchPerformed && !isLoading && (
           <>
-            <DashboardStrip />
+            <LiveStatsStrip />
             <QuickActionGrid onSearch={searchPlaces} />
             <FeaturedShops
               shops={featuredShops}
@@ -654,20 +665,20 @@ function HomeContent() {
           </>
         )}
 
-        {/* ── LOADING ── */}
+        {/* ── LOADING SKELETONS ── */}
         {isLoading && (
-          <section className="p-8">
-            <div className="h-8 w-64 bg-white/5 animate-pulse mb-8 border border-white/10" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
+          <section className="p-4 md:p-8">
+            <div className="h-7 w-48 rounded-xl shimmer mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-[#050505] border-grid">
-                  <div className="h-44 w-full bg-white/5 animate-pulse" />
-                  <div className="p-8 space-y-4">
-                    <div className="h-6 w-3/4 bg-white/5 animate-pulse" />
-                    <div className="h-3 w-1/2 bg-white/5 animate-pulse" />
-                    <div className="pt-4 border-t border-white/5 flex gap-2">
-                      <div className="h-4 w-12 bg-white/5 animate-pulse" />
-                      <div className="h-4 w-16 bg-white/5 animate-pulse" />
+                <div key={i} className="rounded-2xl border border-[var(--border)] overflow-hidden">
+                  <div className="h-44 w-full shimmer" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-5 w-3/4 rounded-lg shimmer" />
+                    <div className="h-3.5 w-1/2 rounded-lg shimmer" />
+                    <div className="pt-3 border-t border-[var(--border)] flex gap-2">
+                      <div className="h-4 w-12 rounded-lg shimmer" />
+                      <div className="h-4 w-16 rounded-lg shimmer" />
                     </div>
                   </div>
                 </div>
@@ -676,48 +687,43 @@ function HomeContent() {
           </section>
         )}
 
-        {/* ── RESULTS ── */}
+        {/* ── SEARCH RESULTS ── */}
         {!isLoading && searchPerformed && places.length > 0 && (
-          <section className="p-8 bg-[#000]">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white">
+          <section className="p-4 md:p-8">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-[var(--border)]">
               <div>
-                <h3 className="text-3xl font-black text-white flex items-center gap-3 uppercase tracking-tighter">
+                <h3 className="text-2xl font-bold text-[var(--text)] flex flex-wrap items-center gap-2">
                   {brandName ? (
                     <>
                       <span>{brandName}</span>
-                      <span className="text-zinc-600">SPECIALISTS</span>
-                      <span className="text-[10px] uppercase font-black px-3 py-1 bg-white text-black tracking-widest">
-                        {places.length} IDENTIFIED
-                      </span>
+                      <span className="text-zinc-500">Specialists</span>
+                      <span className="badge-orange text-[11px]">{places.length} found</span>
                     </>
                   ) : (
-                    <>
-                      {currentQuery === "auto repair in UAE" || currentQuery === "auto repair near me"
-                        ? "PROXIMAL FACILITIES"
-                        : `QUERY RESULTS: ${currentQuery}`}
+                    <>Results for <span className="text-orange-400">"{currentQuery}"</span>
+                      <span className="badge-orange text-[11px]">{places.length}</span>
                     </>
                   )}
                 </h3>
-                <p className="text-[10px] font-bold tracking-widest text-zinc-500 mt-2 uppercase">
-                  {places.length} ACTIVE NODES // {selectedRegion === "all" ? "GLOBAL UAE SCAN" : UAE_REGIONS[selectedRegion]?.label.toUpperCase()}
-                  {isDemoMode ? " // SIMULATION FEED" : " // LIVE TELEMETRY"}
+                <p className="text-sm text-zinc-500 mt-1">
+                  {selectedRegion === "all" ? "All UAE" : UAE_REGIONS[selectedRegion]?.label}
+                  {isDemoMode ? " · Demo mode" : " · Live data"}
                 </p>
               </div>
-              <div className="hidden md:flex items-center gap-6 text-[10px] font-black tracking-widest text-zinc-500 uppercase">
-                <span className="flex items-center gap-2"><Star className="w-4 h-4 text-white" /> OPTIMAL RATING</span>
-                <span className="flex items-center gap-2"><Zap className="w-4 h-4 text-white" /> AI VERIFIED</span>
+              <div className="hidden md:flex items-center gap-4 text-sm text-zinc-500">
+                <span className="flex items-center gap-1.5"><Star className="w-4 h-4 text-amber-400" /> Best rated first</span>
               </div>
             </div>
 
             {serviceShops.length > 0 && (
               <>
                 {serviceShops.length >= 3 && (
-                  <div className="mb-16">
-                    <div className="flex items-center gap-3 mb-6 bg-white text-black py-2 px-4 w-fit">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-xs font-black uppercase tracking-widest">TIER 1 FACILITIES</span>
+                  <div className="mb-10">
+                    <div className="flex items-center gap-2 mb-4">
+                      <TrendingUp className="w-4 h-4 text-orange-400" />
+                      <span className="text-sm font-semibold text-orange-400">Top Picks</span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {serviceShops.slice(0, 3).map((place, i) => (
                         <ShopCard
                           key={place.place_id}
@@ -733,12 +739,12 @@ function HomeContent() {
                 )}
 
                 {serviceShops.length > 3 && (
-                  <div className="mb-16">
-                    <div className="flex items-center gap-3 mb-6 bg-[#050505] text-white border border-white py-2 px-4 w-fit">
-                      <BadgeCheck className="w-4 h-4 text-zinc-500" />
-                      <span className="text-xs font-black uppercase tracking-widest text-zinc-300">ADDITIONAL NODES</span>
+                  <div className="mb-10">
+                    <div className="flex items-center gap-2 mb-4">
+                      <BadgeCheck className="w-4 h-4 text-zinc-400" />
+                      <span className="text-sm font-semibold text-zinc-400">More Results</span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {serviceShops.slice(3).map((place, i) => (
                         <ShopCard
                           key={place.place_id}
@@ -755,13 +761,13 @@ function HomeContent() {
             )}
 
             {partsShops.length > 0 && (
-              <div className="pt-16 border-t border-white/20">
-                <div className="flex items-center gap-3 mb-6 bg-white text-black py-2 px-4 w-fit">
-                  <Package className="w-4 h-4" />
-                  <span className="text-xs font-black uppercase tracking-widest">HARDWARE SUPPLIERS</span>
-                  <span className="text-[10px] text-zinc-500 ml-2">[{partsShops.length}]</span>
+              <div className="pt-8 border-t border-[var(--border)]">
+                <div className="flex items-center gap-2 mb-4">
+                  <Package className="w-4 h-4 text-violet-400" />
+                  <span className="text-sm font-semibold text-violet-400">Parts & Suppliers</span>
+                  <span className="badge-violet text-[10px] px-2 py-0">{partsShops.length}</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {partsShops.map((place, i) => (
                     <ShopCard
                       key={place.place_id}
@@ -778,26 +784,26 @@ function HomeContent() {
 
         {/* No results */}
         {!isLoading && searchPerformed && places.length === 0 && (
-          <div className="p-24 bg-[#0a0a0a] border-grid flex flex-col items-center justify-center text-center">
-            <div className="w-24 h-24 bg-red-600 text-white flex items-center justify-center mb-8">
-              <X className="w-12 h-12" />
+          <div className="p-12 md:p-24 flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mb-6">
+              <Search className="w-8 h-8 text-zinc-500" />
             </div>
             {!HAS_API_KEY ? (
               <>
-                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">SYSTEM OFFLINE</h3>
-                <p className="text-xs text-zinc-400 max-w-sm uppercase tracking-widest leading-relaxed">
-                  MISSING CREDENTIAL: <span className="text-white border border-white px-2 py-1 mx-1 block my-2 text-center bg-[#050505]">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</span>
+                <h3 className="text-xl font-bold text-[var(--text)] mb-2">API key not configured</h3>
+                <p className="text-sm text-zinc-500 max-w-sm">
+                  Set <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-300">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to enable live garage data.
                 </p>
               </>
             ) : (
               <>
-                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">NO QUERY RESULTS</h3>
-                <p className="text-xs text-zinc-500 mb-8 uppercase tracking-widest">ADJUST PARAMETERS AND RETRY SEQUENCE.</p>
+                <h3 className="text-xl font-bold text-[var(--text)] mb-2">No results found</h3>
+                <p className="text-sm text-zinc-500 mb-6">Try adjusting your search or filters.</p>
                 <button
                   onClick={() => { setFilters(DEFAULT_FILTERS); searchPlaces(currentQuery, false, activeBrand); }}
-                  className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+                  className="btn-orange px-6 py-2.5 text-sm"
                 >
-                  RESET FILTERS
+                  Reset Filters
                 </button>
               </>
             )}
@@ -813,23 +819,23 @@ function HomeContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#000]"
+            className="fixed inset-0 z-50 bg-[var(--bg)]"
           >
-            <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-6 py-4 bg-[#050505] border-b border-white">
-              <h2 className="text-xs font-black tracking-widest text-white uppercase flex items-center gap-3">
-                <span className="w-2 h-2 bg-white animate-pulse" />
-                {places.length} ACTIVE LOCATIONS
+            <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 bg-[var(--bg)]/95 backdrop-blur-xl border-b border-[var(--border)]">
+              <h2 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                {places.length} locations
               </h2>
-              <div className="flex items-center gap-4">
-                <button onClick={handleLocate} className="px-4 py-2 bg-[#000] border border-white/20 text-xs font-black tracking-widest uppercase hover:bg-white hover:text-black hover:border-white transition-colors flex items-center gap-2">
-                  <Locate className="w-4 h-4" /> RELOCATE
+              <div className="flex items-center gap-2">
+                <button onClick={handleLocate} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] text-sm font-medium text-zinc-400 hover:border-orange-500/40 hover:text-orange-400 transition-colors flex items-center gap-1.5 rounded-xl">
+                  <Locate className="w-4 h-4" /> Locate me
                 </button>
-                <button onClick={() => setShowMap(false)} className="px-4 py-2 bg-white text-black hover:bg-zinc-300 font-black tracking-widest uppercase text-xs transition-colors flex items-center gap-2">
-                  <X className="w-4 h-4" /> CLOSE
+                <button onClick={() => setShowMap(false)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] text-sm font-medium text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5 rounded-xl">
+                  <X className="w-4 h-4" /> Close
                 </button>
               </div>
             </div>
-            <div className="w-full h-full pt-[64px] bg-[#000]">
+            <div className="w-full h-full pt-[56px]">
               <Map
                 places={places}
                 selectedPlaceId={selectedPlaceId}
@@ -855,8 +861,13 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#000] flex items-center justify-center font-mono text-zinc-500 uppercase font-black tracking-widest text-[10px]">
-        INITIALIZING GARAGEFINDER TERMINAL...
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center animate-pulse">
+            <Wrench className="w-6 h-6 text-white" />
+          </div>
+          <p className="text-sm text-zinc-500">Loading GarageUAE…</p>
+        </div>
       </div>
     }>
       <HomeContent />

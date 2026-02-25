@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Wrench, Newspaper, Car, Scale, Package,
   LayoutDashboard, Gauge, X, ChevronRight,
-  Home, MoreHorizontal, MapPin,
+  Home, MoreHorizontal, MapPin, Sun, Moon,
 } from "lucide-react";
+import { useTheme } from "@/app/providers";
 
 const BOTTOM_TABS = [
   { href: "/", label: "Find", icon: Home },
@@ -39,6 +40,7 @@ const DESKTOP_NAV = [
 export default function Navbar() {
   const [moreOpen, setMoreOpen] = useState(false);
   const pathname = usePathname();
+  const { theme, toggle } = useTheme();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -62,6 +64,16 @@ export default function Navbar() {
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-[11px] font-semibold text-emerald-400">Live</span>
           </div>
+          <button
+            onClick={toggle}
+            className="w-9 h-9 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center hover:border-orange-500/40 transition-all"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark"
+              ? <Sun className="w-4 h-4 text-amber-400" />
+              : <Moon className="w-4 h-4 text-violet-400" />
+            }
+          </button>
         </div>
       </header>
 
@@ -104,6 +116,16 @@ export default function Navbar() {
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-xs font-semibold text-emerald-400">450+ shops live</span>
           </div>
+          <button
+            onClick={toggle}
+            className="w-9 h-9 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center hover:border-orange-500/40 transition-all"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark"
+              ? <Sun className="w-4 h-4 text-amber-400" />
+              : <Moon className="w-4 h-4 text-violet-400" />
+            }
+          </button>
         </div>
       </nav>
 
