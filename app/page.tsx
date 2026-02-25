@@ -39,18 +39,33 @@ const Map = dynamic(() => import("@/components/Map"), {
 const HAS_API_KEY = !!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 /* ─── SEO Structured Data ────────────────────────────────── */
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "GarageFinder UAE",
-  "url": "https://garage-finder-uae.vercel.app",
-  "description": "Find top-rated auto repair shops, car service centers, and spare parts stores across all UAE emirates — Dubai, Abu Dhabi, Sharjah, Ajman, Ras Al Khaimah, Fujairah, Umm Al Quwain.",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://garage-finder-uae.vercel.app/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GarageFinder UAE",
+    "url": "https://garage-finder-uae.vercel.app",
+    "description": "Find top-rated auto repair shops, car service centers, and spare parts stores across all UAE emirates.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://garage-finder-uae.vercel.app/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Best Auto Repair Shops in UAE",
+    "description": "Directory of top-rated automotive service centres across Dubai, Abu Dhabi, Sharjah and all UAE emirates",
+    "url": "https://garage-finder-uae.vercel.app/garages",
+    "numberOfItems": 850,
+    "itemListElement": [
+      { "@type": "AutoRepair", "name": "Top Garages in Dubai", "areaServed": "Dubai" },
+      { "@type": "AutoRepair", "name": "Top Garages in Abu Dhabi", "areaServed": "Abu Dhabi" },
+      { "@type": "AutoRepair", "name": "Top Garages in Sharjah", "areaServed": "Sharjah" }
+    ]
   }
-};
+];
 
 /* ─── UAE Live Clock ─────────────────────────────────────── */
 function UAEClock() {
@@ -586,10 +601,13 @@ function HomeContent() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] overflow-x-hidden">
 
       {/* SEO Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      {structuredData.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
 
       {/* ── STICKY SEARCH HEADER ── */}
       <header className="sticky top-14 z-40 bg-[var(--bg)]/95 backdrop-blur-xl border-b border-[var(--border)]">

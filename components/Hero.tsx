@@ -88,7 +88,7 @@ export default function Hero({ onSearch }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-white">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-white">
               Find the Best
               <br />
               <span className="text-gradient-orange">Auto Care</span>

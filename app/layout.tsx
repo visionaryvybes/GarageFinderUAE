@@ -1,7 +1,23 @@
 import type { Metadata } from "next";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/app/providers";
+
+// Body font: Inter — clean, readable, used by Google Maps & modern service apps
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// Display font: Plus Jakarta Sans — premium automotive feel for headings
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "GarageFinder UAE — Find Auto Repair, Parts & Services Near You",
@@ -39,7 +55,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" suppressHydrationWarning className={`${inter.variable} ${jakarta.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#09090b" />
@@ -56,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="theme-bg theme-text antialiased min-h-screen">
+      <body className="theme-bg theme-text antialiased min-h-screen font-sans">
         <ThemeProvider>
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
