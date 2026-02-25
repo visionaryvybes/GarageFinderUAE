@@ -667,19 +667,20 @@ function HomeContent() {
         {aiAnalysis && <AIInsight analysis={aiAnalysis} onDismiss={() => setAiAnalysis(null)} />}
 
         {/* ── LANDING PAGE SECTIONS ── */}
+        {/* Psychology-driven order: hook → trust validators → product proof → differentiation → social proof → action portals → feature upsell → CTA */}
         {!searchPerformed && !isLoading && (
           <>
-            <LiveStatsStrip />
-            <QuickActionGrid onSearch={searchPlaces} />
-            <FeaturedShops
+            <LiveStatsStrip />          {/* 1. Trust validators (live numbers) */}
+            <FeaturedShops              /* 2. Product proof (real garages) */
               shops={featuredShops}
               onSelect={(p) => handlePlaceSelect(p.place_id)}
               isLoading={featuredLoading}
             />
-            <CarAdvisorTeaser />
-            <WhyUs />
-            <Testimonials />
-            <CTABanner onSearch={searchPlaces} />
+            <WhyUs />                   {/* 3. Differentiation (why GarageUAE) */}
+            <Testimonials />            {/* 4. Social proof BEFORE action portals */}
+            <QuickActionGrid onSearch={searchPlaces} /> {/* 5. Action portals — user is now ready */}
+            <CarAdvisorTeaser />        {/* 6. Feature upsell */}
+            <CTABanner onSearch={searchPlaces} /> {/* 7. Final CTA */}
           </>
         )}
 

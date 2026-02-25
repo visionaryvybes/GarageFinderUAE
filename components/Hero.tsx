@@ -143,7 +143,7 @@ export default function Hero({ onSearch }: HeroProps) {
                 className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 text-white text-sm font-bold rounded-xl transition-all hover:shadow-lg hover:shadow-orange-500/25 active:scale-95 shrink-0"
               >
                 <Zap className="w-4 h-4" />
-                <span className="hidden sm:inline">Search</span>
+                <span className="hidden sm:inline">Find Open Garages</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -173,23 +173,31 @@ export default function Hero({ onSearch }: HeroProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55 }}
-            className="flex flex-wrap gap-5 pt-4 border-t border-white/[0.07]"
+            className="flex flex-wrap gap-4 pt-4 border-t border-white/[0.07]"
           >
-            <div className="flex items-center gap-1.5 text-zinc-500 text-xs font-medium">
+            {/* Open Now — #1 urgency signal */}
+            <div className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span>89 open right now</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <span>4.9 avg rating</span>
+              <span>4.9 avg · 2,400+ reviews</span>
             </div>
-            <div className="flex items-center gap-1.5 text-zinc-500 text-xs font-medium">
+            <div className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
               <Shield className="w-3.5 h-3.5 text-orange-400" />
               <span>Verified shops only</span>
             </div>
-            <div className="flex items-center gap-1.5 text-zinc-500 text-xs font-medium">
+            <div className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
               <Users className="w-3.5 h-3.5 text-orange-400" />
-              <span>15,000+ drivers</span>
+              <span>15,000+ UAE drivers</span>
             </div>
           </motion.div>
         </div>
@@ -211,8 +219,8 @@ export default function Hero({ onSearch }: HeroProps) {
               { value: "< 2min", label: "Response Time" },
             ].map((stat) => (
               <div key={stat.label}>
-                <p className="text-xl sm:text-2xl font-black text-white tabular-nums">{stat.value}</p>
-                <p className="text-[11px] text-zinc-600 font-medium tracking-wide">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-bold text-white tabular-nums">{stat.value}</p>
+                <p className="text-[11px] text-zinc-400 font-medium tracking-wide">{stat.label}</p>
               </div>
             ))}
           </div>

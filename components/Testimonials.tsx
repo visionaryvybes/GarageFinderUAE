@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const REVIEWS = [
@@ -62,7 +62,10 @@ function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
           {review.avatar}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-white leading-tight truncate">{review.name}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-sm font-semibold text-white leading-tight truncate">{review.name}</p>
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+          </div>
           <p className="text-xs text-zinc-500 mt-0.5 truncate">{review.role}</p>
         </div>
         <Quote className="w-4 h-4 text-orange-500/30 ml-auto shrink-0" />
@@ -90,11 +93,23 @@ export default function Testimonials() {
     <section className="py-20 md:py-28 bg-[#09090b] overflow-hidden">
       <div className="max-w-6xl mx-auto px-5 md:px-8 mb-12 text-center">
         <span className="badge-orange mb-4 inline-block">User reviews</span>
-        <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white mt-3">
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mt-3">
           Loved by UAE drivers
         </h2>
-        <p className="text-zinc-500 mt-4 text-base">
-          Thousands of happy customers across all 7 Emirates
+
+        {/* Review aggregate — anchors trust before individual reviews */}
+        <div className="flex items-center justify-center gap-3 mt-5">
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+            ))}
+          </div>
+          <span className="text-white font-bold text-lg">4.9</span>
+          <span className="text-zinc-400 text-sm">out of 5 — from 2,400+ reviews</span>
+        </div>
+
+        <p className="text-zinc-500 mt-3 text-sm">
+          Real drivers across all 7 Emirates
         </p>
       </div>
 

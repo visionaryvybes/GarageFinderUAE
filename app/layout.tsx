@@ -28,7 +28,8 @@ export const metadata: Metadata = {
     "auto repair UAE", "car service Dubai", "garage Dubai", "spare parts UAE",
     "car repair Abu Dhabi", "auto workshop Sharjah", "mechanic near me UAE",
     "car service centre UAE", "automobile repair Dubai", "tyre shop UAE",
-    "engine repair Dubai", "AC service car UAE", "brake repair UAE"
+    "engine repair Dubai", "AC service car UAE", "brake repair UAE",
+    "ورشة سيارات دبي", "تصليح سيارات الإمارات", "ميكانيك قريب", "قطع غيار سيارات"
   ],
   openGraph: {
     title: "GarageFinder UAE — Find Top Auto Repair & Parts",
