@@ -598,13 +598,12 @@ function HomeContent() {
 
             <button
               onClick={() => setShowMap(!showMap)}
-              className={`shrink-0 flex items-center gap-1.5 px-3 sm:px-6 h-full border text-xs font-black tracking-widest transition-colors ${showMap
+              className={`shrink-0 flex items-center gap-2 px-6 h-full border text-xs font-black tracking-widest transition-colors ${showMap
                   ? "bg-white border-white text-black"
                   : "bg-[#050505] border-white/20 text-white hover:border-white hover:bg-white/5"
                 }`}
             >
-              <MapIcon className="w-4 h-4 shrink-0" />
-              <span className="inline sm:hidden text-[10px]">{showMap ? "HIDE" : "MAP"}</span>
+              <MapIcon className="w-4 h-4" />
               <span className="hidden sm:inline">{showMap ? "CLOSE MAP" : "TOGGLE MAP"}</span>
             </button>
           </div>

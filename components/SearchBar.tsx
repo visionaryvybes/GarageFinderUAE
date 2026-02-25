@@ -18,11 +18,11 @@ const SUGGESTIONS = [
 ];
 
 const PLACEHOLDER_EXAMPLES = [
-  "Search garages, parts, or describe a problem...",
-  "BMW M3 specialist in Dubai...",
-  "AC not cooling in summer heat...",
-  "Oil change near Dubai Marina...",
-  "Check engine light is on...",
+  "INPUT QUERY OR DESCRIBE SYMPTOM...",
+  "BMW M3 SPECIALIST DUBAI...",
+  "AC FAILURE IN SUMMER HEAT...",
+  "OIL MAINTENANCE DUBAI MARINA...",
+  "DIAGNOSE ENGINE LIGHT...",
 ];
 
 export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
@@ -45,7 +45,6 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
     setIsFocused(false);
   };
 
-  // Cycle placeholder text
   useEffect(() => {
     const timer = setInterval(() => {
       setPlaceholderIdx((i) => (i + 1) % PLACEHOLDER_EXAMPLES.length);
@@ -69,19 +68,18 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
   }, [isFocused]);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-50">
       <form onSubmit={handleSubmit}>
         <div
-          className={`flex items-center gap-2 rounded-2xl border px-4 py-2.5 transition-all duration-200 ${
-            isFocused
-              ? "bg-zinc-900 border-blue-500/40 shadow-[0_0_0_2px_rgba(59,130,246,0.15),0_0_24px_rgba(59,130,246,0.08)]"
-              : "bg-zinc-900/70 border-zinc-800 hover:border-zinc-700"
-          }`}
+          className={`group flex items-center gap-3 px-4 h-12 border bg-[#050505] transition-colors duration-200 ${isFocused
+              ? "border-white bg-white"
+              : "border-white/20 hover:border-white"
+            }`}
         >
           {isLoading ? (
-            <Loader2 className="w-4 h-4 text-blue-400 animate-spin shrink-0" />
+            <Loader2 className={`w-4 h-4 animate-spin shrink-0 ${isFocused ? 'text-black' : 'text-zinc-500'}`} />
           ) : (
-            <Search className="w-4 h-4 text-zinc-500 shrink-0" />
+            <Search className={`w-4 h-4 shrink-0 transition-colors ${isFocused ? 'text-black' : 'text-zinc-500 group-hover:text-white'}`} />
           )}
 
           <input
@@ -91,66 +89,69 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             placeholder={PLACEHOLDER_EXAMPLES[placeholderIdx]}
-            className="flex-1 bg-transparent text-white placeholder:text-zinc-600 outline-none text-sm min-w-0 transition-placeholder duration-500"
+            className={`flex-1 bg-transparent outline-none text-xs font-black tracking-widest uppercase min-w-0 transition-colors duration-200 ${isFocused ? 'text-black placeholder:text-zinc-500' : 'text-white placeholder:text-zinc-600'
+              }`}
           />
 
           {query && (
             <button
               type="button"
               onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-              className="p-1 hover:bg-zinc-800 rounded-full transition-colors shrink-0"
+              className={`p-1 shrink-0 ${isFocused ? 'text-black hover:bg-black hover:text-white' : 'text-zinc-500 hover:text-white hover:bg-white/10'}`}
             >
-              <X className="w-3.5 h-3.5 text-zinc-500" />
+              <X className="w-3 h-3" />
             </button>
           )}
 
           <button
             type="button"
-            className="p-1.5 hover:bg-zinc-800 rounded-full transition-colors shrink-0 group"
+            className={`p-1.5 shrink-0 transition-colors ${isFocused ? 'text-black hover:bg-black hover:text-white' : 'text-zinc-500 hover:text-white hover:bg-white/10'}`}
             title="Voice search"
           >
-            <Mic className="w-3.5 h-3.5 text-zinc-600 group-hover:text-blue-400 transition-colors" />
+            <Mic className="w-3.5 h-3.5" />
           </button>
 
           <button
             type="submit"
             disabled={!query.trim() || isLoading}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-40 disabled:cursor-default text-white rounded-xl text-xs font-bold transition-all shrink-0 shadow-lg shadow-blue-900/20"
+            className={`flex items-center gap-2 px-4 h-full border-l text-[10px] font-black tracking-widest uppercase transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed ${isFocused
+                ? 'border-black text-black hover:bg-black hover:text-white'
+                : 'border-white/20 text-white hover:bg-white hover:text-black hover:border-white'
+              }`}
           >
             <Sparkles className="w-3 h-3" />
-            <span className="hidden sm:inline">Search</span>
+            <span className="hidden sm:inline">EXECUTE</span>
           </button>
         </div>
       </form>
 
-      {/* Suggestions dropdown */}
+      {/* Dropdown */}
       {isFocused && !query && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900/95 backdrop-blur-xl border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 z-50">
-          <div className="px-4 py-2.5 border-b border-zinc-800">
-            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
-              Popular Searches
+        <div className="absolute top-full left-0 right-0 mt-0 bg-[#000] border border-t-0 border-white z-50">
+          <div className="px-4 py-3 border-b border-white/20 bg-[#050505]">
+            <span className="text-[9px] font-black text-white uppercase tracking-widest">
+              FREQUENT QUERIES
             </span>
           </div>
           {SUGGESTIONS.map((s) => (
             <button
               key={s.text}
               onClick={() => handleSuggestion(s.text)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-800/60 transition-colors text-left group"
+              className="w-full flex items-center gap-4 px-4 py-3 hover:bg-white hover:text-black transition-colors text-left group text-zinc-400 text-xs font-bold tracking-widest uppercase border-b border-white/5 last:border-0"
             >
-              <div className="w-6 h-6 rounded-lg bg-zinc-800 group-hover:bg-blue-600/15 flex items-center justify-center transition-colors">
-                <s.icon className="w-3 h-3 text-zinc-600 group-hover:text-blue-400 transition-colors" />
+              <div className="w-6 h-6 border border-white/20 group-hover:border-black flex items-center justify-center transition-colors">
+                <s.icon className="w-3 h-3 text-zinc-500 group-hover:text-black transition-colors" />
               </div>
-              <span className="text-sm text-zinc-400 group-hover:text-zinc-200 transition-colors">{s.text}</span>
+              <span className="group-hover:text-black transition-colors truncate">{s.text}</span>
             </button>
           ))}
-          <div className="px-4 py-2.5 border-t border-zinc-800 flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[10px] text-zinc-500 font-mono">/</kbd>
-            <span className="text-[11px] text-zinc-600">to focus search</span>
+          <div className="px-4 py-3 border-t border-white/20 flex items-center gap-2 bg-[#050505]">
+            <kbd className="px-1.5 py-0.5 border border-zinc-700 bg-[#000] text-[9px] text-zinc-500 font-mono">/</kbd>
+            <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TO FOCUS SEARCH INPUT</span>
           </div>
         </div>
       )}
 
-      {/* Overlay to close */}
       {isFocused && (
         <div className="fixed inset-0 z-40" onClick={() => setIsFocused(false)} />
       )}

@@ -52,7 +52,7 @@ function HealthGauge({ score }: { score: number }) {
             transition={{ duration: 1.5, ease: "easeOut" }} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div className="absolute w-0.5 h-10 origin-bottom rounded-full"
+          <motion.div className="absolute w-0.5 h-10 origin-bottom "
             style={{ background: color, bottom: "50%" }}
             initial={{ rotate: -135 }} animate={{ rotate: angle }}
             transition={{ duration: 1.5, ease: "easeOut" }} />
@@ -87,8 +87,8 @@ function MileageBar({ item }: { item: MaintenanceItem }) {
           ? <span className="text-red-400 font-bold">Overdue {item.overdueBy.toLocaleString()} km</span>
           : <span>Due at {item.dueAtKm.toLocaleString()} km</span>}
       </div>
-      <div className="h-1.5 bg-[#27272a] rounded-full overflow-hidden">
-        <motion.div className="h-full rounded-full" style={{ background: color }}
+      <div className="h-1.5 bg-[#27272a]  overflow-hidden">
+        <motion.div className="h-full " style={{ background: color }}
           initial={{ width: 0 }} animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: "easeOut" }} />
       </div>
@@ -111,14 +111,14 @@ function MaintenanceCard({ item, index }: { item: MaintenanceItem; index: number
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.025 }}
-      className={`rounded-xl border-l-2 border border-[#27272a] ${s.border} ${s.bg} overflow-hidden`}>
+      className={` border-l-2 border border-[#27272a] ${s.border} ${s.bg} overflow-hidden`}>
       <button onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 p-3 text-left hover:bg-white/[0.02] transition-colors">
         <Icon className={`w-4 h-4 shrink-0 ${s.ic}`} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-semibold text-[#fafafa]">{item.item}</span>
-            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${s.badge}`}>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5  border ${s.badge}`}>
               {item.status === "urgent" ? "URGENT" : item.status === "due_soon" ? "DUE SOON" : item.status === "ok" ? "OK" : "CHECK"}
             </span>
           </div>
@@ -137,7 +137,7 @@ function MaintenanceCard({ item, index }: { item: MaintenanceItem; index: number
             <div className="px-4 pb-4 pt-1 space-y-3 border-t border-[#27272a]/50">
               <p className="text-[13px] text-[#a1a1aa] leading-relaxed">{item.description}</p>
               {item.uaeNote && (
-                <div className="flex gap-2 p-2.5 rounded-lg bg-orange-500/8 border border-orange-500/15">
+                <div className="flex gap-2 p-2.5  bg-orange-500/8 border border-orange-500/15">
                   <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0 mt-0.5" />
                   <p className="text-[12px] text-orange-300">{item.uaeNote}</p>
                 </div>
@@ -158,11 +158,11 @@ function MaintenanceCard({ item, index }: { item: MaintenanceItem; index: number
 /* ── TyrePressureCard ── */
 function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }) {
   return (
-    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+    <div className=" bg-[#18181b] border border-[#27272a] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
         <Gauge className="w-4 h-4 text-blue-400" />
         <span className="text-sm font-bold text-[#fafafa]">Tyre Pressure</span>
-        <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/12 border border-orange-500/20 text-orange-400">UAE Adjusted</span>
+        <span className="ml-auto text-[10px] font-bold px-2 py-0.5  bg-orange-500/12 border border-orange-500/20 text-orange-400">UAE Adjusted</span>
       </div>
       <div className="p-4">
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -171,7 +171,7 @@ function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }
             { label: "Rear", psi: data.rearPsi, bar: data.rearBar },
             { label: "Spare", psi: data.sparePsi, bar: Math.round(data.sparePsi * 0.0689 * 10) / 10 },
           ].map(t => (
-            <div key={t.label} className="text-center p-3 rounded-xl bg-[#1c1c1f] border border-[#27272a]">
+            <div key={t.label} className="text-center p-3  bg-[#1c1c1f] border border-[#27272a]">
               <div className="text-2xl font-black text-blue-400">{t.psi}</div>
               <div className="text-[10px] text-[#52525b] font-semibold">PSI</div>
               <div className="text-[10px] text-[#71717a] mt-0.5">{t.bar} bar</div>
@@ -179,7 +179,7 @@ function TyrePressureCard({ data }: { data: CarAdvisorResponse["tyrePressure"] }
             </div>
           ))}
         </div>
-        <div className="flex gap-2 p-2.5 rounded-xl bg-amber-500/8 border border-amber-500/15">
+        <div className="flex gap-2 p-2.5  bg-amber-500/8 border border-amber-500/15">
           <Thermometer className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-[12px] text-amber-300 leading-relaxed">{data.uaeNote}</p>
@@ -207,18 +207,18 @@ function SafetySection({ alerts }: { alerts: SafetyAlert[] }) {
         const Icon = c.icon;
         return (
           <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-            className={`rounded-xl p-4 border ${c.bg} ${c.border}`}>
+            className={` p-4 border ${c.bg} ${c.border}`}>
             <div className="flex items-start gap-3">
-              <div className={`w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center shrink-0`}>
+              <div className={`w-8 h-8  ${c.bg} flex items-center justify-center shrink-0`}>
                 <Icon className={`w-4 h-4 ${c.ic}`} />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h4 className="text-sm font-bold text-[#fafafa]">{alert.item}</h4>
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${c.badge}`}>{alert.severity.toUpperCase()}</span>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5  ${c.badge}`}>{alert.severity.toUpperCase()}</span>
                 </div>
                 <p className="text-[12px] text-[#a1a1aa] leading-relaxed mb-2">{alert.description}</p>
-                <div className="p-2 rounded-lg bg-black/20 border border-white/5">
+                <div className="p-2  bg-black/20 border border-white/5">
                   <p className="text-[12px] text-[#fafafa] font-medium"><span className={`font-bold ${c.ic}`}>Action: </span>{alert.action}</p>
                 </div>
                 {alert.estimatedCostAed && <p className="text-[11px] text-[#71717a] mt-2">Est. cost: <span className="text-blue-400 font-semibold">{alert.estimatedCostAed} AED</span></p>}
@@ -244,11 +244,11 @@ function UAEClimateSection({ alerts }: { alerts: UAEClimateAlert[] }) {
         const Icon = sIcons[alert.season] || Info;
         return (
           <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-            className={`rounded-xl p-4 border-l-2 border border-[#27272a] ${pStyles[alert.priority]}`}>
+            className={` p-4 border-l-2 border border-[#27272a] ${pStyles[alert.priority]}`}>
             <div className="flex items-center gap-2 mb-2">
               <Icon className={`w-4 h-4 ${alert.priority === "high" ? "text-orange-400" : "text-amber-400"}`} />
               <h4 className="text-sm font-bold text-[#fafafa]">{alert.title}</h4>
-              {alert.priority === "high" && <span className="ml-auto text-[9px] font-black px-1.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/25">HIGH</span>}
+              {alert.priority === "high" && <span className="ml-auto text-[9px] font-black px-1.5 py-0.5  bg-orange-500/15 text-orange-400 border border-orange-500/25">HIGH</span>}
             </div>
             <p className="text-[12px] text-[#a1a1aa] leading-relaxed">{alert.description}</p>
             <p className="text-[10px] text-[#52525b] mt-2 capitalize">{alert.season}</p>
@@ -273,13 +273,13 @@ function WarningLightsSection({ lights }: { lights: WarningLight[] }) {
       {lights.map((light, i) => {
         const st = uStyles[light.urgency] || uStyles.informational;
         return (
-          <div key={i} className={`rounded-xl p-3.5 border-l-2 border border-[#27272a] ${st.border}`}>
+          <div key={i} className={` p-3.5 border-l-2 border border-[#27272a] ${st.border}`}>
             <div className="flex items-start gap-3">
-              <div className={`px-2 py-1 rounded text-[10px] font-black shrink-0 ${cStyles[light.color] || "bg-[#27272a] text-[#a1a1aa]"}`}>{light.color.toUpperCase()}</div>
+              <div className={`px-2 py-1  text-[10px] font-black shrink-0 ${cStyles[light.color] || "bg-[#27272a] text-[#a1a1aa]"}`}>{light.color.toUpperCase()}</div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-sm font-bold text-[#fafafa]">{light.name}</h4>
-                  {light.urgency === "stop_now" && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/25 animate-pulse">STOP NOW</span>}
+                  {light.urgency === "stop_now" && <span className="text-[9px] font-black px-1.5 py-0.5  bg-red-500/15 text-red-400 border border-red-500/25 animate-pulse">STOP NOW</span>}
                 </div>
                 <p className="text-[12px] text-[#a1a1aa] mt-0.5 leading-relaxed">{light.meaning}</p>
                 <p className="text-[12px] text-[#fafafa] mt-1.5 font-medium"><span className={`font-bold ${st.ic}`}>Action: </span>{light.action}</p>
@@ -304,27 +304,27 @@ function ServiceReminderWidget({ data, brand, model }: { data: CarAdvisorRespons
     setReminderSet(true);
   };
   if (reminderSet) return (
-    <div className="rounded-2xl bg-emerald-500/8 border border-emerald-500/20 p-4 flex items-center gap-3">
+    <div className=" bg-emerald-500/8 border border-emerald-500/20 p-4 flex items-center gap-3">
       <BellRing className="w-5 h-5 text-emerald-400 shrink-0" />
       <div className="flex-1">
         <p className="text-sm font-bold text-emerald-400">Service Reminder Set</p>
         <p className="text-[12px] text-[#71717a]">Next service: {data.nextServiceKm.toLocaleString()} km · {data.nextServiceEstimatedDate}</p>
       </div>
-      <button onClick={() => { localStorage.removeItem(key); setReminderSet(false); }} className="p-1 hover:bg-emerald-500/10 rounded-lg transition-colors">
+      <button onClick={() => { localStorage.removeItem(key); setReminderSet(false); }} className="p-1 hover:bg-emerald-500/10  transition-colors">
         <X className="w-4 h-4 text-[#52525b]" />
       </button>
     </div>
   );
   return (
-    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4">
+    <div className=" bg-[#18181b] border border-[#27272a] p-4">
       <div className="flex items-center gap-2 mb-3"><BellRing className="w-4 h-4 text-blue-400" /><h3 className="text-sm font-bold text-[#fafafa]">Set Service Reminder</h3></div>
       <div className="flex gap-2 mb-3">
         <input type="number" value={customKm} onChange={e => setCustomKm(e.target.value)}
           placeholder={`e.g. ${data.nextServiceKm.toLocaleString()}`}
-          className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
+          className="flex-1 bg-[#1c1c1f] border border-[#27272a]  px-3 py-2 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
         <span className="text-sm text-[#71717a] self-center">km</span>
       </div>
-      <button onClick={save} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-bold transition-all">
+      <button onClick={save} className="w-full flex items-center justify-center gap-2 px-4 py-2.5     hover: hover: text-white text-sm font-bold transition-all">
         <BellRing className="w-4 h-4" />Save Reminder
       </button>
       <p className="text-[11px] text-[#52525b] mt-2 text-center">Saved locally to your browser</p>
@@ -362,29 +362,29 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
   };
 
   return (
-    <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+    <div className=" bg-[#18181b] border border-[#27272a] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
         <MessageSquare className="w-4 h-4 text-blue-400" />
         <span className="text-sm font-bold text-[#fafafa]">Ask Your AI Advisor</span>
-        <div className="ml-auto flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[10px] text-[#71717a]">Online</span></div>
+        <div className="ml-auto flex items-center gap-1.5"><span className="w-1.5 h-1.5  bg-emerald-400 animate-pulse" /><span className="text-[10px] text-[#71717a]">Online</span></div>
       </div>
       <div className="h-56 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-500/15 flex items-center justify-center"><Sparkles className="w-5 h-5 text-blue-400" /></div>
+            <div className="w-10 h-10  bg-blue-500/15 flex items-center justify-center"><Sparkles className="w-5 h-5 text-blue-400" /></div>
             <p className="text-sm text-[#71717a] text-center">Ask me anything about your {carDetails.brand} {carDetails.model}</p>
           </div>
         )}
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${m.role === "user" ? "bg-blue-600 text-white rounded-tr-sm" : "bg-[#1c1c1f] text-[#a1a1aa] rounded-tl-sm border border-[#27272a]"}`}>
+            <div className={`max-w-[85%]  px-3.5 py-2.5 text-[13px] leading-relaxed ${m.role === "user" ? "bg-blue-600 text-white -sm" : "bg-[#1c1c1f] text-[#a1a1aa] -sm border border-[#27272a]"}`}>
               {m.content}
             </div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-[#1c1c1f] rounded-2xl rounded-tl-sm px-3.5 py-2.5 border border-[#27272a] flex gap-1 items-center">
+            <div className="bg-[#1c1c1f]  -sm px-3.5 py-2.5 border border-[#27272a] flex gap-1 items-center">
               <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin" /><span className="text-[12px] text-[#52525b]">Thinking...</span>
             </div>
           </div>
@@ -397,7 +397,7 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
           <div className="flex flex-wrap gap-1.5">
             {QUICK_QUESTIONS.slice(0, 4).map(q => (
               <button key={q} onClick={() => send(q)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-[#1c1c1f] border border-[#27272a] text-[#71717a] hover:text-blue-400 hover:border-blue-500/30 transition-all">
+                className="text-[11px] px-2.5 py-1  bg-[#1c1c1f] border border-[#27272a] text-[#71717a] hover:text-blue-400 hover:border-blue-500/30 transition-all">
                 {q.length > 32 ? q.slice(0, 32) + "…" : q}
               </button>
             ))}
@@ -408,9 +408,9 @@ function AIChat({ carDetails }: { carDetails: { brand: string; model: string; ye
         <div className="flex gap-2">
           <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()}
             placeholder="Ask about your car..."
-            className="flex-1 bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3.5 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
+            className="flex-1 bg-[#1c1c1f] border border-[#27272a]  px-3.5 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
           <button onClick={() => send()} disabled={!input.trim() || loading}
-            className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:opacity-40 text-white transition-all">
+            className="px-3.5 py-2.5     hover: hover: disabled:opacity-40 text-white transition-all">
             <Send className="w-4 h-4" />
           </button>
         </div>
@@ -465,8 +465,8 @@ export default function MyCarPage() {
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="relative w-9 h-9">
-            <div className="absolute inset-0 bg-blue-600 rounded-2xl blur opacity-50" />
-            <div className="relative w-9 h-9 bg-gradient-to-br from-[#1c1c1f] to-[#09090b] border border-blue-500/30 rounded-2xl flex items-center justify-center">
+            <div className="absolute inset-0 bg-blue-600   opacity-50" />
+            <div className="relative w-9 h-9  from-[#1c1c1f] to-[#09090b] border border-blue-500/30  flex items-center justify-center">
               <Car className="w-5 h-5 text-blue-400" />
             </div>
           </div>
@@ -482,7 +482,7 @@ export default function MyCarPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6">
           {/* ── Left: Form ── */}
           <div className="space-y-4">
-            <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+            <div className=" bg-[#18181b] border border-[#27272a] overflow-hidden">
               <div className="px-4 py-3 border-b border-[#27272a] flex items-center gap-2">
                 <Wrench className="w-3.5 h-3.5 text-[#71717a]" />
                 <span className="text-[11px] font-bold text-[#71717a] uppercase tracking-widest">Vehicle Details</span>
@@ -492,14 +492,14 @@ export default function MyCarPage() {
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Brand</label>
                     <select value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
+                      className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
                       {CAR_BRANDS.map(b => <option key={b}>{b}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Model</label>
                     <input type="text" value={form.model} onChange={e => setForm(f => ({ ...f, model: e.target.value }))}
-                      placeholder="e.g. Camry, X5..." className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
+                      placeholder="e.g. Camry, X5..." className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -507,12 +507,12 @@ export default function MyCarPage() {
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Year</label>
                     <input type="number" value={form.year} onChange={e => setForm(f => ({ ...f, year: parseInt(e.target.value) || f.year }))}
                       min={1990} max={new Date().getFullYear()}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
+                      className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Engine</label>
                     <select value={form.engineType} onChange={e => setForm(f => ({ ...f, engineType: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
+                      className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors">
                       {["Petrol / Gasoline", "Diesel", "Hybrid", "Plug-in Hybrid (PHEV)", "Electric (EV)"].map(e => <option key={e}>{e}</option>)}
                     </select>
                   </div>
@@ -531,23 +531,23 @@ export default function MyCarPage() {
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Oil Change <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                     <input type="number" value={form.lastOilChangeMileage} onChange={e => setForm(f => ({ ...f, lastOilChangeMileage: e.target.value }))}
-                      placeholder="e.g. 70000" className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
+                      placeholder="e.g. 70000" className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Last Service <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                     <input type="date" value={form.lastServiceDate} onChange={e => setForm(f => ({ ...f, lastServiceDate: e.target.value }))}
-                      className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
+                      className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] outline-none focus:border-blue-500/40 transition-colors" />
                   </div>
                 </div>
                 <div>
                   <label className="text-[11px] font-bold text-[#71717a] uppercase tracking-wider block mb-1.5">Issues / Notes <span className="text-[#3f3f46] normal-case font-normal">optional</span></label>
                   <textarea value={form.additionalInfo} onChange={e => setForm(f => ({ ...f, additionalInfo: e.target.value }))}
                     placeholder="Any issues, warning lights, unusual sounds..." rows={2}
-                    className="w-full bg-[#1c1c1f] border border-[#27272a] rounded-xl px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors resize-none" />
+                    className="w-full bg-[#1c1c1f] border border-[#27272a]  px-3 py-2.5 text-sm text-[#fafafa] placeholder:text-[#52525b] outline-none focus:border-blue-500/40 transition-colors resize-none" />
                 </div>
                 {error && <p className="text-sm text-red-400 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" />{error}</p>}
                 <button onClick={generate} disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:opacity-50 text-white font-bold transition-all shadow-lg shadow-violet-900/30">
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3.5     hover: hover: disabled:opacity-50 text-white font-bold transition-all  -900/30">
                   {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Analyzing {form.brand} {form.model}...</> : <><Sparkles className="w-4 h-4" />Generate Full Analysis</>}
                 </button>
               </div>
@@ -561,7 +561,7 @@ export default function MyCarPage() {
                   { icon: Gauge, label: "Tyre Pressure" }, { icon: Shield, label: "Safety Alerts" },
                   { icon: MessageSquare, label: "AI Chat" }, { icon: BellRing, label: "Reminders" },
                 ].map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#18181b] border border-[#27272a]">
+                  <div key={label} className="flex flex-col items-center gap-1.5 p-3  bg-[#18181b] border border-[#27272a]">
                     <Icon className="w-4 h-4 text-[#52525b]" />
                     <span className="text-[10px] font-semibold text-[#52525b] text-center">{label}</span>
                   </div>
@@ -576,8 +576,8 @@ export default function MyCarPage() {
           {/* ── Right: Results ── */}
           <div className="space-y-4">
             {!data && !loading && (
-              <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-10 flex flex-col items-center justify-center min-h-[400px] text-center gap-5">
-                <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center">
+              <div className=" bg-[#18181b] border border-[#27272a] p-10 flex flex-col items-center justify-center min-h-[400px] text-center gap-5">
+                <div className="w-16 h-16  bg-blue-500/10 flex items-center justify-center">
                   <Car className="w-8 h-8 text-[#27272a]" />
                 </div>
                 <div>
@@ -588,7 +588,7 @@ export default function MyCarPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3 mt-1">
                   {[{ icon: Wrench, label: "30+ Checks", sub: "Comprehensive" }, { icon: Thermometer, label: "UAE Climate", sub: "Local conditions" }, { icon: MessageSquare, label: "AI Chat", sub: "Ask anything" }].map(({ icon: Icon, label, sub }) => (
-                    <div key={label} className="p-3 rounded-xl bg-[#1c1c1f] border border-[#27272a] text-center">
+                    <div key={label} className="p-3  bg-[#1c1c1f] border border-[#27272a] text-center">
                       <Icon className="w-5 h-5 text-[#3f3f46] mx-auto mb-1.5" />
                       <p className="text-[11px] font-bold text-[#71717a]">{label}</p>
                       <p className="text-[10px] text-[#3f3f46]">{sub}</p>
@@ -599,10 +599,10 @@ export default function MyCarPage() {
             )}
 
             {loading && (
-              <div className="rounded-2xl bg-[#18181b] border border-[#27272a] p-12 flex flex-col items-center justify-center gap-6 min-h-[400px]">
+              <div className=" bg-[#18181b] border border-[#27272a] p-12 flex flex-col items-center justify-center gap-6 min-h-[400px]">
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-full bg-blue-500/15 flex items-center justify-center"><Loader2 className="w-8 h-8 text-blue-400 animate-spin" /></div>
-                  <div className="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-ping" />
+                  <div className="w-16 h-16  bg-blue-500/15 flex items-center justify-center"><Loader2 className="w-8 h-8 text-blue-400 animate-spin" /></div>
+                  <div className="absolute inset-0  border-2 border-blue-500/20 animate-ping" />
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-bold text-[#fafafa]">AI analyzing your {form.brand} {form.model}</p>
@@ -616,7 +616,7 @@ export default function MyCarPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                   {/* AI Summary */}
                   {data.aiSummary && (
-                    <div className="rounded-2xl bg-gradient-to-br from-blue-600/10 to-blue-500/5 border border-blue-500/20 p-4">
+                    <div className="    border border-blue-500/20 p-4">
                       <div className="flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-blue-400" /><span className="text-sm font-bold text-blue-400">AI Advisor Says</span></div>
                       <p className="text-[13px] text-[#d4d4d8] leading-relaxed">{data.aiSummary}</p>
                       {data.estimatedAnnualCostAed && (
@@ -631,7 +631,7 @@ export default function MyCarPage() {
 
                   {/* Score + KPI strip */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div className="col-span-2 sm:col-span-1 rounded-2xl bg-[#18181b] border border-[#27272a] p-4 flex items-center justify-center">
+                    <div className="col-span-2 sm:col-span-1  bg-[#18181b] border border-[#27272a] p-4 flex items-center justify-center">
                       <HealthGauge score={data.overallScore} />
                     </div>
                     {[
@@ -639,8 +639,8 @@ export default function MyCarPage() {
                       { label: "Due Soon", value: String(dueSoonCount), color: "text-amber-400", ic: Clock, bg: "bg-amber-500/10" },
                       { label: "Next Service", value: data.nextServiceEstimatedDate || "—", color: "text-blue-400", ic: Zap, bg: "bg-blue-500/10" },
                     ].map(({ label, value, color, ic: Icon, bg }) => (
-                      <div key={label} className="rounded-2xl bg-[#18181b] border border-[#27272a] p-4 flex flex-col justify-between">
-                        <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center mb-2`}><Icon className={`w-4 h-4 ${color}`} /></div>
+                      <div key={label} className=" bg-[#18181b] border border-[#27272a] p-4 flex flex-col justify-between">
+                        <div className={`w-8 h-8  ${bg} flex items-center justify-center mb-2`}><Icon className={`w-4 h-4 ${color}`} /></div>
                         <div className={`text-lg font-black ${color} leading-none`}>{value}</div>
                         <div className="text-[11px] text-[#71717a] mt-0.5">{label}</div>
                       </div>
@@ -654,7 +654,7 @@ export default function MyCarPage() {
                   <ServiceReminderWidget data={data} brand={form.brand} model={form.model} />
 
                   {/* Tabs */}
-                  <div className="rounded-2xl bg-[#18181b] border border-[#27272a] overflow-hidden">
+                  <div className=" bg-[#18181b] border border-[#27272a] overflow-hidden">
                     <div className="flex border-b border-[#27272a] overflow-x-auto scrollbar-none">
                       {[
                         { id: "maintenance", label: "Maintenance", icon: Wrench, count: data.maintenanceItems?.length },
@@ -665,8 +665,8 @@ export default function MyCarPage() {
                         <button key={tab.id} onClick={() => setActiveTab(tab.id as typeof activeTab)}
                           className={`flex items-center gap-1.5 px-4 py-3 text-xs font-bold transition-all shrink-0 relative ${activeTab === tab.id ? "text-blue-400 border-b-2 border-blue-500 bg-blue-500/5" : "text-[#71717a] hover:text-[#a1a1aa]"}`}>
                           <tab.icon className="w-3.5 h-3.5" />{tab.label}
-                          {tab.count != null && <span className="text-[9px] font-black px-1 py-0.5 rounded-full bg-[#27272a] text-[#71717a]">{tab.count}</span>}
-                          {tab.alert && <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+                          {tab.count != null && <span className="text-[9px] font-black px-1 py-0.5  bg-[#27272a] text-[#71717a]">{tab.count}</span>}
+                          {tab.alert && <span className="absolute top-1 right-1 w-1.5 h-1.5  bg-red-500 animate-pulse" />}
                         </button>
                       ))}
                     </div>
@@ -681,7 +681,7 @@ export default function MyCarPage() {
                               { id: "ok", label: "OK", count: (data.maintenanceItems?.filter(i => i.status === "ok").length ?? 0) },
                             ].map(f => (
                               <button key={f.id} onClick={() => setFilterStatus(f.id as typeof filterStatus)}
-                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterStatus === f.id ? "bg-blue-600/12 border-blue-600/35 text-blue-400" : "bg-[#1c1c1f] border-[#27272a] text-[#71717a] hover:border-[#3f3f46]"}`}>
+                                className={`flex items-center gap-1.5 px-3 py-1  text-xs font-semibold border transition-all ${filterStatus === f.id ? "bg-blue-600/12 border-blue-600/35 text-blue-400" : "bg-[#1c1c1f] border-[#27272a] text-[#71717a] hover:border-[#3f3f46]"}`}>
                                 {f.label}<span className="text-[10px] opacity-70">{f.count}</span>
                               </button>
                             ))}
@@ -712,19 +712,19 @@ export default function MyCarPage() {
                   </div>
 
                   {/* Find garage CTA */}
-                  <div className="rounded-2xl bg-gradient-to-r from-orange-500/10 to-orange-600/5 border border-orange-500/20 p-4 flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-orange-500/15 flex items-center justify-center shrink-0"><MapPin className="w-5 h-5 text-orange-400" /></div>
+                  <div className="    border border-orange-500/20 p-4 flex items-center gap-4">
+                    <div className="w-10 h-10  bg-orange-500/15 flex items-center justify-center shrink-0"><MapPin className="w-5 h-5 text-orange-400" /></div>
                     <div className="flex-1">
                       <h3 className="text-sm font-bold text-[#fafafa]">Ready to book a service?</h3>
                       <p className="text-[12px] text-[#71717a]">Find verified garages near you in the UAE</p>
                     </div>
-                    <Link href="/garages" className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white text-xs font-bold transition-all shrink-0">
+                    <Link href="/garages" className="flex items-center gap-1.5 px-3.5 py-2  bg-orange-500 hover:bg-orange-400 text-white text-xs font-bold transition-all shrink-0">
                       Find Garages<ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
 
                   <button onClick={generate} disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#a1a1aa] hover:border-[#3f3f46] text-sm font-semibold transition-all">
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5  bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#a1a1aa] hover:border-[#3f3f46] text-sm font-semibold transition-all">
                     <RotateCcw className="w-4 h-4" />Regenerate Analysis
                   </button>
                 </motion.div>

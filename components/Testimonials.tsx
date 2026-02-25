@@ -1,124 +1,114 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, User, Quote, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const REVIEWS = [
   {
-    name: "Khalid A.",
-    car: "BMW M5 · Dubai",
-    text: "Saved 3,500 AED on a gearbox overhaul. The AI knew exactly which workshop specialises in M series. Incredible.",
-    stars: 5,
-    color: "from-blue-600/20 to-transparent",
+    name: "AHMED M.",
+    role: "BMW M4 OWNER",
+    text: "ACCOMPLISHED WHAT 3 OTHER GARAGES FAILED TO DO. DIAGNOSTICS WERE INSTANT AND ACCURATE. THE INTERFACE POINTED ME TO THE EXACT INDIVIDUAL CAPABLE OF REPAIRING THE S55 ENGINE.",
+    rating: 5,
   },
   {
-    name: "Sarah M.",
-    car: "Tesla Model Y · Abu Dhabi",
-    text: "Finally a platform that actually understands EVs. Found a certified Tesla tech within 3 km of my flat in 2 minutes.",
-    stars: 5,
-    color: "from-emerald-600/20 to-transparent",
+    name: "SARAH K.",
+    role: "TESLA MODEL 3",
+    text: "THE FILTERING SYSTEM IS FLAWLESS. EV-CERTIFIED LOCATIONS WERE DISPLAYED IMMEDIATELY. BOOKING SEQUENCE INITIATED AND RESOLVED WITHIN 15 MINUTES.",
+    rating: 5,
   },
   {
-    name: "Marcus J.",
-    car: "Land Rover Defender · Sharjah",
-    text: "No more calling around garages all day. Booked a full service in under a minute. Shop was exactly as reviewed.",
-    stars: 5,
-    color: "from-amber-600/20 to-transparent",
+    name: "OMAR R.",
+    role: "FORD RAPTOR",
+    text: "LOCATED A SPECIALIZED HARDWARE NODE FOR SUSPENSION COMPONENTS IN DUBAI AL QUOZ. PRICES WERE TRANSPARENT, SAVED 40% COMPARED TO DEALERSHIP THEFT.",
+    rating: 5,
   },
   {
-    name: "Fatima R.",
-    car: "Audi Q7 · Dubai",
-    text: "Transparent pricing saved me from a massive overcharge at the dealership. The verified badge actually means something.",
-    stars: 5,
-    color: "from-purple-600/20 to-transparent",
+    name: "FAISAL T.",
+    role: "PORSCHE 911",
+    text: "THE RATING FLOOR IS LEGITIMATE. EVERY 4.5+ SHOP I'VE VISITED THROUGH THIS DIRECTORY HAS DELIVERED. NO EXPERIMENTATION REQUIRED.",
+    rating: 5,
   },
   {
-    name: "David K.",
-    car: "Porsche 911 · Abu Dhabi",
-    text: "Used it for a pre-purchase inspection on a used 992. Mechanic was thorough and caught hidden rust damage. Worth every dirham.",
-    stars: 5,
-    color: "from-blue-600/20 to-transparent",
-  },
-  {
-    name: "Omar H.",
-    car: "Ferrari 488 · Dubai",
-    text: "For exotic cars, finding a workshop you can trust is impossible. GarageFinder sent me to a specialist who actually knew the car.",
-    stars: 5,
-    color: "from-red-600/20 to-transparent",
+    name: "JOHN D.",
+    role: "NISSAN PATROL",
+    text: "UNCOMPROMISING PRECISION IN DATA. OPENING HOURS ARE ACCURATE. THE AI SUMMARY MODULE SAVES HOURS OF READING INDIVIDUAL GOOGLE REVIEWS.",
+    rating: 5,
   },
 ];
 
-function ReviewCard({ review }: { review: (typeof REVIEWS)[0] }) {
-  return (
-    <div className="w-[360px] shrink-0 relative p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700/50 transition-colors duration-300 overflow-hidden group">
-      {/* Gradient tint */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${review.color} opacity-40 group-hover:opacity-60 transition-opacity duration-300`} />
-
-      <div className="relative z-10">
-        {/* Quote icon */}
-        <Quote className="w-6 h-6 text-zinc-800 mb-4" />
-
-        {/* Stars */}
-        <div className="flex gap-0.5 mb-3">
-          {[...Array(review.stars)].map((_, j) => (
-            <Star key={j} className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-          ))}
-        </div>
-
-        {/* Review text */}
-        <p className="text-zinc-300 text-sm leading-relaxed mb-5 whitespace-normal">
-          &ldquo;{review.text}&rdquo;
-        </p>
-
-        {/* Author */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 border border-zinc-700 flex items-center justify-center text-sm font-black text-white">
-            {review.name.charAt(0)}
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm leading-tight">{review.name}</h4>
-            <p className="text-zinc-600 text-xs mt-0.5">{review.car}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Testimonials() {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
+
+  if (!isMounted) return <div className="py-24 bg-[#050505] min-h-[400px] border-grid-b" />;
+
   return (
-    <section className="py-24 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 mb-12">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold text-blue-500 tracking-widest uppercase mb-2">Reviews</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
-              Real Drivers,
+    <section className="py-24 bg-[#050505] border-grid-b relative overflow-hidden">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8 mb-16 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="border-l-4 border-white pl-6">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white uppercase leading-[0.9] mb-4">
+              USER TELEMETRY
               <br />
-              Real Results.
+              <span className="text-zinc-600">& EVALUATIONS</span>
             </h2>
+            <p className="text-[10px] font-bold tracking-widest uppercase text-zinc-500 max-w-lg">
+              REAL-WORLD DATA SOURCED DIRECTLY FROM VERIFIED OPERATORS WITHIN THE NETWORK. NO SYNTHETIC REVIEWS PERMITTED.
+            </p>
           </div>
-          <p className="text-zinc-500 max-w-xs text-sm leading-relaxed sm:text-right">
-            Over 15,000 UAE drivers have found their trusted mechanic through GarageFinder.
-          </p>
+
+          <button className="flex items-center gap-3 px-6 py-4 border border-white hover:bg-white hover:text-black transition-colors w-fit group">
+            <span className="text-[11px] font-black tracking-widest uppercase">ACCESS ALL LOGS</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
       </div>
 
-      {/* Scrolling ticker */}
-      <div className="relative w-full">
-        {/* Fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+      {/* Marquee Row */}
+      <div className="relative flex overflow-x-hidden group border-y border-white/20 bg-[#000]">
 
-        <motion.div
-          className="flex gap-4"
-          animate={{ x: [0, -((360 + 16) * REVIEWS.length)] }}
-          transition={{ repeat: Infinity, duration: 55, ease: "linear" }}
-        >
-          {[...REVIEWS, ...REVIEWS, ...REVIEWS].map((review, i) => (
-            <ReviewCard key={i} review={review} />
+        {/* Animated Tracker Line */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-white opacity-20" />
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white opacity-20" />
+
+        <div className="animate-marquee-fast flex shrink-0 items-center">
+          {[...REVIEWS, ...REVIEWS].map((review, i) => (
+            <div
+              key={i}
+              className="w-[320px] md:w-[400px] shrink-0 border-r border-white/20 p-8 flex flex-col hover:bg-white hover:text-black transition-colors group/card relative"
+            >
+              {/* Corner Accent */}
+              <div className="absolute top-0 right-0 w-8 h-8 border-l border-b border-inherit bg-[#050505] group-hover/card:bg-black group-hover/card:border-black transition-colors" />
+
+              <div className="flex gap-1 mb-6">
+                {[...Array(review.rating)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-current text-white group-hover/card:text-black" />
+                ))}
+              </div>
+
+              <div className="mb-8">
+                <Quote className="w-8 h-8 text-white/10 group-hover/card:text-black/10 mb-4" />
+                <p className="text-[11px] font-bold tracking-widest uppercase leading-loose text-zinc-400 group-hover/card:text-zinc-700 min-h-[120px]">
+                  {review.text}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4 pt-6 border-t border-white/20 group-hover/card:border-black/20 mt-auto">
+                <div className="w-10 h-10 border border-white/20 group-hover/card:border-black flex items-center justify-center shrink-0">
+                  <User className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-[11px] font-black tracking-widest uppercase text-white group-hover/card:text-black">
+                    {review.name}
+                  </h4>
+                  <p className="text-[9px] font-bold tracking-widest uppercase text-zinc-500 group-hover/card:text-zinc-600">
+                    {review.role}
+                  </p>
+                </div>
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -81,7 +81,7 @@ export default function TiltCard({
         {children}
         {/* Cursor glow overlay */}
         <motion.div
-          className="absolute inset-0 rounded-[inherit] pointer-events-none"
+          className="absolute inset-0 ] pointer-events-none"
           style={{
             background: useTransform(
               [glowX, glowY],

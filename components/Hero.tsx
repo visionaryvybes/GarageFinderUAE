@@ -60,8 +60,8 @@ export default function Hero({ onSearch }: HeroProps) {
           sizes="100vw"
         />
         {/* Multi-layer overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
+        <div className="absolute inset-0    " />
+        <div className="absolute inset-0    " />
         {/* Subtle grid */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -74,8 +74,8 @@ export default function Hero({ onSearch }: HeroProps) {
       </div>
 
       {/* ── Animated gradient blobs ── */}
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px] z-0 pointer-events-none animate-[float_8s_ease-in-out_infinite]" />
-      <div className="absolute top-20 left-80 w-[300px] h-[300px] rounded-full bg-orange-600/6 blur-[80px] z-0 pointer-events-none animate-[float_10s_ease-in-out_infinite_2s]" />
+      <div className="absolute top-0 left-0 w-[600px] h-[600px]  bg-blue-600/10 ] z-0 pointer-events-none animate-[float_8s_ease-in-out_infinite]" />
+      <div className="absolute top-20 left-80 w-[300px] h-[300px]  bg-orange-600/6 ] z-0 pointer-events-none animate-[float_10s_ease-in-out_infinite_2s]" />
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-start justify-center min-h-[90vh] px-6 md:px-16 lg:px-24 max-w-7xl mx-auto">
@@ -86,11 +86,11 @@ export default function Hero({ onSearch }: HeroProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-600/8 backdrop-blur-sm"
+            className="inline-flex items-center gap-2.5 px-4 py-1.5  border border-blue-500/30 bg-blue-600/8 backdrop-"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full  bg-blue-400 opacity-75" />
+              <span className="relative inline-flex  h-2 w-2 bg-blue-500" />
             </span>
             <span className="text-[11px] font-bold tracking-widest uppercase text-blue-300/80">
               Live · AI-Powered · 450+ Verified UAE Shops
@@ -106,7 +106,7 @@ export default function Hero({ onSearch }: HeroProps) {
             <h1 className="text-5xl sm:text-6xl md:text-[76px] font-black tracking-tighter leading-[0.9] text-white">
               Find the Best
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-300 to-white">
+              <span className="     ">
                 Auto Care
               </span>
               <br />
@@ -147,8 +147,8 @@ export default function Hero({ onSearch }: HeroProps) {
             className="w-full max-w-xl"
           >
             <div className="relative group">
-              <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-blue-600/40 via-blue-400/20 to-blue-600/40 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 blur-sm" />
-              <div className="relative flex items-center bg-zinc-950/90 backdrop-blur-md border border-zinc-800 group-focus-within:border-blue-500/50 rounded-2xl p-1.5 shadow-2xl transition-all duration-300">
+              <div className="absolute -inset-px      opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 " />
+              <div className="relative flex items-center bg-zinc-950/90 backdrop- border border-zinc-800 group-focus-within:border-blue-500/50  p-1.5  transition-all duration-300">
                 <Sparkles className="w-4 h-4 text-blue-500/60 ml-3 shrink-0" />
                 <input
                   type="text"
@@ -159,7 +159,7 @@ export default function Hero({ onSearch }: HeroProps) {
                 />
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-900/40 transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                  className="flex items-center gap-2 px-5 py-3     hover: hover: text-white text-sm font-bold  -900/40 transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0"
                 >
                   <Zap className="w-4 h-4" />
                   <span className="hidden sm:inline">AI Search</span>
@@ -180,7 +180,7 @@ export default function Hero({ onSearch }: HeroProps) {
               <button
                 key={tag.label}
                 onClick={() => onSearch(tag.label, true)}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-zinc-800 bg-black/50 backdrop-blur-sm text-xs font-semibold text-zinc-400 hover:text-white hover:border-blue-500/30 hover:bg-blue-600/8 transition-all duration-200"
+                className="flex items-center gap-1.5 px-3.5 py-1.5  border border-zinc-800 bg-black/50 backdrop- text-xs font-semibold text-zinc-400 hover:text-white hover:border-blue-500/30 hover:bg-blue-600/8 transition-all duration-200"
               >
                 <span>{tag.emoji}</span>
                 {tag.label}
@@ -198,7 +198,7 @@ export default function Hero({ onSearch }: HeroProps) {
             <div className="flex items-center gap-2">
               <div className="flex -space-x-1">
                 {[...Array(4)].map((_, i) => (
-                  <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-zinc-600 to-zinc-800 border-2 border-black" />
+                  <div key={i} className="w-6 h-6     border-2 border-black" />
                 ))}
               </div>
               <span className="text-zinc-500 text-xs font-medium">15k+ drivers</span>
@@ -230,7 +230,7 @@ export default function Hero({ onSearch }: HeroProps) {
         transition={{ delay: 0.75, duration: 0.6 }}
         className="absolute bottom-0 left-0 right-0 z-10"
       >
-        <div className="backdrop-blur-md bg-black/70 border-t border-zinc-800/60 px-6 md:px-16 lg:px-24 py-4">
+        <div className="backdrop- bg-black/70 border-t border-zinc-800/60 px-6 md:px-16 lg:px-24 py-4">
           <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { value: "450+", label: "Verified Shops" },

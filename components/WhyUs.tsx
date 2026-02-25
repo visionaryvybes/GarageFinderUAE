@@ -1,127 +1,111 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Cpu, Clock, Award, MapPin, TrendingUp } from "lucide-react";
+import { ShieldCheck, Cpu, Clock, Award, MapPin, TrendingUp, Sparkles } from "lucide-react";
 
 const FEATURES = [
   {
     icon: Cpu,
-    color: "text-blue-400",
-    bg: "bg-blue-600/10 border-blue-600/20",
-    glowColor: "bg-blue-600/5",
-    title: "AI Diagnostics",
-    desc: "Describe your problem in plain English. Our AI analyzes your issue and matches you instantly with the right specialist.",
-    stat: "50+ data points",
-    statColor: "text-blue-400",
-    dot: "bg-blue-500",
+    title: "AI DIAGNOSTICS",
+    desc: "INPUT YOUR AUTOMOTIVE ANOMALY IN PLAIN TEXT. OUR ALGORITHM PROCESSES THE SYMPTOMS AND DIRECTS YOU TO THE APPROPRIATE SPECIALIST INSTANTLY.",
+    stat: "50+ DATA VECTORS",
   },
   {
     icon: ShieldCheck,
-    color: "text-emerald-400",
-    bg: "bg-emerald-600/10 border-emerald-600/20",
-    glowColor: "bg-emerald-600/5",
-    title: "Verified Mechanics",
-    desc: "Every shop is vetted for certifications, insurance, and customer satisfaction. No guesswork, no shady quotes.",
-    stat: "450+ verified",
-    statColor: "text-emerald-400",
-    dot: "bg-emerald-500",
+    title: "VERIFIED NODES",
+    desc: "EVERY LISTED FACILITY HAS BEEN AUDITED FOR CERTIFICATIONS AND SERVICE QUALITY. NO UNVERIFIED PROTOCOLS. NO UNDOCUMENTED QUOTES.",
+    stat: "450+ SECURE LOCATIONS",
   },
   {
     icon: Clock,
-    color: "text-amber-400",
-    bg: "bg-amber-600/10 border-amber-600/20",
-    glowColor: "bg-amber-600/5",
-    title: "Book in 60 Seconds",
-    desc: "See real-time availability, compare transparent pricing, and book instantly. Average response time: 12 minutes.",
-    stat: "12 min avg",
-    statColor: "text-amber-400",
-    dot: "bg-amber-500",
+    title: "RAPID DEPLOYMENT",
+    desc: "MONITOR LIVE AVAILABILITY STATUS, ANALYZE PRICING METRICS, AND INITIATE BOOKING SEQUENCES. AVERAGE RESPONSE LATENCY IS 12 MINUTES.",
+    stat: "12 MIN PING",
   },
 ];
 
 const SECONDARY = [
-  { icon: Award, label: "Top-rated only", desc: "4.3+ stars minimum" },
-  { icon: MapPin, label: "All 7 Emirates", desc: "Dubai, Abu Dhabi, Sharjah & more" },
-  { icon: TrendingUp, label: "Live data", desc: "Updated every 24h" },
+  { icon: Award, label: "ELITE STATUS ONLY", desc: "4.3+ RATING FLOOR" },
+  { icon: MapPin, label: "FULL GRID COVERAGE", desc: "ALL 7 EMIRATES ACTIVE" },
+  { icon: TrendingUp, label: "LIVE TELEMETRY", desc: "24HR SYNC CYCLE" },
 ];
 
 export default function WhyUs() {
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-blue-600/5 blur-[80px] pointer-events-none" />
-
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
+    <section className="py-24 bg-[#0a0a0a] border-grid-t border-grid-b overflow-hidden relative">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-16 border-l-4 border-white pl-6"
         >
-          <p className="text-xs font-bold text-blue-500 tracking-widest uppercase mb-3">Why Choose Us</p>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white mb-4">
-            15,000+ Drivers Trust
+          <div className="flex items-center gap-3 mb-6 bg-white text-black w-fit px-4 py-2">
+            <Sparkles className="w-5 h-5" />
+            <h2 className="text-xl md:text-3xl font-black uppercase tracking-widest">
+              SYSTEM INTEGRITY
+            </h2>
+          </div>
+          <h3 className="text-3xl md:text-6xl font-black tracking-tighter text-white uppercase leading-[0.9] max-w-4xl">
+            15,000+ OPERATORS
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-              GarageFinder
-            </span>
-          </h2>
-          <p className="text-zinc-500 max-w-md mx-auto text-sm leading-relaxed">
-            We built this because finding a trustworthy mechanic in the UAE shouldn&apos;t feel like a gamble.
-          </p>
+            RELY ON THIS INTERFACE
+          </h3>
         </motion.div>
 
-        {/* Primary features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        {/* Primary features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white bg-[#000] mb-12">
           {FEATURES.map((feat, i) => (
             <motion.div
               key={feat.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="relative p-7 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all duration-300 group overflow-hidden"
+              className={`p-8 md:p-12 relative group hover:bg-white transition-colors duration-500 border-b md:border-b-0 ${i !== 2 ? "md:border-r border-white/20 hover:border-white" : "border-white/20 hover:border-white"
+                }`}
             >
-              {/* Subtle bg glow per feature */}
-              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full ${feat.glowColor} blur-3xl pointer-events-none`} />
-
-              {/* Top-right number */}
-              <span className="absolute top-5 right-5 text-4xl font-black text-zinc-800 select-none group-hover:text-zinc-700 transition-colors">
-                0{i + 1}
-              </span>
-
-              <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-6 ${feat.bg}`}>
-                <feat.icon className={`w-6 h-6 ${feat.color}`} />
+              <div className="absolute top-0 right-0 w-12 h-12 border-l border-b border-white/20 group-hover:border-black flex items-center justify-center bg-[#050505] group-hover:bg-black transition-colors">
+                <span className="text-[10px] font-black text-white">0{i + 1}</span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{feat.title}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-4">{feat.desc}</p>
-              <div className="flex items-center gap-1.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${feat.dot}`} />
-                <span className={`text-xs font-semibold ${feat.statColor}`}>{feat.stat}</span>
+
+              <div className="w-16 h-16 border border-white/20 group-hover:border-black flex items-center justify-center mb-8 bg-[#050505] group-hover:bg-transparent transition-colors">
+                <feat.icon className="w-8 h-8 text-white group-hover:text-black" />
+              </div>
+              <h4 className="text-2xl font-black text-white group-hover:text-black uppercase tracking-tighter mb-4">{feat.title}</h4>
+              <p className="text-[10px] font-bold text-zinc-500 group-hover:text-zinc-800 uppercase tracking-widest leading-loose mb-8 h-24">
+                {feat.desc}
+              </p>
+
+              <div className="pt-6 border-t border-white/20 group-hover:border-black/20 mt-auto">
+                <span className="text-[11px] font-black text-white group-hover:text-black uppercase tracking-widest">
+                  &gt; {feat.stat}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Secondary stat strip */}
+        {/* Secondary metric datablocks */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-0 border border-white/20 bg-[#050505]"
         >
-          {SECONDARY.map((item) => (
+          {SECONDARY.map((item, i) => (
             <div
               key={item.label}
-              className="flex items-center gap-4 px-5 py-4 rounded-xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 transition-colors"
+              className={`flex items-start gap-4 p-6 hover:bg-white/5 transition-colors border-b sm:border-b-0 ${i !== 2 ? "sm:border-r border-white/20" : ""
+                }`}
             >
-              <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0">
-                <item.icon className="w-4 h-4 text-zinc-400" />
+              <div className="w-10 h-10 border border-white/20 flex items-center justify-center shrink-0">
+                <item.icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-bold text-zinc-200">{item.label}</p>
-                <p className="text-xs text-zinc-600">{item.desc}</p>
+                <p className="text-[11px] font-black tracking-widest uppercase text-white mb-1">{item.label}</p>
+                <p className="text-[9px] font-bold tracking-widest uppercase text-zinc-500">{item.desc}</p>
               </div>
             </div>
           ))}

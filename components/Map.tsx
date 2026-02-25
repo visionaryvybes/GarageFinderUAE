@@ -169,7 +169,7 @@ export default function Map({
     const dot = document.createElement("div");
     dot.innerHTML = `
       <div style="position:relative;">
-        <div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+        <div style="width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-:0 2px 6px rgba(0,0,0,0.3);"></div>
         <div style="position:absolute;inset:-8px;border:2px solid rgba(66,133,244,0.3);border-radius:50%;animation:marker-pulse 2s infinite;"></div>
       </div>
     `;
@@ -201,16 +201,17 @@ export default function Map({
           display:flex;align-items:center;justify-content:center;
           width:${isSelected ? "36px" : "30px"};
           height:${isSelected ? "36px" : "30px"};
-          background:${isSelected ? "#2563eb" : "#e4e4e7"};
-          color:${isSelected ? "#ffffff" : "#3f3f46"};
-          border-radius:50%;
+          background:${isSelected ? "white" : "black"};
+          color:${isSelected ? "black" : "white"};
+          border-radius:0;
+          font-family:monospace;
           font-size:${isSelected ? "14px" : "12px"};
-          font-weight:700;
-          box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? "0.4" : "0.2"});
-          border:2px solid ${isSelected ? "#60a5fa" : "white"};
+          font-weight:900;
+          box-shadow: ${isSelected ? "2px 2px 0px black" : "0 0 0 0 transparent"};
+          border:2px solid ${isSelected ? "black" : "transparent"};
           transition:all 0.2s;
           cursor:pointer;
-          ${isSelected ? "transform:scale(1.1);" : ""}
+          ${isSelected ? "transform:scale(1.1) rotate(4deg);" : ""}
         ">${index + 1}</div>
       `;
 

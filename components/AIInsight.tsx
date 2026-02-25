@@ -25,15 +25,9 @@ export default function AIInsight({ analysis, onDismiss }: AIInsightProps) {
   }
 
   const urgencyColors = {
-    low: "text-success",
-    medium: "text-warning",
-    high: "text-danger",
-  };
-
-  const urgencyBg = {
-    low: "bg-success/10 border-success/20",
-    medium: "bg-warning/10 border-warning/20",
-    high: "bg-danger/10 border-danger/20",
+    low: "text-blue-400 bg-blue-900/20 border-blue-500/50",
+    medium: "text-amber-400 bg-amber-900/20 border-amber-500/50",
+    high: "text-red-400 bg-red-900/20 border-red-500/50",
   };
 
   return (
@@ -42,55 +36,53 @@ export default function AIInsight({ analysis, onDismiss }: AIInsightProps) {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
-        className={`p-3 rounded-xl border ${urgencyBg[analysis.urgency]} relative`}
+        className={`p-4 border ${urgencyColors[analysis.urgency]} relative group flex flex-col font-mono`}
       >
         <button
           onClick={onDismiss}
-          className="absolute top-2 right-2 p-1 hover:bg-white/10 rounded-full transition-colors"
+          className="absolute top-0 right-0 w-8 h-8 flex items-center justify-center border-l border-b border-inherit hover:bg-white hover:text-black transition-colors"
         >
-          <X className="w-3 h-3 text-text-muted" />
+          <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-accent" />
-          <span className="text-xs font-semibold text-accent uppercase tracking-wider">
-            AI Analysis
+        <div className="flex items-center gap-2 mb-4 bg-black/50 w-fit px-3 py-1 border border-inherit">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="text-[10px] font-black uppercase tracking-widest">
+            AI DIAGNOSTIC MODULE
           </span>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {analysis.possibleIssue && (
-            <div className="flex items-start gap-2">
-              <Wrench className="w-4 h-4 text-text-muted mt-0.5 shrink-0" />
-              <p className="text-sm text-text-secondary">
-                <span className="font-medium text-text-primary">
-                  Possible issue:
-                </span>{" "}
-                {analysis.possibleIssue}
+            <div className="flex items-start gap-3 border-b border-inherit/30 pb-3">
+              <Wrench className="w-4 h-4 mt-0.5 shrink-0 opacity-70" />
+              <p className="text-xs uppercase tracking-widest leading-relaxed">
+                <span className="font-black opacity-100 block mb-1">
+                  DETECTED ANOMALY
+                </span>
+                <span className="opacity-80">{analysis.possibleIssue}</span>
               </p>
             </div>
           )}
 
           {analysis.estimatedCostRange && (
-            <div className="flex items-start gap-2">
-              <DollarSign className="w-4 h-4 text-text-muted mt-0.5 shrink-0" />
-              <p className="text-sm text-text-secondary">
-                <span className="font-medium text-text-primary">
-                  Est. cost:
-                </span>{" "}
-                {analysis.estimatedCostRange}
+            <div className="flex items-start gap-3 border-b border-inherit/30 pb-3">
+              <DollarSign className="w-4 h-4 mt-0.5 shrink-0 opacity-70" />
+              <p className="text-xs uppercase tracking-widest leading-relaxed">
+                <span className="font-black opacity-100 block mb-1">
+                  REPAIR ESTIMATE
+                </span>
+                <span className="opacity-80 font-black">{analysis.estimatedCostRange}</span>
               </p>
             </div>
           )}
 
-          <div className="flex items-center gap-2">
-            <AlertTriangle
-              className={`w-4 h-4 ${urgencyColors[analysis.urgency]} shrink-0`}
-            />
-            <p className="text-sm">
-              <span className="font-medium text-text-primary">Urgency:</span>{" "}
-              <span className={urgencyColors[analysis.urgency]}>
-                {analysis.urgency.charAt(0).toUpperCase() + analysis.urgency.slice(1)}
+          <div className="flex items-center gap-3 pt-1">
+            <AlertTriangle className={`w-4 h-4 shrink-0 animate-pulse`} />
+            <p className="text-xs uppercase tracking-widest">
+              <span className="font-black opacity-100">PRIORITY LEVEL:</span>{" "}
+              <span className="font-black">
+                {analysis.urgency}
               </span>
             </p>
           </div>

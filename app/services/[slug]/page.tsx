@@ -60,11 +60,11 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <div className="min-h-screen bg-black text-white">
             <div className="relative h-64 md:h-80 overflow-hidden">
                 <Image src={svc.img} alt={svc.name} fill className="object-cover opacity-40" sizes="100vw" priority />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20" />
+                <div className="absolute inset-0    " />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-12">
                     <Link href="/services" className="text-xs text-zinc-600 hover:text-zinc-400 mb-4 inline-block">← All Services</Link>
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center shrink-0">
+                        <div className="w-12 h-12  bg-black/60 backdrop- border border-white/10 flex items-center justify-center shrink-0">
                             <svc.icon className={`w-6 h-6 ${svc.iconColor}`} />
                         </div>
                         <div>
@@ -79,11 +79,11 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                 {details && (
                     <>
                         <div className="flex flex-wrap gap-3">
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+                            <div className="flex items-center gap-2 px-4 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                                 <span className="text-xs text-zinc-600">Price range</span>
                                 <span className="text-sm font-bold">{details.priceRange}</span>
                             </div>
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+                            <div className="flex items-center gap-2 px-4 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                                 <span className="text-xs text-zinc-600">Typical time</span>
                                 <span className="text-sm font-bold">{details.avgTime}</span>
                             </div>
@@ -93,7 +93,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                             <h2 className="text-xl font-bold mb-4">What's Included</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 {details.features.map(f => (
-                                    <div key={f} className="flex items-center gap-3 p-3.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+                                    <div key={f} className="flex items-center gap-3 p-3.5  bg-[#0a0a0a] border border-[#1a1a1a]">
                                         <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
                                         <span className="text-sm text-zinc-300">{f}</span>
                                     </div>
@@ -105,7 +105,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                                 <h2 className="text-xl font-bold mb-4">Frequently Asked</h2>
                                 <div className="space-y-3">
                                     {details.faq.map(item => (
-                                        <div key={item.q} className="p-5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+                                        <div key={item.q} className="p-5  bg-[#0a0a0a] border border-[#1a1a1a]">
                                             <h3 className="font-semibold text-sm mb-2">{item.q}</h3>
                                             <p className="text-sm text-zinc-400 leading-relaxed">{item.a}</p>
                                         </div>
@@ -116,10 +116,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     </>
                 )}
 
-                <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-600/20">
+                <div className="p-8     border border-blue-600/20">
                     <h2 className="text-2xl font-bold mb-2">Find {svc.name} Near You</h2>
                     <p className="text-zinc-500 mb-5">Verified shops across Dubai, Abu Dhabi, Sharjah and all UAE emirates.</p>
-                    <Link href={`/?q=${encodeURIComponent(svc.query)}`} className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-all">
+                    <Link href={`/?q=${encodeURIComponent(svc.query)}`} className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white  font-semibold text-sm transition-all">
                         Search {svc.name} shops →
                     </Link>
                 </div>
@@ -128,8 +128,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     <h2 className="text-lg font-bold mb-4">Related Services</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {SERVICES.filter(s => s.slug !== slug && s.category === svc.category).slice(0, 3).map(rel => (
-                            <Link key={rel.id} href={`/services/${rel.slug}`} className="group flex items-center gap-3 p-3.5 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700 transition-all">
-                                <div className="w-8 h-8 rounded-lg bg-black border border-white/5 flex items-center justify-center shrink-0">
+                            <Link key={rel.id} href={`/services/${rel.slug}`} className="group flex items-center gap-3 p-3.5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700 transition-all">
+                                <div className="w-8 h-8  bg-black border border-white/5 flex items-center justify-center shrink-0">
                                     <rel.icon className={`w-4 h-4 ${rel.iconColor}`} />
                                 </div>
                                 <span className="text-sm font-semibold text-zinc-300 group-hover:text-white line-clamp-1">{rel.name}</span>

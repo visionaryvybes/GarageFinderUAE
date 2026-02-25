@@ -60,17 +60,6 @@ function buildSearchQuery(query: string): string {
   return q || query;
 }
 
-interface PlacePage {
-  results: unknown[];
-  next_page_token?: string;
-}
-
-async function fetchPage(url: string): Promise<PlacePage> {
-  const res = await fetch(url);
-  const data = await res.json();
-  return { results: data.results || [], next_page_token: data.next_page_token };
-}
-
 async function searchPlaces(
   query: string,
   lat: number,
@@ -87,19 +76,9 @@ async function searchPlaces(
   });
   if (type) params.set("type", type);
 
-  const baseUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json`;
-  const page1 = await fetchPage(`${baseUrl}?${params}`);
-  let allResults = page1.results;
-
-  // Fetch page 2 if available (Google requires ~2s delay before using next_page_token)
-  if (page1.next_page_token && allResults.length >= 20) {
-    await new Promise(r => setTimeout(r, 2200));
-    const page2Params = new URLSearchParams({ pagetoken: page1.next_page_token, key: apiKey });
-    const page2 = await fetchPage(`${baseUrl}?${page2Params}`);
-    allResults = [...allResults, ...page2.results];
-  }
-
-  return allResults;
+  const res = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?${params}`);
+  const data = await res.json();
+  return data.results || [];
 }
 
 export async function GET(request: NextRequest) {

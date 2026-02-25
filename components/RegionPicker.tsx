@@ -27,27 +27,27 @@ export default function RegionPicker({ value, onChange }: RegionPickerProps) {
         <div ref={ref} className="relative h-full flex items-stretch">
             <button
                 onClick={() => setOpen(!open)}
-                className={`flex items-center gap-1.5 px-3 sm:px-6 h-full border-r border-white/10 transition-colors text-xs font-black tracking-widest uppercase ${open ? "bg-white text-black" : "bg-[#050505] text-zinc-400 hover:text-white hover:bg-[#0a0a0a]"
+                className={`flex items-center gap-2 px-6 h-full border-r border-white/20 transition-colors text-[10px] font-black tracking-widest uppercase ${open ? "bg-white text-black" : "bg-transparent text-white hover:bg-white/5 hover:border-white"
                     }`}
             >
                 <MapPin className="w-4 h-4 shrink-0" />
-                <span className="inline sm:hidden text-[10px]">{current.shortLabel ?? current.label.slice(0, 3).toUpperCase()}</span>
+                <span className="inline sm:hidden">{current.shortLabel ?? current.label.slice(0, 3)}</span>
                 <span className="hidden sm:inline">{current.label}</span>
-                <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform shrink-0 ${open ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-3 h-3 transition-transform shrink-0 ${open ? "rotate-180" : ""}`} />
             </button>
 
             {open && (
-                <div className="absolute top-full mt-0 left-0 w-56 bg-[#050505] border border-white z-50 flex flex-col uppercase divide-y divide-white/10">
-                    <div className="px-4 py-3 bg-white text-black text-[10px] font-black tracking-widest">
-                        SELECT REGION
+                <div className="absolute top-full mt-0 left-0 w-56 bg-[#000] border border-t-0 border-white z-50 flex flex-col uppercase divide-y divide-white/20">
+                    <div className="px-4 py-3 bg-[#050505] text-white text-[9px] font-black tracking-widest">
+                        SELECT LOCATION NODE
                     </div>
                     {Object.entries(UAE_REGIONS).map(([key, region]) => (
                         <button
                             key={key}
                             onClick={() => { onChange(key); setOpen(false); }}
-                            className={`w-full flex items-center justify-between px-4 py-3 text-xs font-black tracking-widest transition-colors ${key === value
-                                    ? "bg-white text-black"
-                                    : "text-zinc-500 hover:bg-[#0a0a0a] hover:text-white"
+                            className={`w-full flex items-center justify-between px-4 py-4 text-[10px] font-black tracking-widest transition-colors ${key === value
+                                ? "bg-white text-black"
+                                : "text-zinc-400 hover:bg-white/10 hover:text-white"
                                 }`}
                         >
                             {region.label}

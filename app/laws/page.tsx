@@ -58,7 +58,7 @@ export default function LawsPage() {
               </h1>
               <p className="text-sm text-zinc-500">Know your rights and responsibilities on UAE roads.</p>
             </div>
-            <button onClick={load} disabled={loading} className="shrink-0 p-2.5 rounded-xl border border-[#1a1a1a] bg-[#0a0a0a] text-zinc-500 hover:text-white hover:border-zinc-700 transition-all disabled:opacity-40">
+            <button onClick={load} disabled={loading} className="shrink-0 p-2.5  border border-[#1a1a1a] bg-[#0a0a0a] text-zinc-500 hover:text-white hover:border-zinc-700 transition-all disabled:opacity-40">
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             </button>
           </div>
@@ -70,7 +70,7 @@ export default function LawsPage() {
               { icon: Shield, label: "Medium Severity", color: "text-amber-400", count: laws.filter(l => l.severity === "medium").length },
               { icon: Car, label: "Low Severity", color: "text-blue-400", count: laws.filter(l => l.severity === "low").length },
             ].map(item => (
-              <div key={item.label} className="flex flex-col items-center py-3 px-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a] text-center">
+              <div key={item.label} className="flex flex-col items-center py-3 px-2  bg-[#0a0a0a] border border-[#1a1a1a] text-center">
                 <item.icon className={`w-4 h-4 ${item.color} mb-1`} />
                 <span className="text-lg font-black text-white">{item.count}</span>
                 <span className="text-[10px] text-zinc-600 leading-tight">{item.label}</span>
@@ -87,7 +87,7 @@ export default function LawsPage() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-all ${
+              className={`px-3 py-1.5  text-xs font-semibold border whitespace-nowrap shrink-0 transition-all ${
                 category === cat
                   ? "bg-amber-600/15 border-amber-600/30 text-amber-400"
                   : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:border-zinc-700 hover:text-white"
@@ -98,7 +98,7 @@ export default function LawsPage() {
           ))}
         </div>
 
-        <div className="p-4 rounded-xl bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
+        <div className="p-4  bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="text-xs text-amber-300/80 leading-relaxed">
             For guidance only. Always verify with official RTA and UAE government sources.
@@ -107,7 +107,7 @@ export default function LawsPage() {
 
         {loading ? (
           <div className="space-y-3">
-            {[...Array(5)].map((_, i) => <div key={i} className="skeleton h-28 rounded-2xl" />)}
+            {[...Array(5)].map((_, i) => <div key={i} className="skeleton h-28 " />)}
           </div>
         ) : (
           <div className="space-y-3">
@@ -117,14 +117,14 @@ export default function LawsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="p-5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/40 transition-colors"
+                className="p-5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/40 transition-colors"
               >
                 <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${SEVERITY_COLORS[law.severity]}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5  border ${SEVERITY_COLORS[law.severity]}`}>
                       {law.severity.toUpperCase()}
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#111] border border-[#1e1e1e] text-zinc-500 font-semibold">
+                    <span className="text-[10px] px-2 py-0.5  bg-[#111] border border-[#1e1e1e] text-zinc-500 font-semibold">
                       {law.category}
                     </span>
                   </div>

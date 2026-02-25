@@ -1,0 +1,19 @@
+
+> garage-finder@1.0.0 dev
+> next dev --turbopack -p 3005
+
+   ▲ Next.js 15.5.12 (Turbopack)
+   - Local:        http://localhost:3005
+   - Network:      http://127.92.218.64:3005
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+ ✓ Starting...
+ ✓ Ready in 910ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2s
+ GET / 200 in 2491ms
+ ✓ Compiled in 664ms
+ ✓ Compiled in 492ms
+ ✓ Compiled in 285ms

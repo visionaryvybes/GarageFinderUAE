@@ -19,7 +19,7 @@ export default function ServicesPage() {
 
             <main className="max-w-7xl mx-auto px-6 py-12">
                 <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-3">
-                    Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">Services</span>
+                    Our <span className="    ">Services</span>
                 </h1>
                 <p className="text-zinc-500 text-lg mb-12 max-w-xl">
                     15 expert automotive solutions available across all 7 UAE emirates.
@@ -30,7 +30,7 @@ export default function ServicesPage() {
                         <Link
                             key={svc.id}
                             href={`/services/${svc.slug}`}
-                            className="group relative rounded-2xl overflow-hidden border border-[#1a1a1a] hover:border-blue-600/30 transition-all duration-500"
+                            className="group relative  overflow-hidden border border-[#1a1a1a] hover:border-blue-600/30 transition-all duration-500"
                         >
                             {/* Image */}
                             <div className="relative h-48 overflow-hidden">
@@ -41,13 +41,13 @@ export default function ServicesPage() {
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+                                <div className="absolute inset-0  from-[#0a0a0a]  " />
                             </div>
 
                             {/* Content */}
                             <div className="p-5 bg-[#0a0a0a]">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-9 h-9 rounded-xl bg-black border border-white/10 flex items-center justify-center">
+                                    <div className="w-9 h-9  bg-black border border-white/10 flex items-center justify-center">
                                         <svc.icon className={`w-4 h-4 ${svc.iconColor}`} />
                                     </div>
                                     <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">

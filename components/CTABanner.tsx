@@ -9,84 +9,73 @@ interface CTABannerProps {
 
 export default function CTABanner({ onSearch }: CTABannerProps) {
   return (
-    <section className="py-20">
-      <div className="max-w-4xl mx-auto px-4">
+    <section className="py-24 bg-[#0a0a0a] border-grid-b border-grid-t">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative overflow-hidden rounded-3xl border border-zinc-800"
+          className="relative overflow-hidden border border-white bg-[#000]"
         >
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900/80 to-zinc-950" />
-
-          {/* Violet glow left */}
-          <div className="absolute top-0 left-1/4 w-[300px] h-[200px] bg-blue-600/12 blur-[60px] rounded-full pointer-events-none" />
-          {/* Orange glow right */}
-          <div className="absolute bottom-0 right-1/4 w-[250px] h-[150px] bg-orange-600/8 blur-[50px] rounded-full pointer-events-none" />
-
-          {/* Floating gear icon */}
-          <div className="absolute top-6 right-8 text-5xl opacity-5 animate-[spin-slow_20s_linear_infinite] pointer-events-none select-none">⚙️</div>
-          <div className="absolute bottom-6 left-8 text-4xl opacity-5 animate-[float_8s_ease-in-out_infinite] pointer-events-none select-none">🔧</div>
+          {/* Custom Structural UI Elements */}
+          <div className="absolute top-0 right-0 w-16 h-16 border-l border-b border-white/20 bg-white/5" />
+          <div className="absolute bottom-0 left-0 w-16 h-16 border-r border-t border-white/20 bg-white/5" />
 
           {/* Grid overlay */}
           <div
-            className="absolute inset-0 opacity-[0.025]"
+            className="absolute inset-0 opacity-[0.1]"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
+                "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
             }}
           />
 
-          <div className="relative z-10 p-10 md:p-16 text-center">
+          <div className="relative z-10 p-12 md:p-24 flex flex-col items-center text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/25 bg-blue-600/8 mb-6">
-              <Zap className="w-3.5 h-3.5 text-blue-400" />
-              <span className="text-[11px] font-bold text-blue-400 tracking-wider uppercase">AI-Powered Search</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 border border-white bg-white text-black mb-10">
+              <Zap className="w-4 h-4 text-black" />
+              <span className="text-xs font-black tracking-widest uppercase">DIRECT AI INTERFACE</span>
             </div>
 
-            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white mb-4 leading-tight">
-              Ready to Get Your
+            <h2 className="text-4xl md:text-7xl font-black tracking-tighter text-white mb-6 uppercase leading-[0.9]">
+              INITIALIZE
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">
-                Car Fixed Today?
+              <span className="text-zinc-600">
+                REPAIR SEQUENCE
               </span>
             </h2>
-            <p className="text-zinc-500 mb-8 max-w-md mx-auto text-sm leading-relaxed">
-              Tell us what&apos;s wrong in plain English. We&apos;ll instantly find the best verified mechanic near you.
+            <p className="text-zinc-400 font-bold text-[10px] tracking-widest uppercase leading-relaxed mb-12 max-w-lg mx-auto">
+              INPUT DIAGNOSTIC DATA AND WE WILL INSTANTLY PROCESS AND LOCATE VERIFIED MECHANICAL FACILITIES IN YOUR PROXIMITY.
             </p>
 
             {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 w-full max-w-2xl">
               <button
                 onClick={() => onSearch("auto repair near me", false)}
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-sm shadow-xl shadow-blue-900/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="group flex-1 w-full inline-flex items-center justify-center gap-3 px-8 py-5 border border-white bg-white text-black hover:bg-zinc-200 transition-colors"
               >
-                Find a Mechanic Near Me
-                <ArrowRight className="w-4 h-4" />
+                <span className="text-xs font-black tracking-widest uppercase">SCAN FOR MECHANICS</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => onSearch("spare parts UAE", false)}
-                className="inline-flex items-center gap-2 px-6 py-4 rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-300 font-semibold text-sm hover:border-orange-500/30 hover:text-orange-300 transition-all"
+                className="flex-1 w-full inline-flex items-center justify-center gap-3 px-8 py-5 border border-white/20 bg-[#050505] text-white hover:border-white hover:bg-white/5 transition-colors"
               >
-                Find Spare Parts
+                <span className="text-xs font-black tracking-widest uppercase">LOCATE HARDWARE</span>
               </button>
             </div>
 
             {/* Trust indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-600">
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-zinc-700" />
-                Avg 12 min response
+            <div className="flex items-center justify-center flex-wrap gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-500">
+              <span className="flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-white" />
+                <span>12 MINUTE PING</span>
               </span>
-              <span className="w-1 h-1 rounded-full bg-zinc-800" />
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-violet-600" />
-                Verified shops only
+              <span className="flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-white" />
+                <span>SECURE FACILITIES</span>
               </span>
-              <span className="w-1 h-1 rounded-full bg-zinc-800" />
-              <span>No registration required</span>
             </div>
           </div>
         </motion.div>

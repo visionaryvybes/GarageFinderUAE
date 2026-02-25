@@ -92,7 +92,7 @@ function UAECalendar() {
   const dayName = uaeTime.toLocaleDateString("en-US", { weekday: "long", timeZone: "Asia/Dubai" });
 
   return (
-    <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+    <div className="p-4  bg-zinc-900 border border-zinc-800">
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
@@ -105,7 +105,7 @@ function UAECalendar() {
           <p className="text-sm font-black text-white">{monthName}</p>
           <p className="text-xs text-zinc-600">{year}</p>
           <div className="flex items-center gap-1 mt-1 justify-end">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-2 h-2  bg-emerald-400 animate-pulse" />
             <span className="text-[10px] text-emerald-500">Live</span>
           </div>
         </div>
@@ -119,7 +119,7 @@ function UAECalendar() {
         {cells.map((day, i) => (
           <div
             key={i}
-            className={`aspect-square flex items-center justify-center text-[11px] rounded-md font-semibold transition-colors ${
+            className={`aspect-square flex items-center justify-center text-[11px]  font-semibold transition-colors ${
               day === null ? "" :
               day === today
                 ? "bg-blue-600 text-white font-black"
@@ -144,7 +144,7 @@ function StatCard({ label, value, sub, color, icon: Icon }: {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800"
+      className="p-4  bg-zinc-900 border border-zinc-800"
     >
       <div className="flex items-start justify-between gap-2">
         <div>
@@ -152,7 +152,7 @@ function StatCard({ label, value, sub, color, icon: Icon }: {
           <p className={`text-2xl font-black ${color}`}>{value}</p>
           {sub && <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>}
         </div>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: color + "20" }}>
+        <div className="w-9 h-9  flex items-center justify-center" style={{ background: color + "20" }}>
           <Icon className="w-4 h-4" style={{ color }} />
         </div>
       </div>
@@ -169,10 +169,10 @@ function LiveFeed() {
     { icon: "🤖", text: "AI search: 1,240 queries today", time: "Live" },
   ];
   return (
-    <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+    <div className="p-4  bg-zinc-900 border border-zinc-800">
       <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
         <Activity className="w-3 h-3" /> LIVE FEED
-        <span className="ml-1 px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] border border-emerald-500/20">LIVE</span>
+        <span className="ml-1 px-1.5 py-0.5  bg-emerald-500/10 text-emerald-400 text-[9px] border border-emerald-500/20">LIVE</span>
       </p>
       <div className="space-y-2.5">
         {feeds.map((f, i) => (
@@ -202,14 +202,14 @@ function QuickNav() {
         <Link
           key={l.href}
           href={l.href}
-          className="flex flex-col gap-2 p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors group"
+          className="flex flex-col gap-2 p-3.5  bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors group"
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: l.color + "20" }}>
+            <div className="w-8 h-8  flex items-center justify-center" style={{ background: l.color + "20" }}>
               <l.icon className="w-4 h-4" style={{ color: l.color }} />
             </div>
             {l.badge && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20">
+              <span className="text-[9px] font-black px-1.5 py-0.5  bg-blue-500/15 text-blue-400 border border-blue-500/20">
                 {l.badge}
               </span>
             )}
@@ -227,7 +227,7 @@ function QuickNav() {
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-2.5 text-xs shadow-xl">
+    <div className="bg-zinc-900 border border-zinc-700  p-2.5 text-xs ">
       <p className="text-zinc-400 font-semibold mb-1">{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }} className="font-bold">{p.name}: {p.value.toLocaleString()}</p>
@@ -271,8 +271,8 @@ export default function DashboardPage() {
               <p className="text-xs text-zinc-600 mt-0.5">Auto repair ecosystem · real-time overview</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="flex items-center gap-1.5 px-3 py-1.5  bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
+                <span className="w-1.5 h-1.5  bg-emerald-400 animate-pulse" />
                 Live Data
               </span>
             </div>
@@ -300,7 +300,7 @@ export default function DashboardPage() {
           {/* Center + right: Charts */}
           <div className="lg:col-span-2 space-y-4">
             {/* Search trend area chart */}
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+            <div className="p-4  bg-zinc-900 border border-zinc-800">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" /> SEARCH ACTIVITY (7 DAYS)
@@ -334,7 +334,7 @@ export default function DashboardPage() {
             {/* Emirate bar chart + rating dist side by side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Garages by Emirate */}
-              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+              <div className="p-4  bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Globe className="w-3 h-3" /> GARAGES BY EMIRATE
                 </p>
@@ -353,7 +353,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Rating distribution */}
-              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+              <div className="p-4  bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Star className="w-3 h-3" /> RATING DISTRIBUTION
                 </p>
@@ -375,7 +375,7 @@ export default function DashboardPage() {
             {/* Service mix pie + Top garages */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Service mix */}
-              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+              <div className="p-4  bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Activity className="w-3 h-3" /> SERVICE MIX
                 </p>
@@ -390,7 +390,7 @@ export default function DashboardPage() {
                   <div className="flex-1 space-y-1.5">
                     {SERVICE_MIX.map(s => (
                       <div key={s.name} className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.fill }} />
+                        <span className="w-2 h-2  shrink-0" style={{ background: s.fill }} />
                         <span className="text-[10px] text-zinc-400">{s.name}</span>
                         <span className="text-[10px] text-zinc-600 ml-auto">{s.value}%</span>
                       </div>
@@ -400,14 +400,14 @@ export default function DashboardPage() {
               </div>
 
               {/* Top rated live */}
-              <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800">
+              <div className="p-4  bg-zinc-900 border border-zinc-800">
                 <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
                   <Shield className="w-3 h-3" /> TOP RATED · DUBAI
                 </p>
                 {loadingLive ? (
                   <div className="space-y-2">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="skeleton h-7 rounded-lg" />
+                      <div key={i} className="skeleton h-7 " />
                     ))}
                   </div>
                 ) : (

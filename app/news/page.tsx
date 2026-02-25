@@ -83,10 +83,10 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="group flex flex-col h-full p-5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/60 hover:bg-[#0d0d0d] transition-all cursor-pointer"
+      className="group flex flex-col h-full p-5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/60 hover:bg-[#0d0d0d] transition-all cursor-pointer"
     >
       {/* Category bar */}
-      <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${cfg.bg} border ${cfg.border} w-fit mb-4`}>
+      <div className={`flex items-center gap-1.5 px-2.5 py-1  ${cfg.bg} border ${cfg.border} w-fit mb-4`}>
         <Icon className={`w-3 h-3 ${cfg.color}`} />
         <span className={`text-[10px] font-bold tracking-wider uppercase ${cfg.color}`}>{item.category}</span>
       </div>
@@ -111,17 +111,17 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
         <div className="flex items-center gap-3">
           <span className="text-[11px] font-semibold text-zinc-500">{item.source}</span>
-          <span className="w-1 h-1 rounded-full bg-zinc-800" />
+          <span className="w-1 h-1  bg-zinc-800" />
           <span className="flex items-center gap-1 text-[11px] text-zinc-700">
             <Clock className="w-3 h-3" />
             {item.readTime}
           </span>
-          <span className="w-1 h-1 rounded-full bg-zinc-800" />
+          <span className="w-1 h-1  bg-zinc-800" />
           <span className="text-[11px] text-zinc-700">{item.date}</span>
         </div>
         <div className="flex items-center gap-2">
           {item.isLive && (
-            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-600/15 border border-emerald-600/25 text-emerald-400 uppercase tracking-wider">
+            <span className="text-[9px] font-bold px-1.5 py-0.5  bg-emerald-600/15 border border-emerald-600/25 text-emerald-400 uppercase tracking-wider">
               Live
             </span>
           )}
@@ -142,10 +142,10 @@ function EventCard({ ev, index }: { event?: never; ev: Event; index: number }) {
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="group flex gap-5 p-5 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/50 hover:bg-[#0d0d0d] transition-all cursor-pointer"
+      className="group flex gap-5 p-5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/50 hover:bg-[#0d0d0d] transition-all cursor-pointer"
     >
       {/* Date block */}
-      <div className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-700/50 text-center">
+      <div className="shrink-0 flex flex-col items-center justify-center w-16 h-16     border border-zinc-700/50 text-center">
         <span className="text-xl font-black text-white leading-none">{monthPart}</span>
         <span className="text-[9px] text-zinc-500 font-semibold uppercase tracking-wider mt-0.5">{yearPart}</span>
       </div>
@@ -154,11 +154,11 @@ function EventCard({ ev, index }: { event?: never; ev: Event; index: number }) {
       <div className="flex-1 min-w-0">
         {/* Tags row */}
         <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${typeColor}`}>
+          <span className={`text-[10px] font-bold px-2 py-0.5  border ${typeColor}`}>
             {ev.type}
           </span>
           {ev.free && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600/10 border border-emerald-600/20 text-emerald-400">
+            <span className="text-[10px] font-bold px-2 py-0.5  bg-emerald-600/10 border border-emerald-600/20 text-emerald-400">
               Free Entry
             </span>
           )}
@@ -191,7 +191,7 @@ function LawCard({ law, index }: { law: Law; index: number }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className={`p-5 rounded-2xl bg-[#0a0a0a] border transition-colors ${
+      className={`p-5  bg-[#0a0a0a] border transition-colors ${
         law.severity === "high"
           ? "border-red-600/15 hover:border-red-600/30"
           : law.severity === "medium"
@@ -203,12 +203,12 @@ function LawCard({ law, index }: { law: Law; index: number }) {
       <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Severity pill */}
-          <span className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full border ${sev.bg} ${sev.border} ${sev.color}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${law.severity === "high" ? "bg-red-400 animate-pulse" : law.severity === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
+          <span className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1  border ${sev.bg} ${sev.border} ${sev.color}`}>
+            <span className={`w-1.5 h-1.5  ${law.severity === "high" ? "bg-red-400 animate-pulse" : law.severity === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
             {sev.label}
           </span>
           {/* Category pill */}
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${catCfg ? `${catCfg.bg} ${catCfg.border} ${catCfg.color}` : "bg-[#111] border-[#1e1e1e] text-zinc-500"}`}>
+          <span className={`text-[10px] font-bold px-2 py-0.5  border ${catCfg ? `${catCfg.bg} ${catCfg.border} ${catCfg.color}` : "bg-[#111] border-[#1e1e1e] text-zinc-500"}`}>
             {law.category}
           </span>
         </div>
@@ -216,13 +216,13 @@ function LawCard({ law, index }: { law: Law; index: number }) {
         {/* Fine + black points */}
         <div className="flex items-center gap-2 shrink-0">
           {law.blackPoints ? (
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800/60 border border-zinc-700/50">
+            <div className="flex items-center gap-1 px-2.5 py-1  bg-zinc-800/60 border border-zinc-700/50">
               <span className="text-[10px] font-bold text-zinc-300">{law.blackPoints}</span>
               <span className="text-[10px] text-zinc-500">pts</span>
             </div>
           ) : null}
           {law.fine && (
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-950/40 border border-red-700/30">
+            <div className="flex items-center gap-1 px-2.5 py-1  bg-red-950/40 border border-red-700/30">
               <span className="text-[10px] font-bold text-red-400">{law.fine}</span>
             </div>
           )}
@@ -295,7 +295,7 @@ export default function NewsPage() {
             <button
               onClick={loadData}
               disabled={loading}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#1a1a1a] bg-[#0a0a0a] text-xs font-semibold text-zinc-500 hover:text-white hover:border-zinc-700 transition-all disabled:opacity-40"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-2  border border-[#1a1a1a] bg-[#0a0a0a] text-xs font-semibold text-zinc-500 hover:text-white hover:border-zinc-700 transition-all disabled:opacity-40"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               Refresh
@@ -305,19 +305,19 @@ export default function NewsPage() {
           {/* Summary stats */}
           {!loading && !error && (
             <div className="flex gap-3 mt-4 flex-wrap">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                 <Newspaper className="w-3.5 h-3.5 text-blue-400" />
                 <span className="text-xs font-bold text-zinc-300">{data.news.length} Articles</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                 <CalendarDays className="w-3.5 h-3.5 text-purple-400" />
                 <span className="text-xs font-bold text-zinc-300">{data.events.length} Events</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                 <Shield className="w-3.5 h-3.5 text-red-400" />
                 <span className="text-xs font-bold text-zinc-300">{highCount} High-Risk Laws</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
                 <span className="text-xs font-bold text-zinc-300">{medCount} Medium Laws</span>
               </div>
@@ -333,7 +333,7 @@ export default function NewsPage() {
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                  className={`relative flex items-center gap-2 px-4 py-2.5  text-sm font-semibold border transition-all ${
                     isActive
                       ? "bg-blue-600/15 border-blue-600/30 text-blue-400"
                       : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
@@ -342,7 +342,7 @@ export default function NewsPage() {
                   <Icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{t.label}</span>
                   {t.count > 0 && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold transition-colors ${
+                    <span className={`text-[10px] px-1.5 py-0.5  font-bold transition-colors ${
                       isActive ? "bg-blue-600/20 text-blue-300" : "bg-[#111] text-zinc-600"
                     }`}>
                       {t.count}
@@ -360,18 +360,18 @@ export default function NewsPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="skeleton h-52 rounded-2xl" />
+              <div key={i} className="skeleton h-52 " />
             ))}
           </div>
         ) : error ? (
           <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16  bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-8 h-8 text-zinc-700" />
             </div>
             <p className="text-zinc-400 mb-4 font-semibold">Failed to load content</p>
             <button
               onClick={loadData}
-              className="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors"
+              className="px-5 py-2.5 bg-blue-600 text-white  text-sm font-semibold hover:bg-blue-500 transition-colors"
             >
               Try Again
             </button>
@@ -450,10 +450,10 @@ export default function NewsPage() {
                 exit={{ opacity: 0 }}
               >
                 {/* Disclaimer */}
-                <div className="p-4 rounded-xl bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
+                <div className="p-4  bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
                   <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-300/80 leading-relaxed">
-                    This information is for guidance only. Always refer to official RTA and UAE government sources for the most up-to-date regulations and fines.
+                    This information is for guidance only. Always refer to official RTA and UAE government sources for the most up- regulations and fines.
                   </p>
                 </div>
 
@@ -465,7 +465,7 @@ export default function NewsPage() {
                       { label: "Medium",    count: medCount,  color: "text-amber-400", bg: "bg-amber-600/10", border: "border-amber-600/20" },
                       { label: "Low Risk",  count: data.laws.filter(l => l.severity === "low").length, color: "text-blue-400", bg: "bg-blue-600/10", border: "border-blue-600/20" },
                     ].map(s => (
-                      <div key={s.label} className={`text-center p-4 rounded-xl ${s.bg} border ${s.border}`}>
+                      <div key={s.label} className={`text-center p-4  ${s.bg} border ${s.border}`}>
                         <p className={`text-2xl font-black ${s.color}`}>{s.count}</p>
                         <p className="text-[11px] text-zinc-500 mt-0.5 font-semibold">{s.label}</p>
                       </div>
@@ -485,7 +485,7 @@ export default function NewsPage() {
                       return (
                         <div key={sev}>
                           <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2 ${sevCfg.color}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${sev === "high" ? "bg-red-400" : sev === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
+                            <span className={`w-1.5 h-1.5  ${sev === "high" ? "bg-red-400" : sev === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
                             {sevCfg.label}
                           </p>
                           <div className="space-y-3 mb-6">

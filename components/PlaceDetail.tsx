@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Star, Clock, Phone, Globe, MapPin, Navigation,
-  ExternalLink, Share2, Bookmark, ChevronDown, ChevronUp,
-  Sparkles, User, Copy, Check, BadgeCheck, Package,
+  ExternalLink, Share2, ChevronDown, ChevronUp,
+  Sparkles, User, BadgeCheck, Package,
 } from "lucide-react";
 import type { PlaceDetails, PlaceReview } from "@/types";
 
@@ -23,9 +23,9 @@ function RatingStars({ rating, size = "sm" }: { rating: number; size?: "sm" | "l
         <Star
           key={star}
           className={`${starSize} ${star <= Math.round(rating)
-            ? "fill-blue-500 text-blue-500"
-            : "fill-zinc-800 text-zinc-800"
-          }`}
+            ? "fill-white text-white"
+            : "fill-[#111] text-[#111]"
+            }`}
         />
       ))}
     </div>
@@ -36,27 +36,28 @@ function ReviewCard({ review }: { review: PlaceReview }) {
   const [expanded, setExpanded] = useState(false);
   const isLong = review.text.length > 200;
   return (
-    <div className="py-4 border-b border-zinc-800/60 last:border-0">
-      <div className="flex items-start gap-3">
-        <div className="w-8 h-8 rounded-full bg-[#1a1a1a] flex items-center justify-center shrink-0 overflow-hidden">
+    <div className="py-6 border-b border-white/20 last:border-0 relative">
+      <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/20" />
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 border border-white/20 bg-[#111] flex items-center justify-center shrink-0">
           {review.profile_photo_url ? (
-            <img src={review.profile_photo_url} alt="" className="w-full h-full rounded-full object-cover" />
+            <img src={review.profile_photo_url} alt="" className="w-full h-full object-cover filter grayscale" />
           ) : (
-            <User className="w-4 h-4 text-zinc-600" />
+            <User className="w-5 h-5 text-white" />
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-white truncate">{review.author_name}</span>
-            <span className="text-[11px] text-zinc-600 shrink-0">{review.relative_time_description}</span>
+          <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
+            <span className="text-xs font-black uppercase text-white tracking-widest truncate">{review.author_name}</span>
+            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">{review.relative_time_description}</span>
           </div>
-          <div className="mt-1"><RatingStars rating={review.rating} /></div>
-          <p className="mt-2 text-sm text-zinc-400 leading-relaxed break-words">
+          <div className="mb-4"><RatingStars rating={review.rating} /></div>
+          <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-relaxed break-words">
             {isLong && !expanded ? review.text.slice(0, 200) + "..." : review.text}
           </p>
           {isLong && (
-            <button onClick={() => setExpanded(!expanded)} className="text-xs text-blue-500 mt-1.5 hover:text-blue-400 font-medium">
-              {expanded ? "Show less" : "Read more"}
+            <button onClick={() => setExpanded(!expanded)} className="text-[10px] font-black text-white mt-4 border border-white px-3 py-1 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">
+              {expanded ? "[ COMPRESS ]" : "[ EXPAND ]"}
             </button>
           )}
         </div>
@@ -72,7 +73,6 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
   const [showHours, setShowHours] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!placeId) { setDetails(null); return; }
@@ -99,199 +99,152 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
     return `https://www.google.com/maps/dir/${origin}/${dest}`;
   };
 
-  const copyAddress = () => {
-    if (details?.formatted_address) {
-      navigator.clipboard.writeText(details.formatted_address);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   const isPartsStore = details?.types?.includes("store") || details?.name?.toLowerCase().includes("parts");
 
   return (
     <AnimatePresence>
       {placeId && (
         <>
-          {/* Backdrop on mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 z-40 sm:hidden"
+            className="fixed inset-0 bg-[#000]/80 z-40 sm:hidden"
           />
 
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 220 }}
-            className="fixed inset-y-0 right-0 w-full sm:w-[440px] bg-zinc-950 border-l border-[#1a1a1a] z-50 flex flex-col overflow-hidden shadow-2xl"
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-[#050505] border-l border-white z-50 flex flex-col overflow-hidden"
           >
-            {/* ── Header ── */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/60 shrink-0">
-              <div className="flex items-center gap-2">
+            {/* ── Brutalist Header ── */}
+            <div className="flex items-center justify-between border-grid-b bg-white text-black shrink-0">
+              <div className="flex items-center gap-3 px-6 py-4">
                 {isPartsStore ? (
-                  <Package className="w-4 h-4 text-orange-400" />
+                  <Package className="w-5 h-5 text-black" />
                 ) : (
-                  <BadgeCheck className="w-4 h-4 text-blue-400" />
+                  <BadgeCheck className="w-5 h-5 text-black" />
                 )}
-                <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                  {isPartsStore ? "Parts Store" : "Service Centre"}
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  {isPartsStore ? "HARDWARE NODE" : "SERVICE CENTRE"}
                 </span>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full bg-[#1a1a1a] hover:bg-zinc-800 transition-colors"
+                className="w-16 h-full flex items-center justify-center border-l border-black hover:bg-black hover:text-white transition-colors"
               >
-                <X className="w-4 h-4 text-zinc-400" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* ── Scrollable body ── */}
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+            {/* ── Scrollable Body ── */}
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-12">
               {loading ? (
-                <div className="p-5 space-y-4">
-                  <div className="skeleton h-52 w-full rounded-2xl" />
-                  <div className="skeleton h-6 w-3/4 rounded-lg" />
-                  <div className="skeleton h-4 w-1/2 rounded-lg" />
-                  <div className="space-y-2 pt-2">
-                    <div className="skeleton h-4 w-full rounded-lg" />
-                    <div className="skeleton h-4 w-2/3 rounded-lg" />
-                    <div className="skeleton h-4 w-4/5 rounded-lg" />
+                <div className="p-8 space-y-6">
+                  <div className="h-48 w-full bg-[#111] animate-pulse border border-white/20" />
+                  <div className="h-8 w-3/4 bg-[#111] animate-pulse border border-white/20" />
+                  <div className="h-4 w-1/2 bg-[#111] animate-pulse" />
+                  <div className="space-y-3 pt-6 border-t border-white/20">
+                    <div className="h-4 w-full bg-[#111] animate-pulse" />
+                    <div className="h-4 w-2/3 bg-[#111] animate-pulse" />
                   </div>
-                  <div className="skeleton h-24 w-full rounded-xl mt-4" />
                 </div>
               ) : details ? (
                 <>
-                  {/* Photos */}
+                  {/* Photos Grid */}
                   {details.photos && details.photos.length > 0 && (
-                    <div className="relative">
-                      <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory scrollbar-none h-56">
+                    <div className="border-b border-white">
+                      <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none h-64 bg-[#111]">
                         {details.photos.slice(0, 8).map((photo, i) => (
                           <img
                             key={i}
                             src={`/api/photo?ref=${photo.photo_reference}&maxwidth=600`}
                             alt={`${details.name} ${i + 1}`}
-                            className={`h-full shrink-0 snap-center object-cover cursor-pointer transition-all duration-200 ${
-                              i === 0 ? "w-full" : "w-64"
-                            } ${i === activePhotoIndex ? "opacity-100" : "opacity-70 hover:opacity-90"}`}
+                            className={`h-full shrink-0 snap-center object-cover cursor-pointer transition-all duration-500 filter ${i === 0 ? "w-full" : "w-72 border-l border-black"
+                              } ${i === activePhotoIndex ? "grayscale-0" : "grayscale opacity-50 hover:opacity-100 hover:grayscale-0"}`}
                             onClick={() => setActivePhotoIndex(i)}
                             loading="lazy"
                           />
                         ))}
                       </div>
-                      <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded-full text-[11px] font-medium text-zinc-300">
-                        {details.photos.length} photos
+                      <div className="px-4 py-2 bg-black text-white text-[9px] font-black tracking-widest uppercase border-t border-white/20">
+                        {details.photos.length} VISUAL RECORDS
                       </div>
                     </div>
                   )}
 
-                  <div className="p-5 space-y-5">
-                    {/* Name, Rating */}
-                    <div>
-                      <h2 className="text-xl font-bold text-white leading-tight pr-4">{details.name}</h2>
-                      <div className="flex flex-wrap items-center gap-2.5 mt-2">
-                        {details.rating && (
-                          <>
-                            <span className="text-xl font-bold text-blue-500">{details.rating.toFixed(1)}</span>
+                  <div className="p-8">
+                    {/* Header Info */}
+                    <div className="mb-8">
+                      <h2 className="text-3xl font-black text-white leading-[0.9] tracking-tighter uppercase mb-6">{details.name}</h2>
+
+                      {details.rating && (
+                        <div className="flex items-center gap-4 border border-white/20 p-3 w-fit">
+                          <span className="text-2xl font-black text-white leading-none">{details.rating.toFixed(1)}</span>
+                          <div className="flex flex-col gap-1 border-l border-white/20 pl-4">
                             <RatingStars rating={details.rating} size="lg" />
                             {details.user_ratings_total && (
-                              <span className="text-sm text-zinc-500">
-                                {details.user_ratings_total.toLocaleString()} reviews
+                              <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
+                                {details.user_ratings_total} EVALUATIONS
                               </span>
                             )}
-                          </>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2 mt-2">
-                        {details.business_status === "OPERATIONAL" && (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-600/10 border border-emerald-600/20 text-emerald-400 font-medium">
-                            ● Operational
-                          </span>
-                        )}
-                        {details.price_level !== undefined && (
-                          <span className="text-sm text-zinc-500">
-                            {"$".repeat(Math.max(1, details.price_level || 1))}
-                          </span>
-                        )}
-                        <span className="text-sm text-zinc-600 capitalize">
-                          {isPartsStore ? "Auto parts" : "Auto repair"}
-                        </span>
-                      </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="grid grid-cols-2 gap-2">
+                    {/* Action Grid */}
+                    <div className="grid grid-cols-2 gap-0 border border-white mb-8 bg-[#000]">
                       <a
                         href={getDirectionsUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-600/20"
+                        className="flex flex-col items-center justify-center gap-3 p-4 border-r border-white hover:bg-white hover:text-black transition-colors group"
                       >
-                        <Navigation className="w-4 h-4" />
-                        Directions
+                        <Navigation className="w-5 h-5 text-white group-hover:text-black" />
+                        <span className="text-[10px] font-black tracking-widest uppercase">NAVIGATE</span>
                       </a>
-                      {details.formatted_phone_number ? (
-                        <a
-                          href={`tel:${details.formatted_phone_number}`}
-                          className="flex items-center justify-center gap-2 py-3 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl font-semibold text-sm text-white transition-colors"
-                        >
-                          <Phone className="w-4 h-4" />
-                          Call
-                        </a>
-                      ) : (
-                        <button className="flex items-center justify-center gap-2 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-600 cursor-default">
-                          <Phone className="w-4 h-4" />
-                          No phone
-                        </button>
-                      )}
-                      <button
-                        onClick={copyAddress}
-                        className="flex items-center justify-center gap-2 py-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl text-sm text-zinc-400 hover:text-white transition-all"
-                      >
-                        {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                        {copied ? "Copied!" : "Copy address"}
-                      </button>
-                      <button className="flex items-center justify-center gap-2 py-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl text-sm text-zinc-400 hover:text-white transition-all">
-                        <Bookmark className="w-4 h-4" />
-                        Save
+                      <button className="flex flex-col items-center justify-center gap-3 p-4 hover:bg-white hover:text-black transition-colors group">
+                        <Share2 className="w-5 h-5 text-white group-hover:text-black" />
+                        <span className="text-[10px] font-black tracking-widest uppercase">TRANSMIT</span>
                       </button>
                     </div>
 
-                    {/* Info Section */}
-                    <div className="space-y-3.5 py-4 border-t border-b border-zinc-800/60">
+                    {/* Info Lines */}
+                    <div className="space-y-0 border border-white/20 bg-[#0a0a0a] mb-8">
                       {/* Address */}
-                      <div className="flex items-start gap-3">
-                        <MapPin className="w-4 h-4 text-zinc-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-zinc-400 leading-relaxed">{details.formatted_address}</p>
+                      <div className="flex items-start gap-4 p-4 border-b border-white/20">
+                        <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 leading-relaxed">{details.formatted_address}</p>
                       </div>
 
                       {/* Hours */}
                       {details.opening_hours && (
-                        <div className="flex items-start gap-3">
-                          <Clock className="w-4 h-4 text-zinc-600 shrink-0 mt-0.5" />
+                        <div className="flex items-start gap-4 p-4 border-b border-white/20">
+                          <Clock className="w-4 h-4 text-white shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
                             <button
                               onClick={() => setShowHours(!showHours)}
-                              className="flex items-center gap-2 text-sm"
+                              className="flex items-center justify-between w-full"
                             >
-                              <span className={details.opening_hours.open_now ? "text-emerald-400 font-semibold" : "text-red-400 font-semibold"}>
-                                {details.opening_hours.open_now ? "Open now" : "Closed"}
+                              <span className={`text-[10px] font-black tracking-widest uppercase ${details.opening_hours.open_now ? "text-white" : "text-zinc-600"}`}>
+                                {details.opening_hours.open_now ? "STATUS: ONLINE" : "STATUS: OFFLINE"}
                               </span>
                               {showHours
-                                ? <ChevronUp className="w-3.5 h-3.5 text-zinc-600" />
-                                : <ChevronDown className="w-3.5 h-3.5 text-zinc-600" />}
+                                ? <ChevronUp className="w-4 h-4 text-white" />
+                                : <ChevronDown className="w-4 h-4 text-white" />}
                             </button>
                             {showHours && details.opening_hours.weekday_text && (
-                              <div className="mt-2.5 space-y-1.5 bg-zinc-900 rounded-xl p-3 border border-zinc-800">
+                              <div className="mt-4 space-y-2 border-t border-white/20 pt-4">
                                 {details.opening_hours.weekday_text.map((day) => {
                                   const [name, ...rest] = day.split(": ");
                                   return (
-                                    <div key={day} className="flex justify-between text-xs">
-                                      <span className="text-zinc-500 font-medium w-24 shrink-0">{name}</span>
-                                      <span className="text-zinc-400 text-right">{rest.join(": ")}</span>
+                                    <div key={day} className="flex justify-between text-[10px] font-bold uppercase tracking-widest">
+                                      <span className="text-zinc-600 w-24 shrink-0">{name}</span>
+                                      <span className="text-zinc-300 text-right">{rest.join(": ")}</span>
                                     </div>
                                   );
                                 })}
@@ -303,74 +256,45 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
 
                       {/* Phone */}
                       {details.formatted_phone_number && (
-                        <div className="flex items-center gap-3">
-                          <Phone className="w-4 h-4 text-zinc-600 shrink-0" />
-                          <a
-                            href={`tel:${details.formatted_phone_number}`}
-                            className="text-sm text-blue-400 hover:text-blue-300 font-medium"
-                          >
+                        <div className="flex items-center gap-4 p-4 border-b border-white/20">
+                          <Phone className="w-4 h-4 text-white shrink-0" />
+                          <a href={`tel:${details.formatted_phone_number}`} className="text-[11px] font-black tracking-widest uppercase text-white hover:text-zinc-400">
                             {details.formatted_phone_number}
                           </a>
                         </div>
                       )}
 
-                      {/* Website */}
+                      {/* Web */}
                       {details.website && (
-                        <div className="flex items-center gap-3">
-                          <Globe className="w-4 h-4 text-zinc-600 shrink-0" />
-                          <a
-                            href={details.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-400 hover:text-blue-300 truncate"
-                          >
+                        <div className="flex items-center gap-4 p-4">
+                          <Globe className="w-4 h-4 text-white shrink-0" />
+                          <a href={details.website} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black tracking-widest uppercase text-white hover:text-zinc-400 truncate">
                             {details.website.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
-                          </a>
-                        </div>
-                      )}
-
-                      {/* Google Maps */}
-                      {details.url && (
-                        <div className="flex items-center gap-3">
-                          <ExternalLink className="w-4 h-4 text-zinc-600 shrink-0" />
-                          <a
-                            href={details.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-400 hover:text-blue-300"
-                          >
-                            View on Google Maps
                           </a>
                         </div>
                       )}
                     </div>
 
-                    {/* AI Summary */}
+                    {/* AI Insight Module */}
                     {reviewSummary && (
-                      <div className="p-4 bg-blue-600/5 border border-blue-600/15 rounded-xl">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Sparkles className="w-4 h-4 text-blue-500" />
-                          <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider">AI Summary</span>
+                      <div className="p-6 border border-white bg-[#000] mb-8 relative">
+                        <div className="absolute top-0 right-0 w-8 h-8 border-b border-l border-white/20" />
+                        <div className="flex items-center gap-3 mb-4 inline-flex bg-white text-black px-3 py-1">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">AI SUMMARY MODULE</span>
                         </div>
-                        <p className="text-sm text-zinc-400 leading-relaxed">{reviewSummary}</p>
+                        <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest leading-relaxed">{reviewSummary}</p>
                       </div>
                     )}
 
-                    {/* Editorial Summary */}
-                    {details.editorial_summary?.overview && !reviewSummary && (
-                      <div className="p-4 bg-zinc-900 rounded-xl border border-zinc-800">
-                        <p className="text-sm text-zinc-400 leading-relaxed italic">
-                          "{details.editorial_summary.overview}"
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Reviews */}
+                    {/* Reviews list */}
                     {details.reviews && details.reviews.length > 0 && (
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-sm font-bold text-white">Customer Reviews</h3>
-                          <span className="text-[11px] text-zinc-600">{details.reviews.length} reviews</span>
+                      <div className="border border-white/20 p-6 bg-[#000]">
+                        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/20">
+                          <h3 className="text-sm font-black text-white uppercase tracking-widest">FIELD REPORTS</h3>
+                          <span className="text-[10px] font-black text-zinc-500 bg-white/5 px-2 py-1 border border-white/10 uppercase tracking-widest">
+                            {details.reviews.length} ENTRIES
+                          </span>
                         </div>
                         <div>
                           {(showAllReviews ? details.reviews : details.reviews.slice(0, 3)).map((review, i) => (
@@ -380,33 +304,13 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
                         {details.reviews.length > 3 && (
                           <button
                             onClick={() => setShowAllReviews(!showAllReviews)}
-                            className="w-full mt-3 py-2.5 text-sm font-medium text-blue-500 hover:bg-blue-600/5 rounded-xl transition-colors border border-zinc-800 hover:border-blue-600/20"
+                            className="w-full mt-6 py-4 border border-white bg-transparent text-white text-[10px] font-black tracking-widest uppercase hover:bg-white hover:text-black transition-colors"
                           >
-                            {showAllReviews ? "Show fewer reviews" : `See all ${details.reviews.length} reviews`}
+                            {showAllReviews ? "COLLAPSE REPORTS" : `LOAD ALL ${details.reviews.length} REPORTS`}
                           </button>
                         )}
                       </div>
                     )}
-
-                    {/* Share */}
-                    <div className="flex gap-2 pt-2 border-t border-zinc-800/60">
-                      <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl text-sm text-zinc-500 hover:text-white transition-all">
-                        <Share2 className="w-4 h-4" />
-                        Share
-                      </button>
-                      <a
-                        href={getDirectionsUrl()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl text-sm text-zinc-500 hover:text-white transition-all"
-                      >
-                        <Navigation className="w-4 h-4" />
-                        Navigate
-                      </a>
-                    </div>
-
-                    {/* Bottom safe area */}
-                    <div className="h-20 md:h-6" />
                   </div>
                 </>
               ) : null}
