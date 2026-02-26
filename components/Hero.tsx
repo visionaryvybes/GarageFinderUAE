@@ -207,20 +207,15 @@ export default function Hero({ onSearch }: HeroProps) {
     <>
       {/* ── MOBILE layout (< sm) ── image at natural aspect ratio, content below */}
       <section className="sm:hidden w-full bg-[#09090b]">
-        {/* Image — 4:3 aspect so car is fully visible, object-bottom focuses on car */}
-        <div className="relative w-full" style={{ aspectRatio: "4/3" }}>
-          <Image
+        {/* Image — full width, natural height, zero cropping */}
+        <div className="relative w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/images/hero.png"
             alt="Premium automotive workshop"
-            fill
-            priority
-            className="object-cover object-bottom"
-            sizes="100vw"
+            className="w-full h-auto block"
           />
-          {/* Soft bottom fade into dark bg */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#09090b]" />
-          {/* Subtle top vignette */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#09090b]/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#09090b]/20 via-transparent to-[#09090b]" />
         </div>
 
         {/* Content */}
