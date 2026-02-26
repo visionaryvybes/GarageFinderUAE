@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useMotionTemplate } from "framer-motion";
 import {
   Package, Star, MapPin, ChevronRight,
   Search, Clock, Activity, Filter, RefreshCw, Zap,
@@ -54,126 +54,134 @@ function inferPartsTags(name: string, address: string): string[] {
 }
 
 function PartsCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult; rank?: number; index?: number; onSelect: (id: string) => void }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const mouseAbsX = useMotionValue(0);
+  const mouseAbsY = useMotionValue(0);
+  const rotateX = useTransform(my, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mx, [-0.5, 0.5], ["-5deg", "5deg"]);
+  const glow = useMotionTemplate`radial-gradient(500px circle at ${mouseAbsX}px ${mouseAbsY}px, rgba(249,115,22,0.12) 0%, transparent 70%)`;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    mx.set((e.clientX - rect.left) / rect.width - 0.5);
+    my.set((e.clientY - rect.top) / rect.height - 0.5);
+    mouseAbsX.set(e.clientX - rect.left);
+    mouseAbsY.set(e.clientY - rect.top);
+  };
+  const handleMouseLeave = () => { mx.set(0); my.set(0); };
+
   const isOpen = shop.opening_hours?.open_now;
-  const isUsed = shop.name.toLowerCase().includes("used") ||
-    shop.name.toLowerCase().includes("second") ||
+  const isUsed = shop.name.toLowerCase().includes("used") || shop.name.toLowerCase().includes("second") ||
     (shop.vicinity || shop.formatted_address || "").toLowerCase().includes("al aweer");
   const tags = inferPartsTags(shop.name, shop.vicinity || shop.formatted_address || "");
   const isFeatured = rank && rank <= 3;
+  const rating = shop.rating || 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      ref={cardRef}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: Math.min((index || 0) * 0.04, 0.5) }}
+      transition={{ duration: 0.35, delay: Math.min((index || 0) * 0.04, 0.5), ease: "easeOut" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={() => onSelect(shop.place_id)}
-      className={`relative rounded-2xl border cursor-pointer active:scale-[0.99] transition-all group overflow-hidden ${
-        isFeatured
-          ? "border-orange-500/25 bg-gradient-to-br from-orange-500/6 via-[var(--surface)] to-[var(--surface)]"
-          : "bg-[var(--surface)] border-[var(--border)] hover:border-orange-500/25 hover:bg-gradient-to-br hover:from-orange-500/3 hover:to-[var(--surface)]"
-      }`}
+      whileTap={{ scale: 0.985 }}
+      style={{ perspective: "1000px" }}
+      className="relative cursor-pointer group"
     >
-      {/* Left accent strip */}
-      <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${
-        isOpen
-          ? "bg-gradient-to-b from-orange-400 to-orange-600"
-          : "bg-gradient-to-b from-zinc-700 to-zinc-800"
-      }`} />
+      <motion.div
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className={`relative rounded-2xl border overflow-hidden ${
+          isFeatured ? "border-orange-500/30 shadow-lg shadow-orange-500/5" : "border-[var(--border)] hover:border-orange-500/25"
+        } bg-[var(--surface)]`}
+      >
+        {/* Cursor-follow glow */}
+        <motion.div className="absolute inset-0 rounded-2xl pointer-events-none z-0" style={{ background: glow }} />
 
-      <div className="p-4 pl-5">
-        <div className="flex items-start gap-3">
-          {/* Rank or icon */}
-          {isFeatured ? (
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 shadow-lg ${
-              rank === 1 ? "bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-amber-500/20" :
-              rank === 2 ? "bg-gradient-to-br from-zinc-300 to-zinc-500 text-white" :
-              "bg-gradient-to-br from-orange-600 to-orange-800 text-white"
-            }`}>
-              #{rank}
-            </div>
-          ) : (
-            <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 group-hover:bg-orange-500/15 transition-colors">
-              <Package className="w-4 h-4 text-orange-400" />
-            </div>
+        {/* Left accent strip */}
+        <div className={`absolute left-0 top-0 bottom-0 w-[3px] z-10 ${
+          isOpen ? "bg-gradient-to-b from-orange-400 to-orange-600" : "bg-gradient-to-b from-zinc-700 to-zinc-800"
+        }`} />
+
+        {/* Image placeholder */}
+        <div className="relative h-36 overflow-hidden bg-gradient-to-br from-[#120a02] via-[#121212] to-[#0e0e16]">
+          <div className="absolute inset-0 flex items-center justify-center opacity-[0.07] pointer-events-none select-none">
+            <Package className="w-20 h-20 text-orange-300" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-transparent" />
+          {isFeatured && (
+            <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-black shadow-lg z-10 ${
+              rank === 1 ? "bg-gradient-to-r from-amber-400 to-amber-600 text-black" :
+              rank === 2 ? "bg-gradient-to-r from-zinc-300 to-zinc-500 text-black" :
+              "bg-gradient-to-r from-orange-600 to-orange-900 text-white"
+            }`}>#{rank}</div>
           )}
-
-          {/* Main info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <p className="font-bold text-[14px] text-[var(--text)] leading-tight truncate pr-1 group-hover:text-orange-400 transition-colors">
-                {shop.name}
-              </p>
-              <div className="flex items-center gap-1 shrink-0">
-                {isUsed && (
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold">
-                    OEM/Used
-                  </span>
-                )}
-                <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                  isOpen
-                    ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                    : "bg-zinc-800/50 border-zinc-700/30 text-zinc-500"
-                }`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
-                  {isOpen ? "Open" : "Closed"}
-                </div>
-              </div>
-            </div>
-
-            {/* Location + rating */}
-            <div className="flex items-center gap-2.5 mt-1 flex-wrap">
-              <div className="flex items-center gap-1 min-w-0">
-                <MapPin className="w-3 h-3 text-zinc-500 shrink-0" />
-                <span className="text-[11px] text-[var(--text-muted)] truncate max-w-[180px]">
-                  {shop.vicinity || shop.formatted_address || "UAE"}
-                </span>
-              </div>
-              {shop.rating && (
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/8 border border-amber-500/15 shrink-0">
-                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                  <span className="text-[11px] font-bold text-amber-300">{shop.rating}</span>
-                  {shop.user_ratings_total && (
-                    <span className="text-[10px] text-zinc-600">
-                      ({shop.user_ratings_total >= 1000 ? `${(shop.user_ratings_total / 1000).toFixed(1)}k` : shop.user_ratings_total})
-                    </span>
-                  )}
-                </div>
+          <div className={`absolute bottom-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border z-10 ${
+            isOpen ? "bg-emerald-950/80 border-emerald-500/30 text-emerald-400 backdrop-blur-sm" : "bg-zinc-900/80 border-zinc-700/40 text-zinc-500 backdrop-blur-sm"
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
+            {isOpen ? "Open Now" : "Closed"}
+          </div>
+          {rating > 0 && (
+            <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-sm border border-amber-500/20 z-10">
+              <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+              <span className="text-[11px] font-bold text-amber-300">{rating}</span>
+              {shop.user_ratings_total && (
+                <span className="text-[10px] text-zinc-500">({shop.user_ratings_total >= 1000 ? `${(shop.user_ratings_total / 1000).toFixed(1)}k` : shop.user_ratings_total})</span>
               )}
             </div>
+          )}
+        </div>
 
-            {/* Parts tags */}
-            <div className="flex flex-wrap gap-1 mt-2">
+        {/* Card body */}
+        <div className="relative z-10 p-4">
+          <div className="flex items-start justify-between gap-2 mb-1.5">
+            <p className="font-bold text-[14px] text-[var(--text)] leading-tight group-hover:text-orange-400 transition-colors line-clamp-1 flex-1">
+              {shop.name}
+            </p>
+            {isUsed && (
+              <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold shrink-0">
+                OEM/Used
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-1 mb-3">
+            <MapPin className="w-3 h-3 text-zinc-500 shrink-0" />
+            <span className="text-[11px] text-[var(--text-muted)] truncate">
+              {shop.vicinity || shop.formatted_address || "UAE"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap gap-1 min-w-0 flex-1">
               {tags.map(tag => (
-                <span key={tag} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--bg)] border border-[var(--border)] text-zinc-500 group-hover:border-[var(--border-glow)] transition-colors">
+                <span key={tag} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-orange-500/10 border border-orange-500/15 text-orange-300/80 group-hover:bg-orange-500/15 transition-colors">
                   {tag}
                 </span>
               ))}
             </div>
+            <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-orange-400 group-hover:translate-x-0.5 transition-all shrink-0" />
           </div>
-
-          <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-orange-400 group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="relative rounded-2xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] shimmer" />
-      <div className="p-4 pl-5 flex items-start gap-3">
-        <div className="shimmer w-10 h-10 rounded-xl shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <div className="shimmer h-4 w-3/4 rounded-lg" />
-            <div className="shimmer h-4 w-14 rounded-full" />
-          </div>
-          <div className="shimmer h-3 w-1/2 rounded-lg" />
-          <div className="flex gap-1 mt-1">
-            <div className="shimmer h-5 w-16 rounded-full" />
-            <div className="shimmer h-5 w-20 rounded-full" />
-          </div>
+    <div className="rounded-2xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
+      <div className="shimmer h-36 w-full" />
+      <div className="p-4 space-y-2.5">
+        <div className="shimmer h-4 w-3/4 rounded-lg" />
+        <div className="shimmer h-3 w-1/2 rounded-lg" />
+        <div className="flex gap-1.5 pt-1">
+          <div className="shimmer h-5 w-16 rounded-full" />
+          <div className="shimmer h-5 w-20 rounded-full" />
+          <div className="shimmer h-5 w-14 rounded-full" />
         </div>
       </div>
     </div>
@@ -311,43 +319,32 @@ export default function PartsPage() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] pb-20 md:pb-6">
 
       {/* Hero Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0d0905] via-[var(--bg)] to-[#09090b] border-b border-[var(--border)]">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/6 via-transparent to-amber-500/4 pointer-events-none" />
-        <div className="absolute top-0 right-1/3 w-64 h-64 rounded-full bg-orange-500/5 blur-3xl pointer-events-none" />
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="badge-orange text-[10px]">OEM · New · Used</span>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--text)]">
-                <span className="text-gradient-orange">UAE</span> Spare Parts
-              </h1>
-              <p className="text-xs text-[var(--text-muted)] mt-1">Engine · brakes · tyres · body parts stores across all emirates</p>
-            </div>
-            <div className="hidden sm:flex flex-col items-end gap-1.5 shrink-0">
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
-                </span>
-                <span className="text-[11px] text-zinc-400 font-medium">
-                  {loading ? "Searching..." : `${filtered.length} stores found`}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                {[
-                  { icon: Package, label: "OEM" },
-                  { icon: RefreshCw, label: "Used" },
-                  { icon: Zap, label: "Performance" },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center gap-1">
-                    <item.icon className="w-3 h-3 text-orange-400" />
-                    <span className="text-[11px] text-zinc-500">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+      <div className="relative overflow-hidden border-b border-[var(--border)]" style={{ background: "linear-gradient(135deg, #0d0803 0%, #09090b 50%, #090a12 100%)" }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/5 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
+        <div className="absolute top-4 right-1/3 w-80 h-80 rounded-full bg-orange-500/6 blur-3xl pointer-events-none" />
+        <div className="max-w-5xl mx-auto px-4 py-10 text-center relative">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="badge-orange text-[10px]">OEM · New · Used</span>
+            <span className="w-1 h-1 rounded-full bg-zinc-700" />
+            <span className="text-[11px] text-zinc-500 font-medium">
+              {loading ? "Searching UAE..." : `${filtered.length} stores found`}
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-orange-100 to-amber-300">
+              UAE Spare Parts
+            </span>
+          </h1>
+          <p className="text-sm md:text-base text-zinc-400 max-w-lg mx-auto mb-6">
+            Engine · brakes · tyres · body parts stores across all 7 emirates
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {["OEM Parts", "Used Parts", "Performance", "Tyres", "Engine Parts", "Bodywork"].map(pill => (
+              <span key={pill} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white/80 transition-all cursor-pointer">
+                {pill}
+              </span>
+            ))}
           </div>
         </div>
       </div>
@@ -474,7 +471,7 @@ export default function PartsPage() {
 
         {/* Results */}
         {loading && filtered.length === 0 ? (
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : error ? (
@@ -506,7 +503,7 @@ export default function PartsPage() {
             </button>
           </div>
         ) : (
-          <div className={`space-y-2 transition-opacity duration-300 ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 transition-opacity duration-300 ${loading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
             {filtered.map((shop, i) => (
               <PartsCard
                 key={shop.place_id}
