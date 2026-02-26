@@ -3,11 +3,11 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  AreaChart, Area, PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend,
+  AreaChart, Area, PieChart, Pie, Cell, CartesianGrid,
 } from "recharts";
 import {
-  TrendingUp, Wrench, Package, Car, MapPin, Clock,
-  Star, Activity, Calendar, ChevronRight, ArrowRight,
+  TrendingUp, Wrench, Package, Car,
+  Star, Activity, Calendar, ArrowRight,
   Newspaper, Zap, Globe, Shield,
 } from "lucide-react";
 import Link from "next/link";
@@ -92,20 +92,20 @@ function UAECalendar() {
   const dayName = uaeTime.toLocaleDateString("en-US", { weekday: "long", timeZone: "Asia/Dubai" });
 
   return (
-    <div className="p-4  bg-zinc-900 border border-zinc-800">
+    <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
-            <Calendar className="w-3 h-3" /> UAE TIME
+            <Calendar className="w-3 h-3" /> UAE Time
           </p>
-          <p className="text-2xl font-black text-white mt-0.5 font-mono">{timeStr}</p>
+          <p className="text-2xl font-black text-[var(--text)] mt-0.5 font-mono">{timeStr}</p>
           <p className="text-[11px] text-zinc-500">{dayName} · UTC+4</p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-black text-white">{monthName}</p>
+          <p className="text-sm font-black text-[var(--text)]">{monthName}</p>
           <p className="text-xs text-zinc-600">{year}</p>
           <div className="flex items-center gap-1 mt-1 justify-end">
-            <span className="w-2 h-2  bg-emerald-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-[10px] text-emerald-500">Live</span>
           </div>
         </div>
@@ -119,13 +119,13 @@ function UAECalendar() {
         {cells.map((day, i) => (
           <div
             key={i}
-            className={`aspect-square flex items-center justify-center text-[11px]  font-semibold transition-colors ${
+            className={`aspect-square flex items-center justify-center text-[11px] rounded-md font-semibold transition-colors ${
               day === null ? "" :
               day === today
-                ? "bg-blue-600 text-white font-black"
+                ? "bg-orange-500 text-white font-black"
                 : day % 7 === 6 || day % 7 === 0
                   ? "text-zinc-600"
-                  : "text-zinc-400 hover:bg-[#1a1a1a]"
+                  : "text-zinc-400 hover:bg-[var(--surface-2)]"
             }`}
           >
             {day}
@@ -144,15 +144,16 @@ function StatCard({ label, value, sub, color, icon: Icon }: {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4  bg-zinc-900 border border-zinc-800"
+      className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]"
+      style={{ background: `linear-gradient(135deg, ${color}08 0%, var(--surface) 100%)`, borderColor: color + "20" }}
     >
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-[11px] text-zinc-600 font-semibold mb-1">{label}</p>
-          <p className={`text-2xl font-black ${color}`}>{value}</p>
-          {sub && <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>}
+          <p className="text-[11px] text-zinc-500 font-medium mb-1">{label}</p>
+          <p className="text-2xl font-black" style={{ color }}>{value}</p>
+          {sub && <p className="text-[10px] text-zinc-500 mt-0.5">{sub}</p>}
         </div>
-        <div className="w-9 h-9  flex items-center justify-center" style={{ background: color + "20" }}>
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: color + "15" }}>
           <Icon className="w-4 h-4" style={{ color }} />
         </div>
       </div>
@@ -162,24 +163,24 @@ function StatCard({ label, value, sub, color, icon: Icon }: {
 
 function LiveFeed() {
   const feeds = [
-    { icon: "🔧", text: "New garage added in Al Quoz, Dubai", time: "2m ago" },
-    { icon: "⭐", text: "FastFix Auto Center rated 4.9 (412 reviews)", time: "5m ago" },
-    { icon: "📦", text: "OEM parts stock updated in Mussafah", time: "12m ago" },
-    { icon: "🛞", text: "Tyre deals live at Emirates Motors, RAK", time: "18m ago" },
-    { icon: "🤖", text: "AI search: 1,240 queries today", time: "Live" },
+    { icon: "🔧", text: "New garage added in Al Quoz, Dubai", time: "2m ago", color: "bg-orange-500/10 border-orange-500/20" },
+    { icon: "⭐", text: "FastFix Auto Center rated 4.9 (412 reviews)", time: "5m ago", color: "bg-amber-500/10 border-amber-500/20" },
+    { icon: "📦", text: "OEM parts stock updated in Mussafah", time: "12m ago", color: "bg-violet-500/10 border-violet-500/20" },
+    { icon: "🛞", text: "Tyre deals live at Emirates Motors, RAK", time: "18m ago", color: "bg-cyan-500/10 border-cyan-500/20" },
+    { icon: "🤖", text: "AI search: 1,240 queries today", time: "Live", color: "bg-violet-500/10 border-violet-500/20" },
   ];
   return (
-    <div className="p-4  bg-zinc-900 border border-zinc-800">
-      <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-        <Activity className="w-3 h-3" /> LIVE FEED
-        <span className="ml-1 px-1.5 py-0.5  bg-emerald-500/10 text-emerald-400 text-[9px] border border-emerald-500/20">LIVE</span>
+    <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+      <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1.5">
+        <Activity className="w-3 h-3 text-emerald-400" /> Live Feed
+        <span className="ml-auto px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] font-bold border border-emerald-500/20">● LIVE</span>
       </p>
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {feeds.map((f, i) => (
-          <div key={i} className="flex items-start gap-2.5">
-            <span className="text-base shrink-0">{f.icon}</span>
+          <div key={i} className={`flex items-start gap-2.5 p-2 rounded-xl border ${f.color}`}>
+            <span className="text-sm shrink-0">{f.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] text-zinc-300 leading-snug">{f.text}</p>
+              <p className="text-[11px] text-[var(--text-muted)] leading-snug">{f.text}</p>
               <p className="text-[10px] text-zinc-600 mt-0.5">{f.time}</p>
             </div>
           </div>
@@ -191,10 +192,10 @@ function LiveFeed() {
 
 function QuickNav() {
   const links = [
-    { href: "/garages", label: "Find Garage", icon: Wrench, color: "#3b82f6", desc: "Service centres UAE-wide" },
-    { href: "/parts", label: "Spare Parts", icon: Package, color: "#f97316", desc: "OEM, new & used parts" },
+    { href: "/garages", label: "Find Garages", icon: Wrench, color: "#f97316", desc: "Service centres UAE-wide" },
+    { href: "/parts", label: "Spare Parts", icon: Package, color: "#f59e0b", desc: "OEM, new & used parts" },
     { href: "/my-car", label: "My Car Advisor", icon: Car, color: "#8b5cf6", desc: "AI maintenance assistant", badge: "AI" },
-    { href: "/news", label: "Auto News", icon: Newspaper, color: "#10b981", desc: "UAE automotive news" },
+    { href: "/news", label: "Auto News", icon: Newspaper, color: "#06b6d4", desc: "UAE automotive news" },
   ];
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -202,21 +203,22 @@ function QuickNav() {
         <Link
           key={l.href}
           href={l.href}
-          className="flex flex-col gap-2 p-3.5  bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors group"
+          className="flex flex-col gap-2 p-3.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-glow)] transition-all group"
+          style={{ background: `linear-gradient(135deg, ${l.color}08 0%, var(--surface) 100%)` }}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8  flex items-center justify-center" style={{ background: l.color + "20" }}>
-              <l.icon className="w-4 h-4" style={{ color: l.color }} />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: l.color + "15" }}>
+              <l.icon className="w-4.5 h-4.5" style={{ color: l.color }} />
             </div>
             {l.badge && (
-              <span className="text-[9px] font-black px-1.5 py-0.5  bg-blue-500/15 text-blue-400 border border-blue-500/20">
+              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/20">
                 {l.badge}
               </span>
             )}
           </div>
           <div>
-            <p className="text-[13px] font-bold text-zinc-200 group-hover:text-white transition-colors">{l.label}</p>
-            <p className="text-[10px] text-zinc-600">{l.desc}</p>
+            <p className="text-[13px] font-bold text-[var(--text)] group-hover:text-white transition-colors">{l.label}</p>
+            <p className="text-[10px] text-zinc-500">{l.desc}</p>
           </div>
         </Link>
       ))}
@@ -227,7 +229,7 @@ function QuickNav() {
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-900 border border-zinc-700  p-2.5 text-xs ">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2.5 text-xs shadow-xl">
       <p className="text-zinc-400 font-semibold mb-1">{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }} className="font-bold">{p.name}: {p.value.toLocaleString()}</p>
@@ -259,20 +261,26 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 pb-20 md:pb-8">
-      {/* Header */}
-      <div className="border-b border-zinc-800/60 bg-zinc-950">
-        <div className="max-w-6xl mx-auto px-3 py-4">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] pb-20 md:pb-8">
+
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0a0809] via-[var(--bg)] to-[#090a0b] border-b border-[var(--border)]">
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-transparent to-orange-500/4 pointer-events-none" />
+        <div className="absolute top-0 left-1/3 w-56 h-56 rounded-full bg-violet-500/5 blur-3xl pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-3 py-5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-black tracking-tight text-white">
-                UAE <span className="text-blue-400">Dashboard</span>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="badge-violet text-[10px]">Real-time Analytics</span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--text)]">
+                UAE Auto <span className="text-gradient-violet">Dashboard</span>
               </h1>
-              <p className="text-xs text-zinc-600 mt-0.5">Auto repair ecosystem · real-time overview</p>
+              <p className="text-xs text-zinc-500 mt-1">Auto repair ecosystem · live market overview</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 px-3 py-1.5  bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
-                <span className="w-1.5 h-1.5  bg-emerald-400 animate-pulse" />
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Data
               </span>
             </div>
@@ -281,11 +289,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-3 py-4 space-y-4">
-        {/* Top stats */}
+        {/* Top KPI stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard label="Total Garages" value="2,205+" sub="Across UAE" color="#3b82f6" icon={Wrench} />
-          <StatCard label="Parts Stores" value="814+" sub="New, OEM & Used" color="#f97316" icon={Package} />
-          <StatCard label="Avg Rating" value="4.3★" sub="Verified reviews" color="#f59e0b" icon={Star} />
+          <StatCard label="Total Garages" value="2,205+" sub="Across UAE" color="#f97316" icon={Wrench} />
+          <StatCard label="Parts Stores" value="814+" sub="New, OEM & Used" color="#f59e0b" icon={Package} />
+          <StatCard label="Avg Rating" value="4.3★" sub="Verified reviews" color="#10b981" icon={Star} />
           <StatCard label="AI Searches" value="1,240" sub="Today" color="#8b5cf6" icon={Zap} />
         </div>
 
@@ -300,10 +308,10 @@ export default function DashboardPage() {
           {/* Center + right: Charts */}
           <div className="lg:col-span-2 space-y-4">
             {/* Search trend area chart */}
-            <div className="p-4  bg-zinc-900 border border-zinc-800">
+            <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> SEARCH ACTIVITY (7 DAYS)
+                <p className="text-xs text-zinc-500 font-semibold flex items-center gap-1.5">
+                  <TrendingUp className="w-3 h-3 text-violet-400" /> Search Activity (7 days)
                 </p>
                 <span className="text-[10px] text-zinc-600">This week</span>
               </div>
@@ -312,20 +320,20 @@ export default function DashboardPage() {
                   <AreaChart data={SEARCH_TREND} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
                     <defs>
                       <linearGradient id="gradSearches" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} />
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="gradGarages" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#f97316" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="day" tick={{ fontSize: 10, fill: "#71717a" }} tickLine={false} axisLine={false} />
                     <YAxis tick={{ fontSize: 10, fill: "#71717a" }} tickLine={false} axisLine={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="searches" stroke="#3b82f6" fill="url(#gradSearches)" strokeWidth={2} name="Total Searches" />
-                    <Area type="monotone" dataKey="garages" stroke="#10b981" fill="url(#gradGarages)" strokeWidth={1.5} name="Garage Searches" />
+                    <Area type="monotone" dataKey="searches" stroke="#8b5cf6" fill="url(#gradSearches)" strokeWidth={2} name="Total Searches" />
+                    <Area type="monotone" dataKey="garages" stroke="#f97316" fill="url(#gradGarages)" strokeWidth={1.5} name="Garage Searches" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -334,9 +342,9 @@ export default function DashboardPage() {
             {/* Emirate bar chart + rating dist side by side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Garages by Emirate */}
-              <div className="p-4  bg-zinc-900 border border-zinc-800">
-                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                  <Globe className="w-3 h-3" /> GARAGES BY EMIRATE
+              <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1.5">
+                  <Globe className="w-3 h-3 text-cyan-400" /> Garages by Emirate
                 </p>
                 <div style={{ height: 160 }}>
                   <ResponsiveContainer width="100%" height="100%">
@@ -344,7 +352,7 @@ export default function DashboardPage() {
                       <XAxis type="number" tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
                       <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: "#71717a" }} tickLine={false} axisLine={false} width={58} />
                       <Tooltip content={<CustomTooltip />} />
-                      <Bar dataKey="garages" name="Garages" radius={[0, 3, 3, 0]}>
+                      <Bar dataKey="garages" name="Garages" radius={[0, 4, 4, 0]}>
                         {EMIRATE_DATA.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                       </Bar>
                     </BarChart>
@@ -353,9 +361,9 @@ export default function DashboardPage() {
               </div>
 
               {/* Rating distribution */}
-              <div className="p-4  bg-zinc-900 border border-zinc-800">
-                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                  <Star className="w-3 h-3" /> RATING DISTRIBUTION
+              <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1.5">
+                  <Star className="w-3 h-3 text-amber-400" /> Rating Distribution
                 </p>
                 <div style={{ height: 160 }}>
                   <ResponsiveContainer width="100%" height="100%">
@@ -363,7 +371,7 @@ export default function DashboardPage() {
                       <XAxis dataKey="range" tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#71717a" }} tickLine={false} axisLine={false} />
                       <Tooltip content={<CustomTooltip />} />
-                      <Bar dataKey="count" name="Garages" radius={[3, 3, 0, 0]}>
+                      <Bar dataKey="count" name="Garages" radius={[4, 4, 0, 0]}>
                         {RATING_DIST.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
                       </Bar>
                     </BarChart>
@@ -375,9 +383,9 @@ export default function DashboardPage() {
             {/* Service mix pie + Top garages */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Service mix */}
-              <div className="p-4  bg-zinc-900 border border-zinc-800">
-                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                  <Activity className="w-3 h-3" /> SERVICE MIX
+              <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1.5">
+                  <Activity className="w-3 h-3 text-violet-400" /> Service Mix
                 </p>
                 <div style={{ height: 140 }} className="flex items-center">
                   <ResponsiveContainer width="60%" height="100%">
@@ -390,8 +398,8 @@ export default function DashboardPage() {
                   <div className="flex-1 space-y-1.5">
                     {SERVICE_MIX.map(s => (
                       <div key={s.name} className="flex items-center gap-1.5">
-                        <span className="w-2 h-2  shrink-0" style={{ background: s.fill }} />
-                        <span className="text-[10px] text-zinc-400">{s.name}</span>
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.fill }} />
+                        <span className="text-[10px] text-[var(--text-muted)]">{s.name}</span>
                         <span className="text-[10px] text-zinc-600 ml-auto">{s.value}%</span>
                       </div>
                     ))}
@@ -400,31 +408,31 @@ export default function DashboardPage() {
               </div>
 
               {/* Top rated live */}
-              <div className="p-4  bg-zinc-900 border border-zinc-800">
-                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1">
-                  <Shield className="w-3 h-3" /> TOP RATED · DUBAI
+              <div className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <p className="text-xs text-zinc-500 font-semibold mb-3 flex items-center gap-1.5">
+                  <Shield className="w-3 h-3 text-orange-400" /> Top Rated · Dubai
                 </p>
                 {loadingLive ? (
                   <div className="space-y-2">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="skeleton h-7 " />
+                      <div key={i} className="shimmer h-7 rounded-xl" />
                     ))}
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {liveGarages.slice(0, 4).map((g, i) => (
-                      <div key={g.place_id} className="flex items-center gap-2">
-                        <span className="text-[10px] font-black text-zinc-600 w-3 shrink-0">#{i + 1}</span>
+                      <div key={g.place_id} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors">
+                        <span className={`text-[10px] font-black w-4 shrink-0 ${i === 0 ? "text-amber-400" : i === 1 ? "text-zinc-400" : "text-zinc-600"}`}>#{i + 1}</span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[11px] font-semibold text-zinc-200 truncate">{g.name}</p>
+                          <p className="text-[11px] font-semibold text-[var(--text)] truncate">{g.name}</p>
                         </div>
                         <div className="flex items-center gap-0.5 shrink-0">
-                          <Star className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" />
-                          <span className="text-[11px] font-black text-zinc-300">{g.rating}</span>
+                          <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                          <span className="text-[11px] font-black text-amber-300">{g.rating}</span>
                         </div>
                       </div>
                     ))}
-                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 mt-1">
+                    <Link href="/garages?q=Dubai" className="flex items-center gap-1 text-[11px] text-orange-400 hover:text-orange-300 mt-1 font-semibold">
                       See all <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
@@ -435,8 +443,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick navigation */}
-        <div className="pt-2">
-          <p className="text-xs text-zinc-600 font-semibold mb-3">QUICK ACCESS</p>
+        <div className="pt-1">
+          <p className="text-xs text-zinc-500 font-semibold mb-3 uppercase tracking-wide">Quick Access</p>
           <QuickNav />
         </div>
       </div>

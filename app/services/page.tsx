@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Wrench, ArrowRight } from "lucide-react";
 import { SERVICES } from "@/lib/services";
 
 export const metadata = {
@@ -9,28 +10,42 @@ export const metadata = {
 
 export default function ServicesPage() {
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Header */}
-            <header className="border-b border-[#1a1a1a] px-6 py-4">
-                <Link href="/" className="text-sm text-zinc-500 hover:text-white transition-colors">
-                    ← Back to Home
-                </Link>
-            </header>
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
 
-            <main className="max-w-7xl mx-auto px-6 py-12">
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-3">
-                    Our <span className="    ">Services</span>
-                </h1>
-                <p className="text-zinc-500 text-lg mb-12 max-w-xl">
-                    15 expert automotive solutions available across all 7 UAE emirates.
-                </p>
+            {/* ── Hero Banner ── */}
+            <div className="border-b border-[var(--border)] bg-gradient-to-b from-orange-950/20 to-transparent">
+                <div className="max-w-7xl mx-auto px-6 py-8">
+                    <div className="flex items-start gap-4">
+                        <div className="relative shrink-0">
+                            <div className="absolute inset-0 rounded-2xl bg-orange-500 blur-lg opacity-20" />
+                            <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-600/20 to-orange-900/20 border border-orange-500/20 flex items-center justify-center">
+                                <Wrench className="w-6 h-6 text-orange-400" />
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <Link href="/" className="text-xs text-[var(--text-subtle)] hover:text-[var(--text-muted)] transition-colors">Home</Link>
+                                <span className="text-[var(--text-subtle)] text-xs">/</span>
+                                <span className="text-xs text-[var(--text-muted)]">Services</span>
+                            </div>
+                            <h1 className="text-2xl md:text-4xl font-black tracking-tighter">
+                                Our <span className="text-gradient-orange">Services</span>
+                            </h1>
+                            <p className="text-[var(--text-muted)] text-sm mt-1 max-w-xl">
+                                15 expert automotive solutions available across all 7 UAE emirates.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <main className="max-w-7xl mx-auto px-6 py-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {SERVICES.map((svc) => (
                         <Link
                             key={svc.id}
                             href={`/services/${svc.slug}`}
-                            className="group relative  overflow-hidden border border-[#1a1a1a] hover:border-blue-600/30 transition-all duration-500"
+                            className="group relative rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--surface)] hover:border-orange-500/30 transition-all duration-300"
                         >
                             {/* Image */}
                             <div className="relative h-48 overflow-hidden">
@@ -41,24 +56,24 @@ export default function ServicesPage() {
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 />
-                                <div className="absolute inset-0  from-[#0a0a0a]  " />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent" />
                             </div>
 
                             {/* Content */}
-                            <div className="p-5 bg-[#0a0a0a]">
+                            <div className="p-5">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-9 h-9  bg-black border border-white/10 flex items-center justify-center">
+                                    <div className="w-9 h-9 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center shrink-0">
                                         <svc.icon className={`w-4 h-4 ${svc.iconColor}`} />
                                     </div>
-                                    <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                                    <h2 className="text-base font-bold text-[var(--text)] group-hover:text-orange-400 transition-colors">
                                         {svc.name}
                                     </h2>
                                 </div>
                                 {svc.desc && (
-                                    <p className="text-sm text-zinc-500">{svc.desc}</p>
+                                    <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-3">{svc.desc}</p>
                                 )}
-                                <span className="inline-block mt-3 text-xs font-semibold text-blue-500 group-hover:text-blue-400">
-                                    Find shops →
+                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-orange-400 group-hover:gap-2 transition-all">
+                                    Find shops <ArrowRight className="w-3 h-3" />
                                 </span>
                             </div>
                         </Link>

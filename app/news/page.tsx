@@ -49,7 +49,7 @@ const TAB_ICONS = { news: Newspaper, events: CalendarDays, laws: Scale };
 const CATEGORY_CONFIG: Record<string, { color: string; bg: string; border: string; icon: React.ElementType }> = {
   Laws:    { color: "text-amber-400",   bg: "bg-amber-600/10",   border: "border-amber-600/20",   icon: Scale      },
   Events:  { color: "text-purple-400",  bg: "bg-purple-600/10",  border: "border-purple-600/20",  icon: CalendarDays },
-  Market:  { color: "text-blue-400",    bg: "bg-blue-600/10",    border: "border-blue-600/20",    icon: TrendingUp },
+  Market:  { color: "text-violet-400",   bg: "bg-violet-600/10",  border: "border-violet-600/20",  icon: TrendingUp },
   EV:      { color: "text-emerald-400", bg: "bg-emerald-600/10", border: "border-emerald-600/20", icon: Zap        },
   Safety:  { color: "text-red-400",     bg: "bg-red-600/10",     border: "border-red-600/20",     icon: Shield     },
   Traffic: { color: "text-orange-400",  bg: "bg-orange-600/10",  border: "border-orange-600/20",  icon: Car        },
@@ -58,12 +58,12 @@ const CATEGORY_CONFIG: Record<string, { color: string; bg: string; border: strin
 const SEVERITY_CONFIG: Record<string, { color: string; bg: string; border: string; label: string }> = {
   high:   { color: "text-red-400",    bg: "bg-red-600/10",    border: "border-red-600/20",    label: "HIGH RISK"  },
   medium: { color: "text-amber-400",  bg: "bg-amber-600/10",  border: "border-amber-600/20",  label: "MEDIUM"     },
-  low:    { color: "text-blue-400",   bg: "bg-blue-600/10",   border: "border-blue-600/20",   label: "LOW RISK"   },
+  low:    { color: "text-cyan-400",    bg: "bg-cyan-600/10",   border: "border-cyan-600/20",    label: "LOW RISK"   },
 };
 
 const EVENT_TYPE_COLORS: Record<string, string> = {
   Race:       "bg-red-600/15 border-red-600/30 text-red-400",
-  Exhibition: "bg-blue-600/15 border-blue-600/30 text-blue-400",
+  Exhibition: "bg-violet-600/15 border-violet-600/30 text-violet-400",
   Show:       "bg-purple-600/15 border-purple-600/30 text-purple-400",
   Meetup:     "bg-emerald-600/15 border-emerald-600/30 text-emerald-400",
   Auction:    "bg-amber-600/15 border-amber-600/30 text-amber-400",
@@ -83,10 +83,10 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="group flex flex-col h-full p-5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/60 hover:bg-[#0d0d0d] transition-all cursor-pointer"
+      className="group flex flex-col h-full p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-glow)] hover:bg-[var(--surface-2)] transition-all cursor-pointer"
     >
       {/* Category bar */}
-      <div className={`flex items-center gap-1.5 px-2.5 py-1  ${cfg.bg} border ${cfg.border} w-fit mb-4`}>
+      <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${cfg.bg} border ${cfg.border} w-fit mb-4`}>
         <Icon className={`w-3 h-3 ${cfg.color}`} />
         <span className={`text-[10px] font-bold tracking-wider uppercase ${cfg.color}`}>{item.category}</span>
       </div>
@@ -108,7 +108,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       <p className="text-[13px] text-zinc-500 leading-relaxed mb-4 line-clamp-2">{item.summary}</p>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
+      <div className="flex items-center justify-between pt-3 border-t border-[var(--border)]">
         <div className="flex items-center gap-3">
           <span className="text-[11px] font-semibold text-zinc-500">{item.source}</span>
           <span className="w-1 h-1  bg-zinc-800" />
@@ -125,7 +125,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
               Live
             </span>
           )}
-          <ExternalLink className={`w-3.5 h-3.5 transition-colors ${item.url ? "text-zinc-600 group-hover:text-blue-400" : "text-zinc-800"}`} />
+          <ExternalLink className={`w-3.5 h-3.5 transition-colors ${item.url ? "text-zinc-600 group-hover:text-orange-400" : "text-zinc-800"}`} />
         </div>
       </div>
     </motion.a>
@@ -142,7 +142,7 @@ function EventCard({ ev, index }: { event?: never; ev: Event; index: number }) {
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="group flex gap-5 p-5  bg-[#0a0a0a] border border-[#1a1a1a] hover:border-zinc-700/50 hover:bg-[#0d0d0d] transition-all cursor-pointer"
+      className="group flex gap-5 p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-glow)] hover:bg-[var(--surface-2)] transition-all cursor-pointer"
     >
       {/* Date block */}
       <div className="shrink-0 flex flex-col items-center justify-center w-16 h-16     border border-zinc-700/50 text-center">
@@ -175,7 +175,7 @@ function EventCard({ ev, index }: { event?: never; ev: Event; index: number }) {
         </div>
       </div>
 
-      <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-blue-400 transition-colors shrink-0 self-center hidden sm:block" />
+      <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-orange-400 transition-colors shrink-0 self-center hidden sm:block" />
     </motion.div>
   );
 }
@@ -191,24 +191,24 @@ function LawCard({ law, index }: { law: Law; index: number }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className={`p-5  bg-[#0a0a0a] border transition-colors ${
+      className={`p-5 rounded-2xl bg-[var(--surface)] border transition-colors ${
         law.severity === "high"
           ? "border-red-600/15 hover:border-red-600/30"
           : law.severity === "medium"
             ? "border-amber-600/15 hover:border-amber-600/25"
-            : "border-[#1a1a1a] hover:border-zinc-700/40"
+            : "border-[var(--border)] hover:border-[var(--border-glow)]"
       }`}
     >
       {/* Top row */}
       <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Severity pill */}
-          <span className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1  border ${sev.bg} ${sev.border} ${sev.color}`}>
-            <span className={`w-1.5 h-1.5  ${law.severity === "high" ? "bg-red-400 animate-pulse" : law.severity === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
+          <span className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full border ${sev.bg} ${sev.border} ${sev.color}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${law.severity === "high" ? "bg-red-400 animate-pulse" : law.severity === "medium" ? "bg-amber-400" : "bg-cyan-400"}`} />
             {sev.label}
           </span>
           {/* Category pill */}
-          <span className={`text-[10px] font-bold px-2 py-0.5  border ${catCfg ? `${catCfg.bg} ${catCfg.border} ${catCfg.color}` : "bg-[#111] border-[#1e1e1e] text-zinc-500"}`}>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${catCfg ? `${catCfg.bg} ${catCfg.border} ${catCfg.color}` : "bg-[var(--surface-2)] border-[var(--border)] text-zinc-500"}`}>
             {law.category}
           </span>
         </div>
@@ -272,30 +272,29 @@ export default function NewsPage() {
   const medCount  = data.laws.filter(l => l.severity === "medium").length;
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
-      {/* ── Page header ── */}
-      <div className="border-b border-[#1a1a1a] bg-[#050505]">
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-3 text-xs text-zinc-600">
-            <Link href="/" className="hover:text-zinc-400 transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-zinc-400">News & Events</span>
-          </div>
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
 
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#090808] via-[var(--bg)] to-[#09090b] border-b border-[var(--border)]">
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-transparent to-cyan-500/3 pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-48 h-48 rounded-full bg-violet-500/5 blur-3xl pointer-events-none" />
+        <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="text-2xl md:text-4xl font-black tracking-tighter text-white mb-1">
-                UAE Auto <span className="text-blue-400">Hub</span>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="badge-violet text-[10px]">Live · News · Laws</span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--text)] mb-1">
+                UAE Auto <span className="text-gradient-violet">Hub</span>
               </h1>
               <p className="text-sm text-zinc-500">
-                Live news, upcoming car events, and UAE traffic laws — all in one place.
+                Live news, upcoming events, and UAE traffic laws — all in one place.
               </p>
             </div>
             <button
               onClick={loadData}
               disabled={loading}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-2  border border-[#1a1a1a] bg-[#0a0a0a] text-xs font-semibold text-zinc-500 hover:text-white hover:border-zinc-700 transition-all disabled:opacity-40"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs font-semibold text-zinc-500 hover:text-[var(--text)] hover:border-[var(--border-glow)] transition-all disabled:opacity-40"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               Refresh
@@ -304,28 +303,28 @@ export default function NewsPage() {
 
           {/* Summary stats */}
           {!loading && !error && (
-            <div className="flex gap-3 mt-4 flex-wrap">
-              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
-                <Newspaper className="w-3.5 h-3.5 text-blue-400" />
-                <span className="text-xs font-bold text-zinc-300">{data.news.length} Articles</span>
+            <div className="flex gap-2 mt-4 flex-wrap">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-violet-500/8 border border-violet-500/15">
+                <Newspaper className="w-3.5 h-3.5 text-violet-400" />
+                <span className="text-xs font-bold text-[var(--text-muted)]">{data.news.length} Articles</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/8 border border-purple-500/15">
                 <CalendarDays className="w-3.5 h-3.5 text-purple-400" />
-                <span className="text-xs font-bold text-zinc-300">{data.events.length} Events</span>
+                <span className="text-xs font-bold text-[var(--text-muted)]">{data.events.length} Events</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/8 border border-red-500/15">
                 <Shield className="w-3.5 h-3.5 text-red-400" />
-                <span className="text-xs font-bold text-zinc-300">{highCount} High-Risk Laws</span>
+                <span className="text-xs font-bold text-[var(--text-muted)]">{highCount} High-Risk Laws</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2  bg-[#0a0a0a] border border-[#1a1a1a]">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/8 border border-amber-500/15">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-xs font-bold text-zinc-300">{medCount} Medium Laws</span>
+                <span className="text-xs font-bold text-[var(--text-muted)]">{medCount} Medium Laws</span>
               </div>
             </div>
           )}
 
           {/* Tabs */}
-          <div className="flex gap-1 mt-5">
+          <div className="flex gap-1.5 mt-5">
             {TABS.map((t) => {
               const Icon = TAB_ICONS[t.id];
               const isActive = tab === t.id;
@@ -333,17 +332,17 @@ export default function NewsPage() {
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2.5  text-sm font-semibold border transition-all ${
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
                     isActive
-                      ? "bg-blue-600/15 border-blue-600/30 text-blue-400"
-                      : "bg-[#0a0a0a] border-[#1a1a1a] text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+                      ? "bg-violet-500/15 border-violet-500/30 text-violet-400"
+                      : "bg-[var(--surface)] border-[var(--border)] text-zinc-500 hover:text-[var(--text)] hover:border-[var(--border-glow)]"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{t.label}</span>
                   {t.count > 0 && (
-                    <span className={`text-[10px] px-1.5 py-0.5  font-bold transition-colors ${
-                      isActive ? "bg-blue-600/20 text-blue-300" : "bg-[#111] text-zinc-600"
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold transition-colors ${
+                      isActive ? "bg-violet-500/20 text-violet-300" : "bg-[var(--bg)] text-zinc-600"
                     }`}>
                       {t.count}
                     </span>
@@ -360,12 +359,12 @@ export default function NewsPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="skeleton h-52 " />
+              <div key={i} className="shimmer h-52 rounded-2xl" />
             ))}
           </div>
         ) : error ? (
           <div className="text-center py-20">
-            <div className="w-16 h-16  bg-[#0a0a0a] border border-[#1a1a1a] flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-8 h-8 text-zinc-700" />
             </div>
             <p className="text-zinc-400 mb-4 font-semibold">Failed to load content</p>
@@ -403,7 +402,7 @@ export default function NewsPage() {
                     {data.news.length > 1 && (
                       <>
                         <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-3 mt-6 flex items-center gap-2">
-                          <TrendingUp className="w-3.5 h-3.5 text-blue-400" /> Latest Updates
+                          <TrendingUp className="w-3.5 h-3.5 text-violet-400" /> Latest Updates
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {data.news.slice(1).map((item, i) => (
@@ -450,7 +449,7 @@ export default function NewsPage() {
                 exit={{ opacity: 0 }}
               >
                 {/* Disclaimer */}
-                <div className="p-4  bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
+                <div className="p-4 rounded-2xl bg-amber-600/5 border border-amber-600/15 flex gap-3 mb-6">
                   <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-300/80 leading-relaxed">
                     This information is for guidance only. Always refer to official RTA and UAE government sources for the most up- regulations and fines.
@@ -463,9 +462,9 @@ export default function NewsPage() {
                     {[
                       { label: "High Risk", count: highCount, color: "text-red-400", bg: "bg-red-600/10", border: "border-red-600/20" },
                       { label: "Medium",    count: medCount,  color: "text-amber-400", bg: "bg-amber-600/10", border: "border-amber-600/20" },
-                      { label: "Low Risk",  count: data.laws.filter(l => l.severity === "low").length, color: "text-blue-400", bg: "bg-blue-600/10", border: "border-blue-600/20" },
+                      { label: "Low Risk",  count: data.laws.filter(l => l.severity === "low").length, color: "text-cyan-400", bg: "bg-cyan-600/10", border: "border-cyan-600/20" },
                     ].map(s => (
-                      <div key={s.label} className={`text-center p-4  ${s.bg} border ${s.border}`}>
+                      <div key={s.label} className={`text-center p-4 rounded-2xl ${s.bg} border ${s.border}`}>
                         <p className={`text-2xl font-black ${s.color}`}>{s.count}</p>
                         <p className="text-[11px] text-zinc-500 mt-0.5 font-semibold">{s.label}</p>
                       </div>
