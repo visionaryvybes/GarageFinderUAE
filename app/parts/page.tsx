@@ -7,6 +7,7 @@ import {
   Search, Clock, Activity, Filter, RefreshCw, Zap,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
@@ -14,7 +15,7 @@ import { type ExtendedPlaceResult } from "@/lib/mock-data";
 import PlaceDetail from "@/components/PlaceDetail";
 
 const PARTS_CATEGORIES = [
-  { label: "All Parts", query: "auto spare parts UAE", color: "#3b82f6" },
+  { label: "All Parts", query: "auto spare parts UAE", color: "#f97316" },
   { label: "Engine", query: "engine parts auto UAE", color: "#ef4444" },
   { label: "Brakes", query: "brake parts auto shop UAE", color: "#f59e0b" },
   { label: "Suspension", query: "suspension parts car UAE", color: "#10b981" },
@@ -107,12 +108,18 @@ function PartsCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult;
           isOpen ? "bg-gradient-to-b from-orange-400 to-orange-600" : "bg-gradient-to-b from-zinc-700 to-zinc-800"
         }`} />
 
-        {/* Image placeholder */}
+        {/* Image area */}
         <div className="relative h-36 overflow-hidden bg-gradient-to-br from-[#120a02] via-[#121212] to-[#0e0e16]">
-          <div className="absolute inset-0 flex items-center justify-center opacity-[0.07] pointer-events-none select-none">
-            <Package className="w-20 h-20 text-orange-300" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-transparent" />
+          {/* Gemini-generated category image */}
+          <Image
+            src={(index ?? 0) % 2 === 0 ? "/images/parts-card-oem.png" : "/images/parts-card-store.png"}
+            alt="Parts store"
+            fill
+            className="object-cover object-center opacity-40 group-hover:opacity-55 transition-opacity duration-500"
+            sizes="(max-width: 640px) 100vw, 50vw"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/20 to-transparent" />
           {isFeatured && (
             <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-black shadow-lg z-10 ${
               rank === 1 ? "bg-gradient-to-r from-amber-400 to-amber-600 text-black" :

@@ -9,6 +9,7 @@ import {
   Activity, Filter, Sparkles, Zap,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell,
@@ -141,16 +142,19 @@ function GarageCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult
             : "bg-gradient-to-b from-zinc-700 to-zinc-800"
         }`} />
 
-        {/* Image placeholder area */}
+        {/* Image area */}
         <div className="relative h-36 overflow-hidden bg-gradient-to-br from-[#1a1008] via-[#121212] to-[#0e0e16]">
-          {/* Decorative car watermark */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-[0.07] pointer-events-none select-none">
-            <svg viewBox="0 0 64 24" fill="currentColor" className="w-40 text-orange-300">
-              <path d="M10.5 14.5H4.5C3.4 14.5 2.5 13.6 2.5 12.5V11C2.5 9.9 3.1 8.9 4 8.4L7 6.9C7.6 6.6 8.3 6.5 9 6.5H14.5M10.5 14.5H53.5M53.5 14.5H59.5C60.6 14.5 61.5 13.6 61.5 12.5V11C61.5 9.9 60.9 8.9 60 8.4L57 6.9C56.4 6.6 55.7 6.5 55 6.5H49.5M53.5 14.5V15M10.5 14.5V15M14.5 6.5H49.5M14.5 6.5L17 4H47L49.5 6.5M17 4L16 2H48L47 4" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+          {/* Gemini-generated category image */}
+          <Image
+            src={(index ?? 0) % 2 === 0 ? "/images/garage-card-service.png" : "/images/garage-card-tyres.png"}
+            alt="Garage"
+            fill
+            className="object-cover object-center opacity-40 group-hover:opacity-55 transition-opacity duration-500"
+            sizes="(max-width: 640px) 100vw, 50vw"
+            loading="lazy"
+          />
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/20 to-transparent" />
           {/* Top-right rank badge */}
           {isFeatured && (
             <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-black shadow-lg z-10 ${
