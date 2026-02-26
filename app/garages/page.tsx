@@ -143,18 +143,18 @@ function GarageCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult
         }`} />
 
         {/* Image area */}
-        <div className="relative h-36 overflow-hidden bg-gradient-to-br from-[#1a1008] via-[#121212] to-[#0e0e16]">
+        <div className="relative h-44 sm:h-36 overflow-hidden bg-gradient-to-br from-[#1a1008] via-[#121212] to-[#0e0e16]">
           {/* Gemini-generated category image */}
           <Image
             src={(index ?? 0) % 2 === 0 ? "/images/garage-card-service.png" : "/images/garage-card-tyres.png"}
             alt="Garage"
             fill
-            className="object-cover object-center opacity-40 group-hover:opacity-55 transition-opacity duration-500"
+            className="object-cover object-center opacity-50 group-hover:opacity-65 transition-opacity duration-500"
             sizes="(max-width: 640px) 100vw, 50vw"
             loading="lazy"
           />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/20 to-transparent" />
+          {/* Gradient overlay — lighter so image shows through */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-transparent" />
           {/* Top-right rank badge */}
           {isFeatured && (
             <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-black shadow-lg z-10 ${
@@ -217,7 +217,7 @@ function GarageCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult
 function SkeletonCard() {
   return (
     <div className="rounded-2xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
-      <div className="shimmer h-36 w-full" />
+      <div className="shimmer h-44 sm:h-36 w-full" />
       <div className="p-4 space-y-2.5">
         <div className="shimmer h-4 w-3/4 rounded-lg" />
         <div className="shimmer h-3 w-1/2 rounded-lg" />

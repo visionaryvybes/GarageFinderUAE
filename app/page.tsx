@@ -112,7 +112,7 @@ function LiveStatsStrip() {
   ];
 
   return (
-    <section className="py-6 bg-[var(--surface)] border-b border-[var(--border)]">
+    <section className="py-5 md:py-6 bg-[var(--surface)] border-b border-[var(--border)]">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
           {/* UAE Clock */}
@@ -196,9 +196,9 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
   ];
 
   return (
-    <section className="py-10 bg-[var(--bg)]">
+    <section className="py-8 md:py-10 bg-[var(--bg)]">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5 md:mb-6">
           <h2 className="text-xl font-bold text-[var(--text)]">What are you looking for?</h2>
           <Link href="/services" className="text-sm text-zinc-500 hover:text-orange-400 transition-colors flex items-center gap-1">
             All services <ChevronRight className="w-4 h-4" />
@@ -215,7 +215,7 @@ function QuickActionGrid({ onSearch }: { onSearch: (q: string, ai?: boolean) => 
             >
               <Link
                 href={a.href}
-                className={`group flex flex-col p-4 md:p-5 rounded-2xl bg-gradient-to-br ${a.gradient} border border-[var(--border)] ${a.border} transition-all duration-200 h-full min-h-[140px] hover:shadow-lg`}
+                className={`group flex flex-col p-4 md:p-5 rounded-2xl bg-gradient-to-br ${a.gradient} border border-[var(--border)] ${a.border} transition-all duration-200 h-full min-h-[120px] md:min-h-[140px] hover:shadow-lg`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${a.iconBg}`}>
@@ -255,12 +255,12 @@ function CarAdvisorTeaser() {
   }, [inView]);
 
   return (
-    <section className="py-16 bg-[var(--surface)] border-t border-b border-[var(--border)]">
+    <section className="py-10 md:py-16 bg-[var(--surface)] border-t border-b border-[var(--border)]">
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <div className="rounded-3xl bg-gradient-to-br from-violet-500/10 via-[var(--bg)] to-orange-500/5 border border-violet-500/20 overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left: info */}
-            <div className="p-8 md:p-12 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+            <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/[0.06]">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/15 border border-violet-500/25 mb-6 w-fit">
                 <Sparkles className="w-3.5 h-3.5 text-violet-400" />
                 <span className="text-[11px] font-semibold text-violet-400">AI Car Advisor</span>
@@ -272,7 +272,7 @@ function CarAdvisorTeaser() {
               <p className="text-zinc-400 text-sm leading-relaxed mb-8 max-w-sm">
                 Describe your symptoms and get instant UAE-specific advice, AED cost estimates, and urgency ratings — powered by Gemini AI.
               </p>
-              <div className="space-y-3 mb-8">
+              <div className="space-y-2.5 mb-6 md:mb-8">
                 {[
                   { icon: Cpu, text: "Trained on UAE-specific vehicle data" },
                   { icon: Clock, text: "Maintenance timeline reminders" },
@@ -297,7 +297,7 @@ function CarAdvisorTeaser() {
             </div>
 
             {/* Right: chat demo */}
-            <div ref={ref} className="relative bg-[var(--bg)] p-6 md:p-10 flex flex-col justify-end min-h-[340px]">
+            <div ref={ref} className="relative bg-[var(--bg)] p-5 md:p-10 flex flex-col justify-end min-h-[280px] md:min-h-[340px]">
               {/* Background illustration */}
               <div className="absolute inset-0 z-0 opacity-10 overflow-hidden rounded-r-3xl">
                 <Image
@@ -611,31 +611,57 @@ function HomeContent() {
 
       {/* ── STICKY SEARCH HEADER ── */}
       <header className="sticky top-14 z-40 bg-[var(--bg)]/95 backdrop-blur-xl border-b border-[var(--border)]">
-        <div className="px-4 py-2.5 flex items-center gap-3 max-w-screen-xl mx-auto">
-          <div className="flex-1">
-            <SearchBar onSearch={searchPlaces} isLoading={isLoading} />
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <RegionPicker value={selectedRegion} onChange={(key) => {
-              setSelectedRegion(key);
-              const region = UAE_REGIONS[key];
-              const newCenter = region ? { lat: region.lat, lng: region.lng } : undefined;
-              if (newCenter) setMapCenter(newCenter);
-              if (searchPerformed) searchPlaces(currentQuery, false, activeBrand, newCenter);
-            }} />
-
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className={`shrink-0 flex items-center gap-2 px-4 h-10 rounded-xl border text-sm font-medium transition-all ${showMap
+        {/* Row 1: Search bar (full width on mobile) */}
+        <div className="px-3 pt-2.5 pb-0 sm:pb-2.5 max-w-screen-xl mx-auto">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <SearchBar onSearch={searchPlaces} isLoading={isLoading} />
+            </div>
+            {/* Desktop: emirate + map inline */}
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              <RegionPicker value={selectedRegion} onChange={(key) => {
+                setSelectedRegion(key);
+                const region = UAE_REGIONS[key];
+                const newCenter = region ? { lat: region.lat, lng: region.lng } : undefined;
+                if (newCenter) setMapCenter(newCenter);
+                if (searchPerformed) searchPlaces(currentQuery, false, activeBrand, newCenter);
+              }} />
+              <button
+                onClick={() => setShowMap(!showMap)}
+                className={`shrink-0 flex items-center gap-2 px-4 h-10 rounded-xl border text-sm font-medium transition-all ${showMap
                   ? "bg-orange-500 border-orange-500 text-white"
                   : "bg-[var(--surface)] border-[var(--border)] text-zinc-400 hover:border-orange-500/40 hover:text-orange-400"
                 }`}
-            >
-              <MapIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">{showMap ? "Close Map" : "Map"}</span>
-            </button>
+              >
+                <MapIcon className="w-4 h-4" />
+                <span>{showMap ? "Close Map" : "Map"}</span>
+              </button>
+            </div>
           </div>
+        </div>
+
+        {/* Row 2 (mobile only): Emirate selector + Map toggle — clearly labeled */}
+        <div className="flex sm:hidden items-center gap-2 px-3 py-2">
+          <RegionPicker value={selectedRegion} onChange={(key) => {
+            setSelectedRegion(key);
+            const region = UAE_REGIONS[key];
+            const newCenter = region ? { lat: region.lat, lng: region.lng } : undefined;
+            if (newCenter) setMapCenter(newCenter);
+            if (searchPerformed) searchPlaces(currentQuery, false, activeBrand, newCenter);
+          }} />
+          <button
+            onClick={() => setShowMap(!showMap)}
+            className={`flex items-center gap-2 px-3 h-10 rounded-xl border text-xs font-semibold transition-all shrink-0 ${showMap
+              ? "bg-orange-500 border-orange-500 text-white"
+              : "bg-[var(--surface)] border-[var(--border)] text-zinc-400 hover:border-orange-500/40 hover:text-orange-400"
+            }`}
+          >
+            <MapIcon className="w-3.5 h-3.5" />
+            {showMap ? "Close Map" : "Map View"}
+          </button>
+          {searchPerformed && places.length > 0 && (
+            <span className="ml-auto text-[11px] text-zinc-500 font-medium shrink-0">{places.length} found</span>
+          )}
         </div>
 
         <BrandBar activeBrand={activeBrand} onBrandSelect={handleBrandSelect} />
