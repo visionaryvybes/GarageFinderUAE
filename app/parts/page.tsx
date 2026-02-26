@@ -56,6 +56,7 @@ function inferPartsTags(name: string, address: string): string[] {
 
 function PartsCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult; rank?: number; index?: number; onSelect: (id: string) => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [imgError, setImgError] = useState(false);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const mouseAbsX = useMotionValue(0);
@@ -80,6 +81,8 @@ function PartsCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult;
   const tags = inferPartsTags(shop.name, shop.vicinity || shop.formatted_address || "");
   const isFeatured = rank && rank <= 3;
   const rating = shop.rating || 0;
+  const photoRef = shop.photos?.[0]?.photo_reference;
+  const hasRealPhoto = !!photoRef && !imgError;
 
   return (
     <motion.div
@@ -110,15 +113,26 @@ function PartsCard({ shop, rank, index, onSelect }: { shop: ExtendedPlaceResult;
 
         {/* Image area */}
         <div className="relative h-44 sm:h-36 overflow-hidden bg-gradient-to-br from-[#120a02] via-[#121212] to-[#0e0e16]">
-          {/* Gemini-generated category image */}
-          <Image
-            src={(index ?? 0) % 2 === 0 ? "/images/parts-card-oem.png" : "/images/parts-card-store.png"}
-            alt="Parts store"
-            fill
-            className="object-cover object-center opacity-50 group-hover:opacity-65 transition-opacity duration-500"
-            sizes="(max-width: 640px) 100vw, 50vw"
-            loading="lazy"
-          />
+          {hasRealPhoto ? (
+            <Image
+              src={`/api/photo?ref=${encodeURIComponent(photoRef!)}&maxwidth=480`}
+              alt={shop.name}
+              fill
+              className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, 50vw"
+              loading="lazy"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <Image
+              src={(index ?? 0) % 2 === 0 ? "/images/parts-card-oem.png" : "/images/parts-card-store.png"}
+              alt="Parts store"
+              fill
+              className="object-cover object-center opacity-50 group-hover:opacity-65 transition-opacity duration-500"
+              sizes="(max-width: 640px) 100vw, 50vw"
+              loading="lazy"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-transparent" />
           {isFeatured && (
             <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-black shadow-lg z-10 ${

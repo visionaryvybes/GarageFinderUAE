@@ -107,8 +107,8 @@ function LiveStatsStrip() {
   const stats = [
     { label: "Garages Indexed", value: 850, suffix: "+", icon: Wrench, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20" },
     { label: "Parts Stores", value: 320, suffix: "+", icon: Package, color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/20" },
-    { label: "Open Right Now", value: 89, suffix: "", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
-    { label: "AI Searches Today", value: 1240, suffix: "+", icon: Sparkles, color: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/20" },
+    { label: "Emirates Covered", value: 7, suffix: "", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
+    { label: "Service Categories", value: 23, suffix: "+", icon: Sparkles, color: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/20" },
   ];
 
   return (
