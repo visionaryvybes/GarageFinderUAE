@@ -50,13 +50,17 @@ export default function ShopCard({ place, onSelect, tierLabel, rank, index = 0 }
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-900">
-            {isPartsStore ? (
-              <Package className="w-10 h-10 text-zinc-700" />
-            ) : (
-              <Wrench className="w-10 h-10 text-zinc-700" />
-            )}
-            <span className="text-xs text-zinc-700 font-medium">No photo</span>
+          <div className="relative w-full h-full bg-gradient-to-br from-[#1a1008] via-[#121212] to-[#0e0e16] overflow-hidden">
+            <Image
+              src={isPartsStore
+                ? (index % 2 === 0 ? "/images/parts-card-oem.png" : "/images/parts-card-store.png")
+                : (index % 2 === 0 ? "/images/garage-card-service.png" : "/images/garage-card-tyres.png")
+              }
+              alt={place.name}
+              fill
+              className="object-cover object-center opacity-40"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
           </div>
         )}
 

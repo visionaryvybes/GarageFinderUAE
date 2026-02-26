@@ -57,10 +57,10 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
     <>
       <div className="relative w-full overflow-hidden border-b border-white/[0.04] bg-[#040404]">
         {/* Left fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 z-10  from-[#040404]  pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-[#040404] to-transparent pointer-events-none" />
         {/* Right fade + Browse button */}
         <div className="absolute right-0 top-0 bottom-0 z-10 flex items-center gap-2 pr-3">
-          <div className="w-20 absolute right-0 top-0 bottom-0  from-[#040404]  pointer-events-none" />
+          <div className="w-20 absolute right-0 top-0 bottom-0 bg-gradient-to-l from-[#040404] to-transparent pointer-events-none" />
           <button
             onClick={() => setShowModal(true)}
             className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-orange-500/40 hover:text-orange-400 transition-all z-20 shrink-0"
@@ -127,14 +127,14 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowModal(false)}
-              className="fixed inset-0 bg-black/80 backdrop- z-50"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.97, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, y: 8 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-x-4 top-[5%] z-50 max-h-[85vh] max-w-2xl mx-auto bg-[#080808] border border-zinc-800  overflow-hidden  flex flex-col"
+              className="fixed inset-x-4 top-[5%] z-50 max-h-[85vh] max-w-2xl mx-auto bg-[#080808] border border-zinc-800 rounded-2xl overflow-hidden flex flex-col"
             >
               {/* Modal header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/60 shrink-0">
@@ -144,7 +144,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-2  bg-[#1a1a1a] hover:bg-zinc-800 transition-colors"
+                  className="p-2 rounded-lg bg-[#1a1a1a] hover:bg-zinc-800 transition-colors"
                 >
                   <X className="w-4 h-4 text-zinc-400" />
                 </button>
