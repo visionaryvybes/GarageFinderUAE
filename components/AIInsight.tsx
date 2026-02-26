@@ -25,7 +25,7 @@ export default function AIInsight({ analysis, onDismiss }: AIInsightProps) {
   }
 
   const urgencyColors = {
-    low: "text-blue-400 bg-blue-900/20 border-blue-500/50",
+    low: "text-cyan-400 bg-cyan-900/20 border-cyan-500/50",
     medium: "text-amber-400 bg-amber-900/20 border-amber-500/50",
     high: "text-red-400 bg-red-900/20 border-red-500/50",
   };

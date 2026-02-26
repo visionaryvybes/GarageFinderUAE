@@ -370,7 +370,7 @@ export default function NewsPage() {
             <p className="text-zinc-400 mb-4 font-semibold">Failed to load content</p>
             <button
               onClick={loadData}
-              className="px-5 py-2.5 bg-blue-600 text-white  text-sm font-semibold hover:bg-blue-500 transition-colors"
+              className="px-5 py-2.5 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-500 transition-colors"
             >
               Try Again
             </button>
@@ -484,7 +484,7 @@ export default function NewsPage() {
                       return (
                         <div key={sev}>
                           <p className={`text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2 ${sevCfg.color}`}>
-                            <span className={`w-1.5 h-1.5  ${sev === "high" ? "bg-red-400" : sev === "medium" ? "bg-amber-400" : "bg-blue-400"}`} />
+                            <span className={`w-1.5 h-1.5 rounded-full ${sev === "high" ? "bg-red-400" : sev === "medium" ? "bg-amber-400" : "bg-cyan-400"}`} />
                             {sevCfg.label}
                           </p>
                           <div className="space-y-3 mb-6">

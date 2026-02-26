@@ -113,10 +113,10 @@ export default function PlaceDetail({ placeId, onClose, userLocation }: PlaceDet
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-5 pb-4 border-b border-white/[0.07]">
         <div className="flex items-start gap-3">
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isPartsStore ? "bg-orange-500/15" : "bg-blue-500/15"}`}>
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isPartsStore ? "bg-orange-500/15" : "bg-violet-500/15"}`}>
             {isPartsStore
               ? <Package className="w-6 h-6 text-orange-400" />
-              : <Wrench className="w-6 h-6 text-blue-400" />
+              : <Wrench className="w-6 h-6 text-violet-400" />
             }
           </div>
           <div className="flex-1 min-w-0">

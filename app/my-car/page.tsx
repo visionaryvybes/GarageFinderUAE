@@ -267,7 +267,7 @@ function WarningLightsSection({ lights }: { lights: WarningLight[] }) {
     service_soon: { border: "border-l-amber-500 bg-amber-500/5", ic: "text-amber-400" },
     informational: { border: "border-l-[#3f3f46]", ic: "text-[#52525b]" },
   };
-  const cStyles: Record<string, string> = { red: "bg-red-500 text-white", amber: "bg-amber-500 text-black", green: "bg-emerald-500 text-white", blue: "bg-blue-500 text-white", orange: "bg-orange-500 text-white" };
+  const cStyles: Record<string, string> = { red: "bg-red-500 text-white", amber: "bg-amber-500 text-black", green: "bg-emerald-500 text-white", blue: "bg-violet-500 text-white", orange: "bg-orange-500 text-white" };
   return (
     <div className="space-y-2">
       {lights.map((light, i) => {

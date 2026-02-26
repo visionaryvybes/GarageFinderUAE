@@ -94,7 +94,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 {details.features.map(f => (
                                     <div key={f} className="flex items-center gap-3 p-3.5  bg-[#0a0a0a] border border-[#1a1a1a]">
-                                        <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
+                                        <CheckCircle2 className="w-4 h-4 text-orange-400 shrink-0" />
                                         <span className="text-sm text-zinc-300">{f}</span>
                                     </div>
                                 ))}
@@ -116,10 +116,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     </>
                 )}
 
-                <div className="p-8     border border-blue-600/20">
+                <div className="p-8 rounded-2xl bg-gradient-to-br from-orange-500/10 to-[#111113] border border-orange-500/20">
                     <h2 className="text-2xl font-bold mb-2">Find {svc.name} Near You</h2>
                     <p className="text-zinc-500 mb-5">Verified shops across Dubai, Abu Dhabi, Sharjah and all UAE emirates.</p>
-                    <Link href={`/?q=${encodeURIComponent(svc.query)}`} className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white  font-semibold text-sm transition-all">
+                    <Link href={`/?q=${encodeURIComponent(svc.query)}`} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm transition-all">
                         Search {svc.name} shops →
                     </Link>
                 </div>

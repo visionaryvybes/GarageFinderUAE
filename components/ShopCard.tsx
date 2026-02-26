@@ -101,7 +101,7 @@ export default function ShopCard({ place, onSelect, tierLabel, rank, index = 0 }
           <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${
             isPartsStore
               ? "bg-orange-500/20 text-orange-300 border border-orange-500/20"
-              : "bg-blue-500/20 text-blue-300 border border-blue-500/20"
+              : "bg-violet-500/20 text-violet-300 border border-violet-500/20"
           }`}>
             {isPartsStore ? "Parts" : "Service"}
           </span>

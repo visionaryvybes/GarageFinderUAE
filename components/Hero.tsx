@@ -89,11 +89,11 @@ export default function Hero({ onSearch }: HeroProps) {
             transition={{ duration: 0.55, delay: 0.08 }}
           >
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-white">
-              Find the Best
+              Book UAE&apos;s Top
               <br />
-              <span className="text-gradient-orange">Auto Care</span>
+              <span className="text-gradient-orange">Garages.</span>
               <br />
-              in the UAE.
+              Instantly.
             </h1>
           </motion.div>
 

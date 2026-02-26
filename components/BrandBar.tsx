@@ -63,7 +63,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
           <div className="w-20 absolute right-0 top-0 bottom-0  from-[#040404]  pointer-events-none" />
           <button
             onClick={() => setShowModal(true)}
-            className="relative flex items-center gap-1.5 px-3 py-1.5  text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-blue-600/40 hover:text-blue-400 transition-all z-20 shrink-0"
+            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-orange-500/40 hover:text-orange-400 transition-all z-20 shrink-0"
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Browse</span>
@@ -94,7 +94,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                 {isSelected && (
                   <motion.div
                     layoutId="brand-indicator"
-                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-500  0_0_8px_#3b82f6]"
+                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]"
                   />
                 )}
               </button>
@@ -105,11 +105,11 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
         {/* Active brand pill */}
         {activeBrand && currentBrand && (
           <div className="absolute left-16 top-1/2 -translate-y-1/2 z-10 flex items-center gap-2">
-            <div className="flex items-center gap-2 px-2.5 py-1  bg-blue-600/15 border border-blue-600/30 backdrop-">
-              <span className="text-xs font-bold text-blue-400">{currentBrand.name}</span>
+            <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-orange-500/15 border border-orange-500/30 backdrop-blur-sm">
+              <span className="text-xs font-bold text-orange-400">{currentBrand.name}</span>
               <button
                 onClick={() => onBrandSelect("auto repair", null)}
-                className="text-blue-400/60 hover:text-blue-400 transition-colors"
+                className="text-orange-400/60 hover:text-orange-400 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -169,9 +169,9 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`px-3 py-1.5  text-xs font-bold whitespace-nowrap border transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border transition-all ${
                       activeCategory === cat.id
-                        ? "bg-blue-600/15 border-blue-600/40 text-blue-400"
+                        ? "bg-orange-500/15 border-orange-500/30 text-orange-400"
                         : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-white"
                     }`}
                   >
@@ -194,13 +194,13 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                           onBrandSelect(brand.query, isActive ? null : brandId);
                           setShowModal(false);
                         }}
-                        className={`flex items-center gap-3 p-3  border transition-all ${
+                        className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                           isActive
-                            ? "bg-blue-600/10 border-blue-600/30"
+                            ? "bg-orange-500/10 border-orange-500/25"
                             : "bg-zinc-900 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900"
                         }`}
                       >
-                        <div className="w-10 h-10  bg-black/50 flex items-center justify-center shrink-0 overflow-hidden border border-white/5">
+                        <div className="w-10 h-10 rounded-xl bg-black/50 flex items-center justify-center shrink-0 overflow-hidden border border-white/5">
                           <img
                             src={`/car-logos/${brandId}.png`}
                             alt={brand.name}
@@ -211,7 +211,7 @@ export default function BrandBar({ activeBrand, onBrandSelect }: BrandBarProps) 
                           />
                         </div>
                         <div className="text-left min-w-0">
-                          <p className={`text-sm font-bold truncate ${isActive ? "text-blue-400" : "text-zinc-200"}`}>
+                          <p className={`text-sm font-bold truncate ${isActive ? "text-orange-400" : "text-zinc-200"}`}>
                             {brand.name}
                           </p>
                           <p className="text-[10px] text-zinc-600 truncate">Find specialists</p>
